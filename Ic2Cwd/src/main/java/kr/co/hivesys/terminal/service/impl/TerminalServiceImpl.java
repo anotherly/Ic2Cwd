@@ -16,12 +16,19 @@ public class TerminalServiceImpl implements TerminalService{
 	@Resource(name="terminalMapper")
 	private TerminalMapper TerminalMapper;
 	
+	//메인화면 대시보드에서의 단말기목록 
+	@Override
+	public List<TerminalVo> mainTerminalList(TerminalVo cmsVo) {
+		return TerminalMapper.mainTerminalList(cmsVo);
+	}
+	
 	@Override
 	public List<TerminalVo> selectTerminalList(TerminalVo cmsVo) {
 		return TerminalMapper.selectTerminalList(cmsVo);
 	}
+	
 	@Override
-	public TerminalVo selectTerminal(TerminalVo cmsVo) {
+	public List<TerminalVo> selectTerminal(TerminalVo cmsVo) {
 		return TerminalMapper.selectTerminal(cmsVo);
 	}
 

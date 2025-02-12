@@ -8,74 +8,123 @@
 ========= ======= ================================================= 
 2020.07.23 정다빈     최초 생성 
 -->
-
-	<resultMap type="terminalVO" id="selectTerminalList">
-		<result property="lteRImei" column="LTE-R_IMEI"/>
-		<result property="lteRImsi" column="LTE-R_IMSI"/>
-		<result property="lteRserial" column="LTE-R_SERIAL"/>
-		<result property="lteRUseRId" column="LTE-R_USER_ID"/>
-		<result property="lteRMacAdd" column="LTE-R_MAC_ADD"/>
-		<result property="lteRIp" column="LTE-R_IP"/>
-		<result property="lteRSimNo" column="LTE-R_SIM_NO"/>
-		<result property="conSystem01Ip" column="CON_SYSTEM01_IP"/>
-		<result property="conSystem01" column="CON_SYSTEM01"/>
-		<result property="conSystem02Ip" column="CON_SYSTEM02_IP"/>
-		<result property="conSystem02" column="CON_SYSTEM02"/>
-		<result property="conSystem03Ip" column="CON_SYSTEM03_IP"/>
-		<result property="conSystem03" column="CON_SYSTEM03"/>
-		<result property="conGw" column="CON_GW"/>
-		<result property="lteRUsed" column="LTE-R_USED"/>
+	
+	<resultMap type="terminalVO" id="resultTerminalVo">
+		<result property="trainNo" column="train_no"/>
+		<result property="deviceIp" column="device_ip"/>
+		<result property="deviceMac" column="device_mac"/>
 		<result property="insLocTxt" column="INS_LOC_TXT"/>
-		<result property="lteRCode" column="LTE-R_CODE"/>
-		<result property="lteRDeviceType" column="LTE-R_DEVICE_TYPE"/>
-		<result property="swVerCode" column="SW_VER_CODE"/>
-		<result property="teamCnt" column="TEAM_CNT"/>
-		<result property="deviceCnt" column="DEVICE_CNT"/>
-		<result property="lterCellId" column="LTE-R_CELL_ID"/>
-		<result property="rmtResetYdt" column="RMT_RESET_YDT"/>
-		<result property="rmtResetRlt" column="RMT_RESET_RLT"/>
-		<result property="rmtUptYdt" column="RMT_UPT_YDT"/>
-		<result property="rmtUptRlt" column="RMT_UPT_RLT"/>
-		<result property="getDeviceInfoYdt" column="GET_DEVICE_INFO_YDT"/>
-		<result property="swVerUpdate" column="SW_VER_UPDATE"/>
-		<result property="obsCount" column="OBS_COUNT"/>
-		<result property="useYn" column="USE_YN"/>
-		<result property="regYdt" column="REG_YDT"/>
-		<result property="intervalTime" column="INTERVAL_TIME"/>
-		<result property="departCode" column="DEPART_CODE"/>
-		<result property="departName" column="DEPART_NAME"/>
-		<result property="cpyCode" column="CPY_CODE"/>
-		<result property="cpyName" column="CPY_NAME"/>
-		<result property="hqCode" column="HQ_CODE"/>
-		<result property="hqName" column="HQ_NAME"/>
-		<result property="teamCode" column="TEAM_CODE"/>
-		<result property="teamName" column="TEAM_NAME"/>
-		<result property="idx" column="IDX"/>
-		<result property="receiveTime" column="RECEIVE_TIME"/>
+		<result property="deviceUsed" column="device_used"/>
+		<result property="gatewayIp" column="gateway_ip"/>
+		<result property="deviceUser" column="device_user"/>
+		<result property="etc" column="etc"/>
+		<result property="regDt" column="reg_dt"/>
 		
-		<result property="memCritVal" column="MEM_CRIT_VAL"/>
-		<result property="lteRComUpVal" column="LTE-R_COM_UP_VAL"/>
-		<result property="lteRComDnVal" column="LTE-R_COM_DN_VAL"/>
-		
-		<result property="RSSI" column="LTE-R_RSSI_VAL"/>
-		<result property="RSRP" column="LTE-R_RSRP_VAL"/>
-		<result property="RSRQ" column="LTE-R_RSSI_VAL"/>
-		
-		<result property="keyVal" column="KEY_VAL"/>
-		<result property="cnt" column="CNT"/>
-		<result property="keyDate" column="KEY_DATE"/>
-		
-		<result property="lteRBand" column="LTE-R_BAND"/>
-		<result property="lteRChannel" column="LTE-R_CHANNEL"/>
-		<result property="lteRMCC" column="LTE-R_MCC"/>
-		<result property="lteRMNC" column="LTE-R_MNC"/>
-		
-		<result property="obsCode" column="OBS_CODE"/>
-		<result property="failureRegYdt" column="FAILURE_REG_YDT"/>
-		<result property="failbackYdt" column="FAILBACK_YDT"/>
+		<result property="rcvDt" column="rcv_dt"/>
+		<result property="trainNo" column="train_no"/>
+		<result property="formationNo" column="formation_no"/>
+		<result property="activeCap" column="active_cap"/>
+		<result property="trainCnt" column="train_cnt"/>
+		<result property="trainAddCnt" column="train_add_cnt"/>
+		<result property="deviceIp" column="device_ip"/>
+		<result property="deviceMac" column="device_mac"/>
+		<result property="kpa1" column="kpa1"/>
+		<result property="kpa2" column="kpa2"/>
+		<result property="kpa3" column="kpa3"/>
+		<result property="kpa4" column="kpa4"/>
+		<result property="kpa5" column="kpa5"/>
+		<result property="kpa6" column="kpa6"/>
+		<result property="kpa7" column="kpa7"/>
+		<result property="kpa8" column="kpa8"/>
+		<result property="rate1" column="rate1"/>
+		<result property="rate2" column="rate2"/>
+		<result property="rate3" column="rate3"/>
+		<result property="rate4" column="rate4"/>
+		<result property="rate5" column="rate5"/>
+		<result property="rate6" column="rate6"/>
+		<result property="rate7" column="rate7"/>
+		<result property="rate8" column="rate8"/>
+		<result property="errorRange" column="error_range"/>
 	</resultMap>
 	
-	<select id="selectDayLilst" parameterType="terminalVO" resultMap="selectTerminalList">
+	<!-- 메인화면 게이지 차트 -->
+	<select id="mainGaugeChart" parameterType="terminalVO" resultType="chartVo">
+	    WITH gauge AS (
+			SELECT 
+			    train_no
+			   ,rcv_dt
+			   <!-- ,train_add_cnt+2 AS sum_rate1 -->
+			   ,train_cnt AS sum_rate1
+				,rate1,rate2,rate3,rate4,rate5,rate6
+<!-- 				,CASE WHEN train_add_cnt =1 THEN (RATE1+RATE2+RATE3)/3
+			 		 WHEN train_add_cnt =2 THEN (RATE1+RATE2+RATE3+RATE4)/4
+					 WHEN train_add_cnt =3 THEN (RATE1+RATE2+RATE3+RATE4+RATE5)/5
+				    WHEN train_add_cnt =4 THEN (RATE1+RATE2+RATE3+RATE4+RATE5+RATE6)/6
+			   ELSE IF(RATE1>2,1,0)+IF(RATE2>2,1,0) END -->
+			   ,IF(RATE1>2,1,0)+IF(RATE2>2,1,0)+IF(RATE3>2,1,0)+IF(RATE4>2,1,0)+IF(RATE5>2,1,0)+IF(RATE6>2,1,0)+IF(RATE7>2,1,0)+IF(RATE8>2,1,0)			   			   
+			   AS sum_rate2
+			FROM TCMS_LOG
+			WHERE 1=1
+			<if test="formationNo !=null and formationNo neq ''"> 
+				AND formation_no=#{formationNo}
+			</if>
+			AND RCV_DT>=CURDATE()
+		)
+		SELECT 
+		 <!-- SUM(sum_rate1) AS gaugePointCnt
+		,SUM(sum_rate2) AS gaugeAllCnt -->
+		ROUND((SUM(sum_rate2) / SUM(sum_rate1)) * 100,0) as gaugePointCnt
+		FROM gauge a
+	</select>
+	
+	<!-- 메인화면 바 차트 -->
+	<select id="mainBarChart" parameterType="terminalVO" resultType="chartVo">
+	    
+	    WITH RECURSIVE DT_TABLE AS (
+		    SELECT NOW() dt, 1 lv FROM dual
+		    UNION all
+		    SELECT DATE_ADD(NOW(), INTERVAL DT_TABLE.lv HOUR) dt, DT_TABLE.lv+1 AS lv FROM DT_TABLE WHERE DT_TABLE.lv   <![CDATA[ < ]]> 24 
+		)
+		SELECT tm.dt AS xVal,IFNULL(val.yVal,0) as yVal from		
+		(SELECT 
+		   HOUR(dt) AS dt
+		FROM DT_TABLE
+		ORDER BY dt ASC
+		)tm
+	    left join
+		(
+			SELECT xVal
+			,ROUND(AVG(sum_rate),0) AS yVal
+			FROM
+			(
+				SELECT 
+					 DATE_FORMAT(RCV_DT, '%H') AS xVal
+					 ,train_cnt
+					 ,train_add_cnt
+					 <!-- ##중편수에 따른 평균 혼잡도 계산 -->
+					 <!-- ,CASE WHEN train_add_cnt =1 THEN (RATE1+RATE2+RATE3)/3
+					 		 WHEN train_add_cnt =2 THEN (RATE1+RATE2+RATE3+RATE4)/4
+							 WHEN train_add_cnt =3 THEN (RATE1+RATE2+RATE3+RATE4+RATE5)/5
+			 			    WHEN train_add_cnt =4 THEN (RATE1+RATE2+RATE3+RATE4+RATE5+RATE6)/6
+					 ELSE (RATE1+RATE2)/2 END -->
+					 <!-- TRAIN_CNT와 TRAIN_ADD_CNT의 값에 따라 달라짐 -->
+					  ,round((rate1+rate2+rate3+rate4+rate5+rate6+rate7+rate8)/train_cnt,0)
+					 AS sum_rate
+				FROM TCMS_LOG 
+				WHERE 1=1
+				<if test="formationNo !=null and formationNo neq ''"> 
+					AND formation_no=#{formationNo}
+				</if>
+				AND RCV_DT>=CURDATE()
+			)A
+			GROUP BY xVal
+		)val
+		on tm.dt=val.xVal
+		ORDER BY xVal 
+	    
+	</select>
+	
+	<select id="selectDayLilst" parameterType="terminalVO" resultMap="resultTerminalVo">
 		SELECT J2.*,D.* FROM
 	    (
 	    SELECT J1.*,C.* FROM
@@ -173,212 +222,6 @@
 			</choose>
 		)D
 		ON(J2.`LTE-R_IP`=D.LTEIP)
-	</select>
-
-
-	<resultMap type="terminalVO" id="mainChart1">
-		<result property="lteRCode" column="LTE-R_CODE"/>
-		<result property="teamName" column="TEAM_NAME"/>
-		<result property="cnt" column="CNT"/>
-	</resultMap>
-	<select id="mainChart1" parameterType="terminalVo" resultMap="mainChart1">
-		SELECT SUBSTR(A.`LTE-R_CODE`,1,11),A.lteCode AS `LTE-R_CODE`
-		, COUNT(A.lteCode) AS CNT
-		,B.*
-		FROM
-		(
-			SELECT  `LTE-R_CODE`,SUBSTR(`LTE-R_CODE`,9,3) AS lteCode,USE_YN FROM tbl_router_info T
-				<!-- 로그인 사용자의 소속을 가져와서 해당하는 것만 찾음 -->
-				<!-- WHERE SUBSTR(`LTE-R_CODE`,1,7) LIKE CONCAT(SUBSTR('ARX-SCH-SHT',1,7),'%') -->
-		)A
-		LEFT JOIN 
-		tbl_depart_info B
-		ON(SUBSTR(A.`LTE-R_CODE`,1,11)=B.DEPART_CODE)
-		GROUP BY A.lteCode
-	</select>
-		
-	<resultMap type="terminalVO" id="mainChart2">
-		<result property="keyVal" column="KEY_VAL"/>
-		<result property="cnt" column="CNT"/>
-	</resultMap>
-	<select id="mainChart2" parameterType="terminalVo" resultMap="mainChart2">
-		WITH RAN AS (
-			SELECT * FROM tbl_rssi_strength
-		)
-		SELECT B.KEY_VAL,COUNT(B.KEY_VAL) AS cnt FROM
-		(	
-			SELECT T1.*,T2.* FROM
-			(SELECT `LTE-R_IP`,`LTE-R_MAC_ADD`,`LTE-R_CODE`,SUBSTR(`LTE-R_CODE`,9,3) AS lteCode FROM tbl_router_info) T1
-			LEFT JOIN tbl_depart_info T2 ON SUBSTR(T1.`LTE-R_CODE`,1,11)=T2.DEPART_CODE
-		)A
-		LEFT JOIN
-		(SELECT `LTE-R_IP` AS K1,`LTE-R_MAC_ADD` AS K2,
-		CASE 
-		WHEN `LTE-R_RSSI_VAL` <![CDATA[ > ]]> RAN.EXCELLENT_VAL THEN 'EXCELLENT'
-		WHEN `LTE-R_RSSI_VAL` <![CDATA[ > ]]> RAN.GOOD_VAL THEN 'GOOD'
-		WHEN `LTE-R_RSSI_VAL` <![CDATA[ > ]]> RAN.MEDIUM_VAL THEN 'MIDDLE'
-		ELSE 'WEAK' END AS KEY_VAL
-		FROM stat_receive_data_day,RAN
-			WHERE 1=1 
-				<choose>
-				    <when test="keyType eq 'monStat'">
-						AND  DATE_FORMAT(key_date, '%Y-%m') = #{keyDate}
-				    </when>
-				    <when test="keyType eq 'yearStat'">
-						AND  DATE_FORMAT(key_date, '%Y') = #{keyDate}
-				    </when>
-				    <otherwise>
-				     	AND KEY_DATE=#{keyDate}
-				    </otherwise>
-				</choose>
-		)B
-		 ON A.`LTE-R_IP`=B.K1
-		 AND A.`LTE-R_MAC_ADD`=B.K2
-		  WHERE 1=1
-		  <!--관리자 아닐 시 로그인 사용자 정보 입력 -->
-		<if test="departCode != null and departCode neq ''">
-			AND A.DEPART_CODE=#{departCode}
-		</if>
-		GROUP BY b.key_val
-		HAVING KEY_VAL IS NOT NULL
-	</select>
-	
-	<resultMap type="terminalVO" id="barChart">
-		<result property="lteRComUpVal" column="LTE-R_COM_UP_VAL"/>
-		<result property="lteRComDnVal" column="LTE-R_COM_DN_VAL"/>
-		<result property="teamCode" column="TEAM_CODE"/>
-		<result property="teamName" column="TEAM_NAME"/>
-	</resultMap>
-	<select id="barChart" parameterType="terminalVo" resultMap="barChart">
-		SELECT J1.TEAM_CODE, J1.TEAM_NAME 
-		,ROUND(AVG(J1.`LTE-R_COM_UP_VAL`),0) AS `LTE-R_COM_UP_VAL` 
-		,ROUND(AVG(J1.`LTE-R_COM_DN_VAL`),0) AS `LTE-R_COM_DN_VAL`
-		,J1.REG_YDT
-		FROM
-		(
-		SELECT A.* ,B.* FROM
-		(	
-			SELECT T1.*,T2.* FROM
-			(SELECT `LTE-R_IP`,`LTE-R_MAC_ADD`,`LTE-R_CODE`,SUBSTR(`LTE-R_CODE`,9,3) AS lteCode FROM tbl_router_info) T1
-			LEFT JOIN tbl_depart_info T2 ON SUBSTR(T1.`LTE-R_CODE`,1,11)=T2.DEPART_CODE
-		)A
-		LEFT JOIN
-		(SELECT `LTE-R_IP` AS K1,`LTE-R_MAC_ADD` AS K2,`LTE-R_COM_UP_VAL`,`LTE-R_COM_DN_VAL` FROM stat_receive_data_day
-				WHERE 1=1 
-				<choose>
-				    <when test="keyType eq 'monStat'">
-						AND  DATE_FORMAT(key_date, '%Y-%m') = #{keyDate}
-				    </when>
-				    <when test="keyType eq 'yearStat'">
-						AND  DATE_FORMAT(key_date, '%Y') = #{keyDate}
-				    </when>
-				    <otherwise>
-				     	AND KEY_DATE=#{keyDate}
-				    </otherwise>
-				</choose>
-		)B
-		 ON A.`LTE-R_IP`=B.K1
-		 AND A.`LTE-R_MAC_ADD`=B.K2
-		  WHERE 1=1
-		  <!--관리자 아닐 시 로그인 사용자 정보 입력 -->
-		<if test="departCode != null and departCode neq ''">
-			AND A.DEPART_CODE=#{departCode}
-		</if>
-		 )J1
-		 GROUP BY J1.lteCode
-		 ORDER BY J1.REG_YDT
-	</select>
-	
-	<resultMap type="terminalVO" id="userRsrp">
-		<result property="keyVal" column="KEY_VAL"/>
-		<result property="cnt" column="CNT"/>
-	</resultMap>
-	<select id="userRsrp" parameterType="terminalVo" resultMap="userRsrp">
-		WITH RAN AS (
-			SELECT * FROM tbl_rsrp_strength
-		)
-		SELECT B.KEY_VAL,COUNT(B.KEY_VAL) AS cnt FROM
-		(	
-			SELECT T1.*,T2.* FROM
-			(SELECT `LTE-R_IP`,`LTE-R_MAC_ADD`,`LTE-R_CODE`,SUBSTR(`LTE-R_CODE`,9,3) AS lteCode FROM tbl_router_info) T1
-			LEFT JOIN tbl_depart_info T2 ON SUBSTR(T1.`LTE-R_CODE`,1,11)=T2.DEPART_CODE
-		)A
-		LEFT JOIN
-		(SELECT `LTE-R_IP` AS K1,`LTE-R_MAC_ADD` AS K2,
-		CASE 
-		WHEN `LTE-R_RSRP_VAL` <![CDATA[ > ]]> RAN.EXCELLENT_VAL THEN 'EXCELLENT'
-		WHEN `LTE-R_RSRP_VAL` <![CDATA[ > ]]> RAN.GOOD_VAL THEN 'GOOD'
-		WHEN `LTE-R_RSRP_VAL` <![CDATA[ > ]]> RAN.MEDIUM_VAL THEN 'MIDDLE'
-		ELSE 'WEAK' END AS KEY_VAL
-		FROM stat_receive_data_day,RAN
-				WHERE 1=1 
-				<choose>
-				    <when test="keyType eq 'monStat'">
-						AND  DATE_FORMAT(key_date, '%Y-%m') = #{keyDate}
-				    </when>
-				    <when test="keyType eq 'yearStat'">
-						AND  DATE_FORMAT(key_date, '%Y') = #{keyDate}
-				    </when>
-				    <otherwise>
-				     	AND KEY_DATE=#{keyDate}
-				    </otherwise>
-				</choose>
-		)B
-		 ON A.`LTE-R_IP`=B.K1
-		 AND A.`LTE-R_MAC_ADD`=B.K2
-		  WHERE 1=1
-		  <!--관리자 아닐 시 로그인 사용자 정보 입력 -->
-		<if test="departCode != null and departCode neq ''">
-			AND A.DEPART_CODE=#{departCode}
-		</if>
-		GROUP BY b.key_val
-		HAVING KEY_VAL IS NOT NULL
-	</select>
-	
-	<resultMap type="terminalVO" id="userRsrq">
-		<result property="keyVal" column="KEY_VAL"/>
-		<result property="cnt" column="CNT"/>
-	</resultMap>
-	<select id="userRsrq" parameterType="terminalVo" resultMap="userRsrq">
-		WITH RAN AS (
-			SELECT * FROM tbl_rsrq_strength
-		)
-		SELECT B.KEY_VAL,COUNT(B.KEY_VAL) AS cnt FROM
-		(	
-			SELECT T1.*,T2.* FROM
-			(SELECT `LTE-R_IP`,`LTE-R_MAC_ADD`,`LTE-R_CODE`,SUBSTR(`LTE-R_CODE`,9,3) AS lteCode FROM tbl_router_info) T1
-			LEFT JOIN tbl_depart_info T2 ON SUBSTR(T1.`LTE-R_CODE`,1,11)=T2.DEPART_CODE
-		)A
-		LEFT JOIN
-		(SELECT `LTE-R_IP` AS K1,`LTE-R_MAC_ADD` AS K2,
-		CASE 
-		WHEN `LTE-R_RSRQ_VAL` <![CDATA[ > ]]> RAN.EXCELLENT_VAL THEN 'EXCELLENT'
-		WHEN `LTE-R_RSRQ_VAL` <![CDATA[ > ]]> RAN.GOOD_VAL THEN 'GOOD'
-		WHEN `LTE-R_RSRQ_VAL` <![CDATA[ > ]]> RAN.MEDIUM_VAL THEN 'MIDDLE'
-		ELSE 'WEAK' END AS KEY_VAL
-		FROM stat_receive_data_day,RAN
-				WHERE 1=1 
-				<choose>
-				    <when test="keyType eq 'monStat'">
-						AND  DATE_FORMAT(key_date, '%Y-%m') = #{keyDate}
-				    </when>
-				    <when test="keyType eq 'yearStat'">
-						AND  DATE_FORMAT(key_date, '%Y') = #{keyDate}
-				    </when>
-				    <otherwise>
-				     	AND KEY_DATE=#{keyDate}
-				    </otherwise>
-				</choose>
-		)B
-		 ON A.`LTE-R_IP`=B.K1
-		 AND A.`LTE-R_MAC_ADD`=B.K2
-		  WHERE 1=1
-		  <!--관리자 아닐 시 로그인 사용자 정보 입력 -->
-		<if test="departCode != null and departCode neq ''">
-			AND A.DEPART_CODE=#{departCode}
-		</if>
-		GROUP BY b.key_val
-		HAVING KEY_VAL IS NOT NULL
 	</select>
 
 </mapper>

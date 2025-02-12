@@ -5,7 +5,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>단말장치(LTE-R) 관리 WEB 시스템</title>
+	<title>인천2호선 혼잡도 관제시스템</title>
 	<!-- Custom style -->
 	<link rel="stylesheet" href="<%=request.getContextPath()%>/css/style.css">
 
@@ -27,6 +27,5 @@
 		});
 	</script>
 </head>
-<body>
-</body>
+<body></body>
 </html>

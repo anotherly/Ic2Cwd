@@ -22,8 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import kr.co.hivesys.auth.service.AuthService;
-import kr.co.hivesys.auth.vo.AuthVo;
 import kr.co.hivesys.depart.service.DepartService;
 import kr.co.hivesys.depart.vo.DepartVo;
 import kr.co.hivesys.user.service.UserService;
@@ -52,12 +50,6 @@ public class UserController {
 	@Resource(name="userService")
 	private UserService userService;
 	
-	@Resource(name="departService")
-	private DepartService departService;
-	
-	@Resource(name="authService")
-	private AuthService authService;
-	
 	//주소에 맞게 매핑
 	@RequestMapping(value= "/user/*.do")
 	public String urlMapping(HttpSession httpSession, HttpServletRequest request,Model model
@@ -66,27 +58,6 @@ public class UserController {
 		url = request.getRequestURI().substring(request.getContextPath().length()).split(".do")[0];
 		logger.debug("▶▶▶▶▶▶▶.보내려는 url : "+url);
 		return url;
-	}
-	
-	//목록 화면 진입시 필요데이터
-	@RequestMapping(value="/user/list.do")
-	public @ResponseBody ModelAndView listDo(HttpServletRequest request) throws Exception{
-		url = request.getRequestURI().substring(request.getContextPath().length()).split(".do")[0];
-		ModelAndView mav = new ModelAndView(url);
-		try {
-			List<DepartVo> departList1 = new ArrayList<>();
-			List<DepartVo> departList2 = new ArrayList<>();
-			List<DepartVo> departList3 = new ArrayList<>();
-			departList1 = departService.selectDepartList1(new DepartVo());
-			departList2 = departService.selectDepartList2(new DepartVo());
-			departList3 = departService.selectDepartList3(new DepartVo());
-			mav.addObject("departList1", departList1);
-			mav.addObject("departList2", departList2);
-			mav.addObject("departList3", departList3);
-		} catch (Exception e) {
-			logger.debug("에러메시지 : "+e.toString());
-		}
-		return mav;
 	}
 	
 	//목록 조회
@@ -101,8 +72,6 @@ public class UserController {
 		try {
 			
 			UserVO reqLoginVo = (UserVO) request.getSession().getAttribute("login");
-			inputVo.setUserAuth(reqLoginVo.getUserAuth());
-			inputVo.setDepartCode(reqLoginVo.getDepartCode());
 			
 			sList = userService.selectUserList(inputVo);
 			mav.addObject("data", sList);
@@ -119,20 +88,6 @@ public class UserController {
 		ModelAndView mav = new ModelAndView(url);
 		List<UserVO> UserList = new ArrayList<>();
 		try {
-			
-			List<DepartVo> departList1 = new ArrayList<>();
-			List<DepartVo> departList2 = new ArrayList<>();
-			List<DepartVo> departList3 = new ArrayList<>();
-			List<AuthVo> authList = new ArrayList<>();
-			departList1 = departService.selectDepartList1(new DepartVo());
-			departList2 = departService.selectDepartList2(new DepartVo());
-			departList3 = departService.selectDepartList3(new DepartVo());
-			authList = authService.selectAuthList(new AuthVo());
-			mav.addObject("departList1", departList1);
-			mav.addObject("departList2", departList2);
-			mav.addObject("departList3", departList3);
-			mav.addObject("authList", authList);
-			
 			UserList = userService.selectUserList(new UserVO());
 		} catch (Exception e) {
 			logger.debug("에러메시지 : "+e.toString());
@@ -172,24 +127,9 @@ public class UserController {
 		ModelAndView mav = new ModelAndView("jsonView");
 		UserVO data= null;
 		try {
-			
-			List<DepartVo> departList1 = new ArrayList<>();
-			List<DepartVo> departList2 = new ArrayList<>();
-			List<DepartVo> departList3 = new ArrayList<>();
-			List<AuthVo> authList = new ArrayList<>();
-			departList1 = departService.selectDepartList1(new DepartVo());
-			departList2 = departService.selectDepartList2(new DepartVo());
-			departList3 = departService.selectDepartList3(new DepartVo());
-			authList = authService.selectAuthList(new AuthVo());
-			mav.addObject("departList1", departList1);
-			mav.addObject("departList2", departList2);
-			mav.addObject("departList3", departList3);
-			mav.addObject("authList", authList);
-			
 			data = userService.selectUser(inputVo);
 			mav.addObject("data", data);
 			mav.setViewName(url);
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.debug(""+e);
@@ -212,24 +152,10 @@ public class UserController {
 		UserVO data= null;
 		try {
 			data = userService.selectUser(inputVo);
-			
-			List<DepartVo> departList1 = new ArrayList<>();
-			List<DepartVo> departList2 = new ArrayList<>();
-			List<DepartVo> departList3 = new ArrayList<>();
-			List<AuthVo> authList = new ArrayList<>();
-			departList1 = departService.selectDepartList1(new DepartVo());
-			departList2 = departService.selectDepartList2(new DepartVo());
-			departList3 = departService.selectDepartList3(new DepartVo());
-			authList = authService.selectAuthList(new AuthVo());
-			mav.addObject("departList1", departList1);
-			mav.addObject("departList2", departList2);
-			mav.addObject("departList3", departList3);
-			mav.addObject("authList", authList);
-			
 			mav.addObject("data", data);
 			mav.setViewName(url);
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		return mav;
 	}

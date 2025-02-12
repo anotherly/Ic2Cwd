@@ -40,7 +40,6 @@ body {
     margin-right: 25px;
 }
 
-
 .arex_tab.selected{
 	display:flex;
 	align-items: center;
@@ -218,12 +217,14 @@ body {
 }
 .login_logo{
     width: 318px;
-    height: 160px;
+    height: 100px;
     text-indent: -9999px;
-    background: url(../images/icons/arex_login_logo.png) no-repeat center center;
+    background: url(../images/icons/logo.png) no-repeat center center;
     display: block;
     margin-bottom: 20px;
+    border-bottom: 2px solid lightgrey;
 }
+
 .login_form{
     width: 318px;
     display: flex;
@@ -402,13 +403,22 @@ aside.lnb {
     box-shadow: inset 0px -1px 0 #e5e5e5;
     clear: both;
     padding: 0 30px;
-    height: 50px;
+    height: 55px;
     position: fixed;
     left: 202px;
     right: 0;
     top: 0;
     z-index: 989;
 }
+
+.header-div{
+	display: flex;
+    height: 100%;
+    width: 580px;
+    justify-content: space-around;
+    align-items: center;
+}
+
 /* 로고(시스템명) */
 .container-wrap .header-wrap h1.logo {
     position: absolute;
@@ -420,10 +430,24 @@ aside.lnb {
     width: 520px;
     height: 50px;
     text-indent: -9999px;
-    background: url(../images/icons/arex_logo.png) no-repeat left center;
+    background: url(../images/icons/logo.png) no-repeat left center;
     display: block;
     background-size: contain;
 }
+
+
+.sys-name {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: bold;
+    color: #403f3f;
+}
+
+.sys-name span :first-child{
+    font-size: 32px;
+}
+
 /* 상단 유틸 */
 .container-wrap .header-wrap .header_util{
     position: absolute;

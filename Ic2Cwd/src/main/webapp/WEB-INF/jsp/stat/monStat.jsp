@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>단말장치(LTE-R) 관리 WEB 시스템</title>
+    <title>인천2호선 혼잡도 관제시스템</title>
 	<meta charset="UTF-8">
     <jsp:include page="../cmn/top.jsp" flush="false" />
 <style>
@@ -57,15 +57,6 @@ table td {
 	$(document).ready(function(){
 		var now = new Date();
 		var yesterday = new Date(now.setDate(now.getDate() - 1));	
-		//console.log("chart 진입");
-		//$("#container_chart").hide();
-		var userAuth='${login.userAuth}';
-		if(userAuth==0){
-			$("#chtImg").load("/stat/mainAdminChart.do");
-		}else{
-			$("#chtImg").load("/stat/mainUserChart.do");
-		}
-		
 		//최대일과 현재일이 같을 경우 발생할수 있는 문제에 대해 최대일에 +1초 
 		//먼저 변수 선언
 		var maxD = moment().add(1, 'seconds').format("YYYY-MM");

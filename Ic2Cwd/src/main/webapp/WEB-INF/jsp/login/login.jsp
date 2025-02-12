@@ -36,7 +36,11 @@
     <!-- container Start ------------------>
     <div id="login_container" class="login_wrap">
         <div class="login_box">
-            <div class="login_logo">공항철도 | Airport Railroad Express | 무선장치 관리시스템 | Wireless device management system</div>
+            <div class="login_logo"> 인천2호선 | 무선장치 관리시스템 | Crowdedness Management System</div>
+            <div class="sys-name" style="margin-bottom: 30px;">
+    			<span style="font-size: 32px;">혼잡도 관리 시스템</span>
+    			<span>Crowdedness Management System</span>
+			</div>
             <form id="loginForm" class="login_form" name="loginForm" method="post" enctype="multipart/form-data">
                 <div class="login_fm_id">
                 	<input type="text" id="userId" name="userId" class="form-control"  maxlength="10" onkeyup="spaceChk(this);" onkeydown="spaceChk(this);"  required/>

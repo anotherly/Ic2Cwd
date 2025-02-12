@@ -20,6 +20,7 @@ import kr.co.hivesys.statistic.mapper.StatisticMapper;
 import kr.co.hivesys.statistic.service.StatisticService;
 import kr.co.hivesys.statistic.vo.StkAreaVO;
 import kr.co.hivesys.terminal.vo.TerminalVo;
+import kr.co.hivesys.statistic.vo.ChartVo;
 import kr.co.hivesys.statistic.vo.ChkDateVO;
 import kr.co.hivesys.statistic.vo.LogDataVO;
 import kr.co.hivesys.statistic.vo.MainStVo;
@@ -49,6 +50,19 @@ public class StatisticServiceImpl implements StatisticService{
 	
 	@Resource(name="statisticMapper")
 	private StatisticMapper statisticMapper;
+	
+	
+	//메인화면 게이지 차트
+	@Override
+	public List<ChartVo> mainGaugeChart(TerminalVo cmsVo) {
+		return statisticMapper.mainGaugeChart(cmsVo);
+	}
+	
+	//메인화면 바 차트
+	@Override
+	public List<ChartVo> mainBarChart(TerminalVo cmsVo) {
+		return statisticMapper.mainBarChart(cmsVo);
+	}
 	
 	@Override
 	public List<TerminalVo>  selectDayLilst(TerminalVo inputVo) {

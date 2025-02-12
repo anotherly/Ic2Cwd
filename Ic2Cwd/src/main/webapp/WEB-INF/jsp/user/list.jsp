@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>단말장치(LTE-R) 관리 WEB 시스템</title>
+    <title>인천2호선 혼잡도 관제시스템</title>
 	<meta charset="UTF-8">
     <jsp:include page="../cmn/top.jsp" flush="false" />
     <style>

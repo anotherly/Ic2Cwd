@@ -1,204 +1,79 @@
 package kr.co.hivesys.terminal.vo;
 
-public class TerminalVo {
+import kr.co.hivesys.comm.BaseVO;
+
+public class TerminalVo  extends BaseVO{
 	
-	private String lteRImei;
-	private String lteRImsi;
-	private String lteRserial;
-	private String lteRUseRId;
-	private String lteRMacAdd;
-	private String lteRIp;
-	private String lteRSimNo;
-	private String conSystem01Ip;
-	private String conSystem01;
-	private String conSystem02Ip;
-	private String conSystem02;
-	private String conSystem03Ip;
-	private String conSystem03;
-	private String conGw;
-	private String lteRUsed;
+	//차상단말기 정보
+	private String trainNo;
+	private String formationNo;
+	private String deviceIp;
+	private String deviceMac;
 	private String insLocTxt;
-	private String lteRCode;
-	private String lteRDeviceType;
-	private String swVerCode;
-	private String teamCnt;
-	private String deviceCnt;
-	private String lterCellId;
-	private String rmtResetYdt;
-	private String rmtResetRlt;
-	private String rmtUptYdt;
-	private String rmtUptRlt;
-	private String getDeviceInfoYdt;
-	private String swVerUpdate;
-	private String obsCount;
-	private String useYn;
-	private String regYdt;
-	private String intervalTime;
+	private String deviceUsed;
+	private String gatewayIp;
+	private String deviceUser;
+	private String etc;
+	private String regDt;
+	//차상단말기 로그
+	private String rcvDt;
 	
-	private String lteRBand;
-	private String lteRChannel;
-	private String lteRMCC;
-	private String lteRMNC;
+	private String tno2;
+	private String fno2;
 	
-	private String receiveTime;
-	private String memCritVal;
-	private String lteRComUpVal;
-	private String lteRComDnVal;
+	private String activeCap;
+	private String trainCnt;
+	private String trainAddCnt;
+	private int kpa1;
+	private int kpa2;
+	private int kpa3;
+	private int kpa4;
+	private int kpa5;
+	private int kpa6;
+	private int kpa7;
+	private int kpa8;
+	private int rate1;
+	private int rate2;
+	private int rate3;
+	private int rate4;
+	private int rate5;
+	private int rate6;
+	private int rate7;
+	private int rate8;
+	private int avgCwd;
 	
-	private String RSSI;
-	private String RSRP;
-	private String RSRQ;
-	
-	private String departCode;
-	private String departName;
-	
-	private String cpyCode;
-	private String cpyName;
-	private String hqName;
-	private String hqCode;
-	private String teamName;
-	private String teamCode;
-	
-	private String obsCode;
-	private String idx;
-	
-	private int startNum;
-	private int endNum;
-	
-	private String flagPage;
+	private String errorRange;
 
-	private String keyVal;
-	private String cnt;
-	private String keyDate;
-	
-	private String nowStatus;
-	
-	private String failureRegYdt;
-	private String failbackYdt;
-	
-	private String keyType;
-	
-	// 24-10-14 추가 컬럼
-	private String lteROper;
-
-	public String getLteRImei() {
-		return lteRImei;
+	public String getTrainNo() {
+		return trainNo;
 	}
 
-	public void setLteRImei(String lteRImei) {
-		this.lteRImei = lteRImei;
+	public void setTrainNo(String trainNo) {
+		this.trainNo = trainNo;
 	}
 
-	public String getLteRImsi() {
-		return lteRImsi;
+	public String getFormationNo() {
+		return formationNo;
 	}
 
-	public void setLteRImsi(String lteRImsi) {
-		this.lteRImsi = lteRImsi;
+	public void setFormationNo(String formationNo) {
+		this.formationNo = formationNo;
 	}
 
-	public String getLteRserial() {
-		return lteRserial;
+	public String getDeviceIp() {
+		return deviceIp;
 	}
 
-	public void setLteRserial(String lteRserial) {
-		this.lteRserial = lteRserial;
+	public void setDeviceIp(String deviceIp) {
+		this.deviceIp = deviceIp;
 	}
 
-	public String getLteRUseRId() {
-		return lteRUseRId;
+	public String getDeviceMac() {
+		return deviceMac;
 	}
 
-	public void setLteRUseRId(String lteRUseRId) {
-		this.lteRUseRId = lteRUseRId;
-	}
-
-	public String getLteRMacAdd() {
-		return lteRMacAdd;
-	}
-
-	public void setLteRMacAdd(String lteRMacAdd) {
-		this.lteRMacAdd = lteRMacAdd;
-	}
-
-	public String getLteRIp() {
-		return lteRIp;
-	}
-
-	public void setLteRIp(String lteRIp) {
-		this.lteRIp = lteRIp;
-	}
-
-	public String getLteRSimNo() {
-		return lteRSimNo;
-	}
-
-	public void setLteRSimNo(String lteRSimNo) {
-		this.lteRSimNo = lteRSimNo;
-	}
-
-	public String getConSystem01Ip() {
-		return conSystem01Ip;
-	}
-
-	public void setConSystem01Ip(String conSystem01Ip) {
-		this.conSystem01Ip = conSystem01Ip;
-	}
-
-	public String getConSystem01() {
-		return conSystem01;
-	}
-
-	public void setConSystem01(String conSystem01) {
-		this.conSystem01 = conSystem01;
-	}
-
-	public String getConSystem02Ip() {
-		return conSystem02Ip;
-	}
-
-	public void setConSystem02Ip(String conSystem02Ip) {
-		this.conSystem02Ip = conSystem02Ip;
-	}
-
-	public String getConSystem02() {
-		return conSystem02;
-	}
-
-	public void setConSystem02(String conSystem02) {
-		this.conSystem02 = conSystem02;
-	}
-
-	public String getConSystem03Ip() {
-		return conSystem03Ip;
-	}
-
-	public void setConSystem03Ip(String conSystem03Ip) {
-		this.conSystem03Ip = conSystem03Ip;
-	}
-
-	public String getConSystem03() {
-		return conSystem03;
-	}
-
-	public void setConSystem03(String conSystem03) {
-		this.conSystem03 = conSystem03;
-	}
-
-	public String getConGw() {
-		return conGw;
-	}
-
-	public void setConGw(String conGw) {
-		this.conGw = conGw;
-	}
-
-	public String getLteRUsed() {
-		return lteRUsed;
-	}
-
-	public void setLteRUsed(String lteRUsed) {
-		this.lteRUsed = lteRUsed;
+	public void setDeviceMac(String deviceMac) {
+		this.deviceMac = deviceMac;
 	}
 
 	public String getInsLocTxt() {
@@ -209,413 +84,251 @@ public class TerminalVo {
 		this.insLocTxt = insLocTxt;
 	}
 
-	public String getLteRCode() {
-		return lteRCode;
+	public String getDeviceUsed() {
+		return deviceUsed;
 	}
 
-	public void setLteRCode(String lteRCode) {
-		this.lteRCode = lteRCode;
+	public void setDeviceUsed(String deviceUsed) {
+		this.deviceUsed = deviceUsed;
 	}
 
-	public String getLteRDeviceType() {
-		return lteRDeviceType;
+	public String getGatewayIp() {
+		return gatewayIp;
 	}
 
-	public void setLteRDeviceType(String lteRDeviceType) {
-		this.lteRDeviceType = lteRDeviceType;
+	public void setGatewayIp(String gatewayIp) {
+		this.gatewayIp = gatewayIp;
 	}
 
-	public String getSwVerCode() {
-		return swVerCode;
+	public String getDeviceUser() {
+		return deviceUser;
 	}
 
-	public void setSwVerCode(String swVerCode) {
-		this.swVerCode = swVerCode;
+	public void setDeviceUser(String deviceUser) {
+		this.deviceUser = deviceUser;
 	}
 
-	public String getTeamCnt() {
-		return teamCnt;
+	public String getEtc() {
+		return etc;
 	}
 
-	public void setTeamCnt(String teamCnt) {
-		this.teamCnt = teamCnt;
+	public void setEtc(String etc) {
+		this.etc = etc;
 	}
 
-	public String getDeviceCnt() {
-		return deviceCnt;
+	public String getRegDt() {
+		return regDt;
 	}
 
-	public void setDeviceCnt(String deviceCnt) {
-		this.deviceCnt = deviceCnt;
+	public void setRegDt(String regDt) {
+		this.regDt = regDt;
 	}
 
-	public String getLterCellId() {
-		return lterCellId;
+	public String getRcvDt() {
+		return rcvDt;
 	}
 
-	public void setLterCellId(String lterCellId) {
-		this.lterCellId = lterCellId;
+	public void setRcvDt(String rcvDt) {
+		this.rcvDt = rcvDt;
 	}
 
-	public String getRmtResetYdt() {
-		return rmtResetYdt;
+	public String getTno2() {
+		return tno2;
 	}
 
-	public void setRmtResetYdt(String rmtResetYdt) {
-		this.rmtResetYdt = rmtResetYdt;
+	public void setTno2(String tno2) {
+		this.tno2 = tno2;
 	}
 
-	public String getRmtResetRlt() {
-		return rmtResetRlt;
+	public String getFno2() {
+		return fno2;
 	}
 
-	public void setRmtResetRlt(String rmtResetRlt) {
-		this.rmtResetRlt = rmtResetRlt;
+	public void setFno2(String fno2) {
+		this.fno2 = fno2;
 	}
 
-	public String getRmtUptYdt() {
-		return rmtUptYdt;
+	public String getActiveCap() {
+		return activeCap;
 	}
 
-	public void setRmtUptYdt(String rmtUptYdt) {
-		this.rmtUptYdt = rmtUptYdt;
+	public void setActiveCap(String activeCap) {
+		this.activeCap = activeCap;
 	}
 
-	public String getRmtUptRlt() {
-		return rmtUptRlt;
+	public String getTrainCnt() {
+		return trainCnt;
 	}
 
-	public void setRmtUptRlt(String rmtUptRlt) {
-		this.rmtUptRlt = rmtUptRlt;
+	public void setTrainCnt(String trainCnt) {
+		this.trainCnt = trainCnt;
 	}
 
-	public String getGetDeviceInfoYdt() {
-		return getDeviceInfoYdt;
+	public String getTrainAddCnt() {
+		return trainAddCnt;
 	}
 
-	public void setGetDeviceInfoYdt(String getDeviceInfoYdt) {
-		this.getDeviceInfoYdt = getDeviceInfoYdt;
+	public void setTrainAddCnt(String trainAddCnt) {
+		this.trainAddCnt = trainAddCnt;
 	}
 
-	public String getSwVerUpdate() {
-		return swVerUpdate;
+	public int getKpa1() {
+		return kpa1;
 	}
 
-	public void setSwVerUpdate(String swVerUpdate) {
-		this.swVerUpdate = swVerUpdate;
+	public void setKpa1(int kpa1) {
+		this.kpa1 = kpa1;
 	}
 
-	public String getObsCount() {
-		return obsCount;
+	public int getKpa2() {
+		return kpa2;
 	}
 
-	public void setObsCount(String obsCount) {
-		this.obsCount = obsCount;
+	public void setKpa2(int kpa2) {
+		this.kpa2 = kpa2;
 	}
 
-	public String getUseYn() {
-		return useYn;
+	public int getKpa3() {
+		return kpa3;
 	}
 
-	public void setUseYn(String useYn) {
-		this.useYn = useYn;
+	public void setKpa3(int kpa3) {
+		this.kpa3 = kpa3;
 	}
 
-	public String getRegYdt() {
-		return regYdt;
+	public int getKpa4() {
+		return kpa4;
 	}
 
-	public void setRegYdt(String regYdt) {
-		this.regYdt = regYdt;
+	public void setKpa4(int kpa4) {
+		this.kpa4 = kpa4;
 	}
 
-	public String getIntervalTime() {
-		return intervalTime;
+	public int getKpa5() {
+		return kpa5;
 	}
 
-	public void setIntervalTime(String intervalTime) {
-		this.intervalTime = intervalTime;
+	public void setKpa5(int kpa5) {
+		this.kpa5 = kpa5;
 	}
 
-	public String getLteRBand() {
-		return lteRBand;
+	public int getKpa6() {
+		return kpa6;
 	}
 
-	public void setLteRBand(String lteRBand) {
-		this.lteRBand = lteRBand;
+	public void setKpa6(int kpa6) {
+		this.kpa6 = kpa6;
 	}
 
-	public String getLteRChannel() {
-		return lteRChannel;
+	public int getKpa7() {
+		return kpa7;
 	}
 
-	public void setLteRChannel(String lteRChannel) {
-		this.lteRChannel = lteRChannel;
+	public void setKpa7(int kpa7) {
+		this.kpa7 = kpa7;
 	}
 
-	public String getLteRMCC() {
-		return lteRMCC;
+	public int getKpa8() {
+		return kpa8;
 	}
 
-	public void setLteRMCC(String lteRMCC) {
-		this.lteRMCC = lteRMCC;
+	public void setKpa8(int kpa8) {
+		this.kpa8 = kpa8;
 	}
 
-	public String getLteRMNC() {
-		return lteRMNC;
+	public int getRate1() {
+		return rate1;
 	}
 
-	public void setLteRMNC(String lteRMNC) {
-		this.lteRMNC = lteRMNC;
+	public void setRate1(int rate1) {
+		this.rate1 = rate1;
 	}
 
-	public String getReceiveTime() {
-		return receiveTime;
+	public int getRate2() {
+		return rate2;
 	}
 
-	public void setReceiveTime(String receiveTime) {
-		this.receiveTime = receiveTime;
+	public void setRate2(int rate2) {
+		this.rate2 = rate2;
 	}
 
-	public String getMemCritVal() {
-		return memCritVal;
+	public int getRate3() {
+		return rate3;
 	}
 
-	public void setMemCritVal(String memCritVal) {
-		this.memCritVal = memCritVal;
+	public void setRate3(int rate3) {
+		this.rate3 = rate3;
 	}
 
-	public String getLteRComUpVal() {
-		return lteRComUpVal;
+	public int getRate4() {
+		return rate4;
 	}
 
-	public void setLteRComUpVal(String lteRComUpVal) {
-		this.lteRComUpVal = lteRComUpVal;
+	public void setRate4(int rate4) {
+		this.rate4 = rate4;
 	}
 
-	public String getLteRComDnVal() {
-		return lteRComDnVal;
+	public int getRate5() {
+		return rate5;
 	}
 
-	public void setLteRComDnVal(String lteRComDnVal) {
-		this.lteRComDnVal = lteRComDnVal;
+	public void setRate5(int rate5) {
+		this.rate5 = rate5;
 	}
 
-	public String getRSSI() {
-		return RSSI;
+	public int getRate6() {
+		return rate6;
 	}
 
-	public void setRSSI(String rSSI) {
-		RSSI = rSSI;
+	public void setRate6(int rate6) {
+		this.rate6 = rate6;
 	}
 
-	public String getRSRP() {
-		return RSRP;
+	public int getRate7() {
+		return rate7;
 	}
 
-	public void setRSRP(String rSRP) {
-		RSRP = rSRP;
+	public void setRate7(int rate7) {
+		this.rate7 = rate7;
 	}
 
-	public String getRSRQ() {
-		return RSRQ;
+	public int getRate8() {
+		return rate8;
 	}
 
-	public void setRSRQ(String rSRQ) {
-		RSRQ = rSRQ;
+	public void setRate8(int rate8) {
+		this.rate8 = rate8;
 	}
 
-	public String getDepartCode() {
-		return departCode;
+	public int getAvgCwd() {
+		return avgCwd;
 	}
 
-	public void setDepartCode(String departCode) {
-		this.departCode = departCode;
+	public void setAvgCwd(int avgCwd) {
+		this.avgCwd = avgCwd;
 	}
 
-	public String getDepartName() {
-		return departName;
+	public String getErrorRange() {
+		return errorRange;
 	}
 
-	public void setDepartName(String departName) {
-		this.departName = departName;
-	}
-
-	public String getCpyCode() {
-		return cpyCode;
-	}
-
-	public void setCpyCode(String cpyCode) {
-		this.cpyCode = cpyCode;
-	}
-
-	public String getCpyName() {
-		return cpyName;
-	}
-
-	public void setCpyName(String cpyName) {
-		this.cpyName = cpyName;
-	}
-
-	public String getHqName() {
-		return hqName;
-	}
-
-	public void setHqName(String hqName) {
-		this.hqName = hqName;
-	}
-
-	public String getHqCode() {
-		return hqCode;
-	}
-
-	public void setHqCode(String hqCode) {
-		this.hqCode = hqCode;
-	}
-
-	public String getTeamName() {
-		return teamName;
-	}
-
-	public void setTeamName(String teamName) {
-		this.teamName = teamName;
-	}
-
-	public String getTeamCode() {
-		return teamCode;
-	}
-
-	public void setTeamCode(String teamCode) {
-		this.teamCode = teamCode;
-	}
-
-	public String getObsCode() {
-		return obsCode;
-	}
-
-	public void setObsCode(String obsCode) {
-		this.obsCode = obsCode;
-	}
-
-	public String getIdx() {
-		return idx;
-	}
-
-	public void setIdx(String idx) {
-		this.idx = idx;
-	}
-
-	public int getStartNum() {
-		return startNum;
-	}
-
-	public void setStartNum(int startNum) {
-		this.startNum = startNum;
-	}
-
-	public int getEndNum() {
-		return endNum;
-	}
-
-	public void setEndNum(int endNum) {
-		this.endNum = endNum;
-	}
-
-	public String getFlagPage() {
-		return flagPage;
-	}
-
-	public void setFlagPage(String flagPage) {
-		this.flagPage = flagPage;
-	}
-
-	public String getKeyVal() {
-		return keyVal;
-	}
-
-	public void setKeyVal(String keyVal) {
-		this.keyVal = keyVal;
-	}
-
-	public String getCnt() {
-		return cnt;
-	}
-
-	public void setCnt(String cnt) {
-		this.cnt = cnt;
-	}
-
-	public String getKeyDate() {
-		return keyDate;
-	}
-
-	public void setKeyDate(String keyDate) {
-		this.keyDate = keyDate;
-	}
-
-	public String getNowStatus() {
-		return nowStatus;
-	}
-
-	public void setNowStatus(String nowStatus) {
-		this.nowStatus = nowStatus;
-	}
-
-	public String getFailureRegYdt() {
-		return failureRegYdt;
-	}
-
-	public void setFailureRegYdt(String failureRegYdt) {
-		this.failureRegYdt = failureRegYdt;
-	}
-
-	public String getFailbackYdt() {
-		return failbackYdt;
-	}
-
-	public void setFailbackYdt(String failbackYdt) {
-		this.failbackYdt = failbackYdt;
-	}
-
-	public String getKeyType() {
-		return keyType;
-	}
-
-	public void setKeyType(String keyType) {
-		this.keyType = keyType;
-	}
-
-	public String getLteROper() {
-		return lteROper;
-	}
-
-	public void setLteROper(String lteROper) {
-		this.lteROper = lteROper;
+	public void setErrorRange(String errorRange) {
+		this.errorRange = errorRange;
 	}
 
 	@Override
 	public String toString() {
-		return "TerminalVo [lteRImei=" + lteRImei + ", lteRImsi=" + lteRImsi + ", lteRserial=" + lteRserial
-				+ ", lteRUseRId=" + lteRUseRId + ", lteRMacAdd=" + lteRMacAdd + ", lteRIp=" + lteRIp + ", lteRSimNo="
-				+ lteRSimNo + ", conSystem01Ip=" + conSystem01Ip + ", conSystem01=" + conSystem01 + ", conSystem02Ip="
-				+ conSystem02Ip + ", conSystem02=" + conSystem02 + ", conSystem03Ip=" + conSystem03Ip + ", conSystem03="
-				+ conSystem03 + ", conGw=" + conGw + ", lteRUsed=" + lteRUsed + ", insLocTxt=" + insLocTxt
-				+ ", lteRCode=" + lteRCode + ", lteRDeviceType=" + lteRDeviceType + ", swVerCode=" + swVerCode
-				+ ", teamCnt=" + teamCnt + ", deviceCnt=" + deviceCnt + ", lterCellId=" + lterCellId + ", rmtResetYdt="
-				+ rmtResetYdt + ", rmtResetRlt=" + rmtResetRlt + ", rmtUptYdt=" + rmtUptYdt + ", rmtUptRlt=" + rmtUptRlt
-				+ ", getDeviceInfoYdt=" + getDeviceInfoYdt + ", swVerUpdate=" + swVerUpdate + ", obsCount=" + obsCount
-				+ ", useYn=" + useYn + ", regYdt=" + regYdt + ", intervalTime=" + intervalTime + ", lteRBand="
-				+ lteRBand + ", lteRChannel=" + lteRChannel + ", lteRMCC=" + lteRMCC + ", lteRMNC=" + lteRMNC
-				+ ", receiveTime=" + receiveTime + ", memCritVal=" + memCritVal + ", lteRComUpVal=" + lteRComUpVal
-				+ ", lteRComDnVal=" + lteRComDnVal + ", RSSI=" + RSSI + ", RSRP=" + RSRP + ", RSRQ=" + RSRQ
-				+ ", departCode=" + departCode + ", departName=" + departName + ", cpyCode=" + cpyCode + ", cpyName="
-				+ cpyName + ", hqName=" + hqName + ", hqCode=" + hqCode + ", teamName=" + teamName + ", teamCode="
-				+ teamCode + ", obsCode=" + obsCode + ", idx=" + idx + ", startNum=" + startNum + ", endNum=" + endNum
-				+ ", flagPage=" + flagPage + ", keyVal=" + keyVal + ", cnt=" + cnt + ", keyDate=" + keyDate
-				+ ", nowStatus=" + nowStatus + ", failureRegYdt=" + failureRegYdt + ", failbackYdt=" + failbackYdt
-				+ ", keyType=" + keyType + ", lteROper=" + lteROper + "]";
+		return "TerminalVo [trainNo=" + trainNo + ", formationNo=" + formationNo + ", deviceIp=" + deviceIp
+				+ ", deviceMac=" + deviceMac + ", insLocTxt=" + insLocTxt + ", deviceUsed=" + deviceUsed
+				+ ", gatewayIp=" + gatewayIp + ", deviceUser=" + deviceUser + ", etc=" + etc + ", regDt=" + regDt
+				+ ", rcvDt=" + rcvDt + ", tno2=" + tno2 + ", fno2=" + fno2 + ", activeCap=" + activeCap + ", trainCnt="
+				+ trainCnt + ", trainAddCnt=" + trainAddCnt + ", kpa1=" + kpa1 + ", kpa2=" + kpa2 + ", kpa3=" + kpa3
+				+ ", kpa4=" + kpa4 + ", kpa5=" + kpa5 + ", kpa6=" + kpa6 + ", kpa7=" + kpa7 + ", kpa8=" + kpa8
+				+ ", rate1=" + rate1 + ", rate2=" + rate2 + ", rate3=" + rate3 + ", rate4=" + rate4 + ", rate5=" + rate5
+				+ ", rate6=" + rate6 + ", rate7=" + rate7 + ", rate8=" + rate8 + ", avgCwd=" + avgCwd + ", errorRange="
+				+ errorRange + "]";
 	}
-	
 
+	
 	
 }

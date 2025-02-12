@@ -1,6 +1,7 @@
 package kr.co.hivesys.statistic.web;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.hivesys.comm.SessionListener;
 import kr.co.hivesys.statistic.service.StatisticService;
 import kr.co.hivesys.statistic.vo.StkAreaVO;
+import kr.co.hivesys.statistic.vo.ChartVo;
 import kr.co.hivesys.statistic.vo.LogDataVO;
 import kr.co.hivesys.statistic.vo.MainStVo;
 import kr.co.hivesys.statistic.vo.MainYTVo;
@@ -65,6 +67,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+
+import kr.co.hivesys.terminal.service.TerminalService;
 import kr.co.hivesys.terminal.vo.TerminalVo;
 import kr.co.hivesys.user.vo.UserVO;
 /**
@@ -88,6 +92,10 @@ public class StatisticController {
 	
 	@Resource(name="statisticService")
 	private StatisticService statisticService;
+	
+	@Resource(name="terminalService")
+	private TerminalService terminalService;
+	
 	public String url="";
 	
 	List<TerminalVo> svoList =null;
@@ -110,6 +118,75 @@ public class StatisticController {
 		return url;
 	}
 	
+
+	//메인화면 - 좌측 부
+	@RequestMapping(value="/stat/mainChart.ajax")
+	public @ResponseBody ModelAndView mainLeft( 
+			HttpServletRequest request
+			,@ModelAttribute("TerminalVo") TerminalVo inputVo
+			,@RequestParam(required=false, value="startNum")String startNum
+			,@RequestParam(required=false, value="endNum")String endNum
+			,@RequestParam(required=false, value="teamName")String teamCode
+			) throws Exception{
+		url = request.getRequestURI().substring(request.getContextPath().length()).split(".do")[0];
+		ModelAndView mav = new ModelAndView("jsonView");
+		
+		List<TerminalVo> tList = null;
+		List<ChartVo> sList = null;
+		List<ChartVo> xyList = null;
+		try {
+			UserVO reqLoginVo = (UserVO) request.getSession().getAttribute("login");
+			tList = terminalService.selectTerminal(inputVo);
+			sList = statisticService.mainGaugeChart(inputVo);
+			xyList = statisticService.mainBarChart(inputVo);
+			
+			if(sList.get(0)!=null) {
+				mav.addObject("gaugeCnt", sList.get(0).getGaugePointCnt());
+			}else {
+				mav.addObject("gaugeCnt", 0);
+			}
+			mav.addObject("train", tList.get(0));
+			mav.addObject("xyList", xyList);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.debug("에러메시지 : "+e.toString());
+		}
+		return mav;
+	}
+	
+	//메인화면 - 좌측 바차트
+	@RequestMapping(value="/stat/mainBarChart.ajax")
+	public @ResponseBody ModelAndView mainBarChart(
+			HttpServletRequest request
+			//@RequestParam(required=false, value="idArr[]")List<String> listArr
+			,@ModelAttribute("TerminalVo") TerminalVo inputVo
+			,@RequestParam(required=false, value="startNum")String startNum
+			,@RequestParam(required=false, value="endNum")String endNum
+			,@RequestParam(required=false, value="teamName")String teamCode
+			) throws Exception{
+		url = request.getRequestURI().substring(request.getContextPath().length()).split(".do")[0];
+		ModelAndView mav = new ModelAndView("jsonView");
+		List<ChartVo> sList = null;
+		try {
+			UserVO reqLoginVo = (UserVO) request.getSession().getAttribute("login");
+			
+			sList = statisticService.mainBarChart(inputVo);
+			mav.addObject("data", sList);
+			
+			//현재시각 조회
+			Calendar cal = Calendar.getInstance();
+			String pattern = "yyyy-MM-dd HH:mm:ss"; 
+			SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+			mav.addObject("nowDt", formatter.format(cal.getTime()));
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.debug("에러메시지 : "+e.toString());
+		}
+		return mav;
+	}
+	
 	@RequestMapping(value="/stat/list.ajax")
 	public @ResponseBody ModelAndView statList( 
 			HttpServletRequest request, HttpServletResponse response
@@ -128,71 +205,6 @@ public class StatisticController {
 		}
 		return mav;
 	}
-	
-	//메인차트 - 관리자
-		@RequestMapping(value="/stat/mainAdminChart.ajax")
-		public @ResponseBody ModelAndView mainAdminChart( 
-				HttpServletRequest request, HttpServletResponse response
-				,@ModelAttribute("TerminalVo") TerminalVo inputVo
-				) throws Exception{
-			url = request.getRequestURI().substring(request.getContextPath().length()).split(".do")[0];
-			
-			ModelAndView mav = new ModelAndView("jsonView");
-			List<TerminalVo>  data1= new ArrayList<>();
-			List<TerminalVo>  data2= new ArrayList<>();
-			List<TerminalVo>  data3= new ArrayList<>();
-			List<TerminalVo>  data4= new ArrayList<>();
-			try {
-				data1= statisticService.mainChart1(inputVo);
-				data2= statisticService.mainChart2(inputVo);
-				data3= statisticService.barChart(inputVo);
-				//data4= statisticService.selectDayLilst(inputVo);
-				mav.addObject("data1", data1);
-				mav.addObject("data2", data2);
-				mav.addObject("data3", data3);
-				//mav.addObject("data4", data4);
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-				logger.debug(""+e);
-				mav.addObject("msg","에러가 발생했습니다.");
-			}
-			return mav;
-		}
-		
-		//메인차트 - 일반
-		@RequestMapping(value="/stat/mainUserChart.ajax")
-		public @ResponseBody ModelAndView mainUserChart( 
-				HttpServletRequest request, HttpServletResponse response
-				,@ModelAttribute("TerminalVo") TerminalVo inputVo
-				) throws Exception{
-			url = request.getRequestURI().substring(request.getContextPath().length()).split(".do")[0];
-			
-			ModelAndView mav = new ModelAndView("jsonView");
-			List<TerminalVo>  data1= new ArrayList<>();
-			List<TerminalVo>  data2= new ArrayList<>();
-			List<TerminalVo>  data3= new ArrayList<>();
-			
-			UserVO reqLoginVo = (UserVO) request.getSession().getAttribute("login");
-			if(!(reqLoginVo.getUserAuth().equals("0"))) {
-				inputVo.setDepartCode(reqLoginVo.getDepartCode());
-			}
-			
-			try {
-				data1= statisticService.userRsrp(inputVo);
-				data2= statisticService.userRsrq(inputVo);
-				data3= statisticService.barChart(inputVo);
-				mav.addObject("data1", data1);
-				mav.addObject("data2", data2);
-				mav.addObject("data3", data3);
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-				logger.debug(""+e);
-				mav.addObject("msg","에러가 발생했습니다.");
-			}
-			return mav;
-		}
 	
 
 	//그래프 캡쳐(div) 및 통계 데이터 다운로드
@@ -488,7 +500,7 @@ public class StatisticController {
     		x=1;y++;
     		
             //TD(통계 vo 리스트 데이터 삽입)
-            for (int i = 0; i < svoList.size(); i++) {
+            /*for (int i = 0; i < svoList.size(); i++) {
             	sheet1.addMergedRegion(new CellRangeAddress(y,y,x,x+2));
                 objRow = sheet1.createRow(y);
                 for (int j = 0; j < 3; j++) {
@@ -534,16 +546,9 @@ public class StatisticController {
                 	objCell.setCellValue(svoList.get(i).getFailureRegYdt());
                 	x++;
                 }
-                /*sheet1.addMergedRegion(new CellRangeAddress(y,y,x,x+1));
-                for (int j = 0; j < 2; j++) {
-                	objCell = objRow.createCell(x);
-                	objCell.setCellStyle(contentStyle);
-                	objCell.setCellValue(svoList.get(i).getFailbackYdt());
-                	x++;
-                }*/
             	//개행
             	x=1;y++;
-			}
+			}*/
             
 	    }catch(Exception e) {
 	    	logger.debug(e.toString());

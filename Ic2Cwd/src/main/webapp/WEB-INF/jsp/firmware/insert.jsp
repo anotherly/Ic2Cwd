@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko" lang="ko">
 <head>
-<title>단말장치(LTE-R) 관리 WEB 시스템</title>
+<title>인천2호선 혼잡도 관제시스템</title>
 <meta charset="UTF-8">
 <jsp:include page="../cmn/top.jsp" flush="false" />
  	 

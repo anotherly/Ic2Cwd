@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import kr.co.hivesys.auth.vo.AuthVo;
 import kr.co.hivesys.comm.file.FileUploadSave;
 import kr.co.hivesys.comm.file.vo.FileVo;
 import kr.co.hivesys.depart.service.DepartService;
@@ -29,9 +28,6 @@ import kr.co.hivesys.depart.vo.DepartVo;
 import kr.co.hivesys.terminal.vo.TerminalVo;
 import kr.co.hivesys.user.vo.UserVO;
 import kr.co.hivesys.terminal.service.TerminalService;
-
-
-
 
 @Controller
 public class TerminalController {
@@ -56,8 +52,8 @@ public class TerminalController {
 		return mav;
 	}
 	
-	//목록 조회
-	@RequestMapping(value="/terminal/list.ajax")
+	//메인화면 - 목록 조회
+	@RequestMapping(value="/terminal/mainTerminalList.ajax")
 	public @ResponseBody ModelAndView reqList( 
 			HttpServletRequest request
 			//@RequestParam(required=false, value="idArr[]")List<String> listArr
@@ -68,33 +64,11 @@ public class TerminalController {
 			) throws Exception{
 		url = request.getRequestURI().substring(request.getContextPath().length()).split(".do")[0];
 		ModelAndView mav = new ModelAndView("jsonView");
-		List<TerminalVo> sList= null;
+		List<TerminalVo> sList = null;
 		try {
-			//빌어먹을 mysql이 offset에서 cast가 안되므로(문자 숫자 변환한걸 오프셋으로 못씀)
-			//vo는 int로 페이지 만들고 페이징 변수를 만들거나 
-			//아니면 별도의 로직처-리 필요
-			if(startNum !=null ) {
-				inputVo.setStartNum(Integer.parseInt(startNum));
-				inputVo.setFlagPage("T");
-			}
-			if(endNum !=null ) {
-				inputVo.setEndNum(Integer.parseInt(endNum));
-			}
-			
 			UserVO reqLoginVo = (UserVO) request.getSession().getAttribute("login");
 			
-			if(reqLoginVo!=null) {
-				if(!(reqLoginVo.getUserAuth().equals("0"))) {
-					inputVo.setDepartCode(reqLoginVo.getDepartCode());
-				}
-			}
-			
-			
-			if(teamCode !=null ) {
-				inputVo.setTeamName(teamCode);
-			}
-			
-			sList = terminalService.selectTerminalList(inputVo);
+			sList = terminalService.mainTerminalList(inputVo);
 			mav.addObject("data", sList);
 
 			//현재시각 조회
@@ -109,20 +83,26 @@ public class TerminalController {
 		}
 		return mav;
 	}
-	//셀렉트박스 변경시
-	@RequestMapping(value="/terminal/routerTeamCnt.ajax")
-	public @ResponseBody ModelAndView reqInsert (
-			@ModelAttribute("TerminalVo") TerminalVo inputVo
-			,HttpServletRequest request) 
-					throws Exception{
+	
+	//목록 상세
+	@RequestMapping(value= {"/terminal/list.do","/terminal/detail.do"})
+	public @ResponseBody ModelAndView reqDetail( 
+	HttpServletRequest request, HttpServletResponse response
+	,@ModelAttribute("TerminalVo") TerminalVo inputVo
+	) throws Exception{
 		url = request.getRequestURI().substring(request.getContextPath().length()).split(".do")[0];
+		
 		ModelAndView mav = new ModelAndView("jsonView");
-		List<TerminalVo> terminalList = new ArrayList<>();
+		TerminalVo data= null;
 		try {
-			terminalList = terminalService.routerTeamCnt(inputVo);
-			mav.addObject("data", terminalList);
+			data = terminalService.selectTerminal(inputVo).get(0);;
+			mav.addObject("data", data);
+			mav.setViewName(url);
+			
 		} catch (Exception e) {
-			logger.debug("에러메시지 : "+e.toString());
+			e.printStackTrace();
+			logger.debug(""+e);
+			mav.addObject("msg","에러가 발생했습니다.");
 		}
 		return mav;
 	}
@@ -144,29 +124,6 @@ public class TerminalController {
 		return mav;
 	}
 	
-	//(상세)
-	@RequestMapping(value="/terminal/detail.do")
-	public @ResponseBody ModelAndView reqDetail( 
-	HttpServletRequest request, HttpServletResponse response
-	,@ModelAttribute("TerminalVo") TerminalVo inputVo
-	) throws Exception{
-		url = request.getRequestURI().substring(request.getContextPath().length()).split(".do")[0];
-		
-		ModelAndView mav = new ModelAndView("jsonView");
-		TerminalVo data= null;
-		try {
-			data = terminalService.selectTerminal(inputVo);
-			mav.addObject("data", data);
-			mav.setViewName(url);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.debug(""+e);
-			mav.addObject("msg","에러가 발생했습니다.");
-		}
-		return mav;
-	}
-	
 	//사용자 수정 페이지 진입
 	@RequestMapping(value="/terminal/update.do")
 	public @ResponseBody ModelAndView userUpdate( 
@@ -184,7 +141,7 @@ public class TerminalController {
 			List<DepartVo> departList = new ArrayList<>();
 			departList = departService.selectDepartList(new DepartVo());
 			mav.addObject("departList", departList);
-			data = terminalService.selectTerminal(inputVo);
+			data = terminalService.selectTerminal(inputVo).get(0);
 			mav.addObject("data", data);
 			mav.setViewName(url);
 		} catch (Exception e) {
@@ -337,7 +294,7 @@ public class TerminalController {
 		ModelAndView mav = new ModelAndView("jsonView");
 		TerminalVo data= null;
 		try {
-			data = terminalService.selectTerminal(inputVo);
+			data = terminalService.selectTerminal(inputVo).get(0);
 			mav.addObject("data", data);
 			mav.setViewName(url);
 			
@@ -368,7 +325,6 @@ public class TerminalController {
 			mav.addObject("data1", data1);
 			mav.addObject("data2", data2);
 			mav.addObject("data3", data3);
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.debug(""+e);
@@ -391,11 +347,11 @@ public class TerminalController {
 		List<TerminalVo>  data3= new ArrayList<>();
 		
 		UserVO reqLoginVo = (UserVO) request.getSession().getAttribute("login");
-		if(reqLoginVo!=null) {
-			if(!(reqLoginVo.getUserAuth().equals("0"))) {
-				inputVo.setDepartCode(reqLoginVo.getDepartCode());
-			}
-		}
+//		if(reqLoginVo!=null) {
+//			if(!(reqLoginVo.getUserAuth().equals("0"))) {
+//				inputVo.setDepartCode(reqLoginVo.getDepartCode());
+//			}
+//		}
 		try {
 			data1= terminalService.userRsrp(inputVo);
 			data2= terminalService.userRsrq(inputVo);

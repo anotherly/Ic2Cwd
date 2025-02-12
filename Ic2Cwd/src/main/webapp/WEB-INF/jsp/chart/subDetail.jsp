@@ -3,83 +3,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
-<style>
-.contents_box{
-	background:none;
-	box-shadow: none;
-	padding:0;
-}
-
-.contents_box2 {
-	background:none;
-	box-shadow: none;
-	padding:0;
-	
-	max-height: 0px !important;
-    min-height: 38vh;
-}
-
-.ctn_tbl_row .ctn_tbl_th,.ctn_tbl_row .ctn_tbl_td{
-	min-height:unset;
-	height:50px;
-}
-
-@media screen and (max-width: 1920px){
-	.ctn_tbl_row .ctn_tbl_th,.ctn_tbl_row .ctn_tbl_td{
-		height:40px;
-	}
-}
-
-.ctn_tbl_row .ctn_tbl_th{
-	background:#02221A;
-	font-size:calc(5px + 0.4vw + 0.4vh);
-	flex: 0 0 25%;
-	/* height:calc(10px + 0.4vw + 0.4vh); */
-}
-
-.ctn_tbl_td{
-	background:none;
-	font-size:calc(5px + 0.4vw + 0.4vh);
-}
-
-.contents_box *{
-	color:#fff;
-}
-
-#showOper{
-	background-color : #006f6f;
-	border-radius : 5px;
-	border : none;
-	color : yellow;
-	margin-left:15px;
-}
-
-/* 24-10-18 : 차트 크기 조절 */
-@media(max-width : 3840px) {
-	#opration_box > svg{
-		margin-top : 70px;
-	}
-	
-	#chartDetail {
-		margin-top : 40px;
-	}
-
-}
-
-@media(max-width : 1920px) {
-	#opration_box > svg{
-		margin-top : 0px;
-	}
-	
-	#chartDetail {
-		margin-top : 0px;
-	}
-}
-
-</style>
 <script>
 	var chartObj;
-	var lteRIp='';
+	var formationNo='';
 	
 	// 누적 운영 시간 차트 배열 (전역)
 	var detailArr = [];
@@ -99,7 +25,6 @@
 		var operArr = [];
 		var dateArr = [];
 		
-		
 		//console.log("서브 상세");
 		//차트 화면일경우 상세정보 테마 변경
 		/* $('.contents_box').css('background','none');
@@ -110,8 +35,8 @@
 		 */
 		 $('.contents_box *').css('color','#fff'); 
 		 
-		lteRIp='${data.lteRIp}';
-		var rtVo=ajaxMethod("/realtimeChartFirst.ajax",{"lteRIp":lteRIp}).data;
+		 formationNo='${data.formationNo}';
+		var rtVo=ajaxMethod("/realtimeChartFirst.ajax",{"formationNo":formationNo}).data;
 		//chart start
 		var memArr;
 		var downArr;
@@ -165,7 +90,7 @@
 			
 		}
     	
-		var rtVo=ajaxMethod("/realtimeChartFirst.ajax",{"lteRIp":lteRIp}).data;
+		var rtVo=ajaxMethod("/realtimeChartFirst.ajax",{"formationNo":formationNo}).data;
 		var MEMORY = rtVo.memCritVal; 
 		var UP = rtVo.lteRComUpVal; 
 		var DOWN = rtVo.lteRComDnVal; 
@@ -273,7 +198,7 @@
 		
 	    subChartTimer=setInterval(function(){
 	    	//console.log("차트 갱신");
-			var rtVo=ajaxMethod("/realtimeChart.ajax",{"lteRIp":lteRIp}).data;
+			var rtVo=ajaxMethod("/realtimeChart.ajax",{"formationNo":formationNo}).data;
 			var MEMORY = rtVo.memCritVal; 
 			var UP = rtVo.lteRComUpVal; 
 			var DOWN = rtVo.lteRComDnVal; 
@@ -305,12 +230,6 @@
 			chkTerId='';
 			chartTimerReset();
 			$("#all_chart").empty();
-			var userAuth='${login.userAuth}';
-			if(userAuth==0){
-				$("#all_chart").load("/chart/mainAdminChart.do");
-			}else{
-				$("#all_chart").load("/chart/mainUserChart.do");
-			}
 		});
 		
 		// 24-10-11 : 배열에 데이터 넣는 작업
@@ -438,7 +357,7 @@
 		
 		// 좌측 영역 사용용도  + d클래스 작업
 		function dclassAdd() {
-			var ipVal = '${data.lteRIp}'; // 선택된 단말기 ip 값 받아오기
+			var ipVal = '${data.formationNo}'; // 선택된 단말기 ip 값 받아오기
 			var use = '${data.lteRUsed}'; // 사용용도 값 받아오기
 			dClass = ipVal.substr(9); // d클래스 슬라이스
 			
@@ -456,7 +375,7 @@
 			//console.log(' 운영시간 차트 버튼 클릭');
 			
 			// 차트에 넣을 데이터 불러오기
-			var detailChart = ajaxMethod("/detailChart.ajax",{"lteRIp":lteRIp}).data;
+			var detailChart = ajaxMethod("/detailChart.ajax",{"formationNo":formationNo}).data;
 
 			//var detailArr = [];
 
@@ -675,7 +594,7 @@
 					<div class="ctn_tbl_row">
 						<div class="ctn_tbl_th">단말기 고유 IP</div>
 						<div class="ctn_tbl_td">
-							<span id="lteRIp">${data.lteRIp}</span>
+							<span id="formationNo">${data.formationNo}</span>
 						</div>
 						<div class="ctn_tbl_th">MAC Add</div>
 						<div class="ctn_tbl_td">

@@ -3,8 +3,17 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
-<div style="display: flex; align-items: center; height: 100%;">
-	<h1 class='logo'><a href="/chart/main.do">단말장치(LTE-R) 관리 WEB 시스템</a></h1>
+<div class="header-div">
+
+	<h1 class='logo'>
+		<a style="width:200px;" href="/chart/main.do"></a>
+	</h1>
+	
+	<div class="sys-name">
+		<span style="font-size: 24px;">혼잡도 관리 시스템</span>
+		<span style="font-size: 10px;">Crowdedness Management System</span>
+	</div>
+	
 </div>
 <div class="header_util">
 	<div class="username">

@@ -3,7 +3,7 @@ var endNum=1;
 var tbM;//tr 내부에 들어가는 td들
 var tbCnt=0;//전체 들어가는 데이터 수 (42개 이하인데 변경예정)
 var trCnt=1;//행 카운트
-
+var chkTerId;//최초 선택여부
 /////////////////////////////
 
 var mok=0;//전체 데이터를 td 수로(7) 나눴을때 몫 (이건 최대 페이지 개수를 구할때 쓰임)
@@ -32,26 +32,25 @@ function trainOne(alData){
 	var oldName="";//팀이 변경되기 전 이전 팀
 	var enterLine=1;//현재 td number
 	var blankCnt=0;//페이지 안깨지기 위한 공백 카운트
+	var backName="";//여유보통주의혼잡상태
 	
 	for (var i = 0; i < alData.length; i++) {
-		var backName="";
 		if(i==0){
-			oldName=alData[i].teamName;
+			//oldName=alData[i].teamName;
+			chkTerId=alData[i].formationNo;
+		}else{
+			chkTerId=0;
 		}
 		/*공백처리안함*/
 		//배경 선택
-		backName=selectBackgra(alData[i].teamName,alData[i].obsCount);
-		
-		
-		/* 2024-10-08 : 단말기 구분을 위해 단말기 사용용도 + ip D 클래스로 처리 */
-		// ip에서 D클래스 슬라이스
-		var dClass = alData[i].lteRIp.substr(9);
-		
-		// 이후 사용용도 + D 클래스 붙이기
-		var spanVal = alData[i].lteRUsed + "_" + dClass;
+		backName=alData[i].avgCwd;
+		if(backName==null){
+			backName=0;
+		}
+		var spanVal = alData[i].formationNo;
 		
 		//td 내부 만듦
-		tbM+= tdCreate(alData[i].lteRIp,backName,spanVal); 
+		tbM+= tdCreate(alData[i].formationNo,backName,spanVal); 
 		tbCnt++;
 		//7열 초과시 줄바꿈
 		if(parseInt((enterLine)%7)==0){
@@ -87,22 +86,8 @@ function trCreate(){
 //중간에 들어가는 td값을 채움
 //tdid,tdCont,spanVal
 function tdCreate(tdid,backName,spanVal){
+	console.log("tdCreate");
 	var funcTbCont="";
-	
-	/* 2024-10-08 : _IP 붙일 시 텍스트 위치 깨짐 문제 해결 방안 -> 첫번 째 언더바에서 개행하기 */
-	
-	// findUnder : sapnVal에서 첫번째 언더바가 있는 자리의 인덱스를 찾음
-	var findUnder = spanVal.indexOf('_');
-	
-	// useFront : spanVal의 처음부터 첫 번째 언더바 바로 앞까지 문자열 자름
-	var useFront = spanVal.substr(0,findUnder);
-	
-	// useBack : spanVal의 첫 번째 언더바를 포함하여 맨 뒤까지 문자열 자름
-	var useBack = spanVal.substr(findUnder);
-	
-	// 확인용 로그
-	/*//console.log('언더바 앞 :' + useFront);
-	//console.log('언더바 뒤:' + useBack);*/
 	
 	//갱신전에 선택된 단말기였다면 선택배경 유지되도록
 	if(chkTerId==tdid){
@@ -110,8 +95,8 @@ function tdCreate(tdid,backName,spanVal){
 			"<td id='"+tdid+"' class='selected'>"
 			+"<div class='td-div'>"
 				+"<div class='img-container'>"
-					+"<div style=" 
-						+"'background:url(../images/arex/"+backName+".png) no-repeat;" 
+					+"<div id="+backName+" style=" 
+						+"'background:url(../images/ic2/train_cwd_"+backName+".png) no-repeat;" 
 						+"background-size: contain;'>" 
 					+"</div>"
 				+"</div>"
@@ -123,13 +108,13 @@ function tdCreate(tdid,backName,spanVal){
 			"<td id='"+tdid+"'>"
 			+"<div class='td-div'>"
 				+"<div class='img-container'>"
-					+"<div style=" 
-						+"'background:url(../images/arex/"+backName+".png) no-repeat;" 
+					+"<div id="+backName+" style=" 
+						+"'background:url(../images/ic2/train_cwd_"+backName+".png) no-repeat;" 
 						+"background-size: contain;'>" 
 					+"</div>"
 				+"</div>"
 				// 첫번 째 언더바 바로 다음에 br 태그로 개행 처리
-				+"<span>"+useFront+"<br>"+useBack+"</span>"
+				+"<span>"+spanVal+"</span>"
 			+"</div>"
 		+"</td>";
 	}
@@ -137,46 +122,34 @@ function tdCreate(tdid,backName,spanVal){
 }
 
 //배경 선택
-function selectBackgra(teamName,obsCount){
+/*function selectBackgra(avgCwd){
 	var backgra='';
-	//배경 선택가능
-	if(teamName.indexOf('전기') != -1){
-		backgra="electric";
-	}else if(teamName.indexOf('시설') != -1){
-		backgra="facility";
-	}else if(teamName.indexOf('신호') != -1){
-		backgra="signal";
-	}else{
-		backgra="lte_non";
-	}
 	
 	//상태표기
-	if(obsCount=='reset'){
-		backgra=backgra+"_r";
-	}else if(obsCount=='update'){
-		backgra=backgra+"_u";
-	}else if (obsCount=='f') {//데이터 없음
-		backgra=backgra+"_f";
-	}else if (obsCount=='obs') {//장애
-		backgra=backgra+"_obs";
-	}else if (obsCount=='weak'){
-		backgra=backgra+"_weak"
+	if(avgCwd=='1'){
+		backgra=backgra+"1";
+	}else if(avgCwd=='2'){
+		backgra=backgra+"_2";
+	}else if (avgCwd=='3') {
+		backgra=backgra+"_3";
+	}else if (avgCwd=='4') {
+		backgra=backgra+"_4";
 	}else{
-		backgra=backgra;
+		backgra=backgra+"_0";
 	}
 	return backgra;
-}
+}*/
 
 //페이징 처리를 위한 행 감춤
 function hideTr(startPage,endPage){
-		$("#lteTbd tr").each(function(i,list){
-			
-			if(i >= startPage && i < endPage){
-				$(list).show();
-			}else{
-				$(list).hide();
-			}
-		});
+	$("#lteTbd tr").each(function(i,list){
+		
+		if(i >= startPage && i < endPage){
+			$(list).show();
+		}else{
+			$(list).hide();
+		}
+	});
 }
 
 

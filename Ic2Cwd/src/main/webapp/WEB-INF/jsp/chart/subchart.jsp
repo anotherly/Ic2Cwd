@@ -8,7 +8,7 @@
 
 <script>
 	var chartObj;
-	var lineVal='${lteRIp}';
+	var lineVal='${formationNo}';
 	$(document).ready(function(){
 		
 	});

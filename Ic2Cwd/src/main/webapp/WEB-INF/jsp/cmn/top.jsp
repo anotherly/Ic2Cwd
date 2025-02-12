@@ -26,6 +26,7 @@
 	<link rel="stylesheet" href="<%=request.getContextPath()%>/css/svc.css">
 	<link rel="stylesheet" href="<%=request.getContextPath()%>/css/dtb.css">
 	<link rel="stylesheet" href="<%=request.getContextPath()%>/css/user.css">
+	<link rel="stylesheet" href="<%=request.getContextPath()%>/css/resize.css">
 	<!-- DataTable -->
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/DataTables/datatables.min.css" />
 	<script type="text/javascript" src="<%=request.getContextPath()%>/DataTables/datatables.min.js"></script>
@@ -65,8 +66,7 @@
 </head>
 <script>
 	$(document).ready(function() {
-		//console.log("탑 화면");
-		
+		console.log("탑 화면");
 		setInterval(function(){
 			var nowhh = new Date().getHours();
 			//새벽 3시~4시 사이에 화면 갱신
@@ -98,7 +98,7 @@
 		// 메뉴 항목 클릭 시
 		$(".goUrlMenu").on("click", function() {
 			allTimerReset();
-			goMenuSite($(this).attr('id'));
+			//goMenuSite($(this).attr('id'));
 		});
 		
 		window.onload = function() {
@@ -112,7 +112,7 @@
 				}
 				document.body.classList.toggle('open');
 			});
-		} 
+		}
 		
 		// 윈도우 resize이벤트를 통한 전체화면 여부 체크
 		$(window).on('resize', function() {
@@ -120,10 +120,9 @@
 				//console.log("full screen");
 			} else {
 				//console.log("nomal screen");
-			}      
+			}
 		});
 	});
 </script>
-
-</body>
+<body></body>
 </html>

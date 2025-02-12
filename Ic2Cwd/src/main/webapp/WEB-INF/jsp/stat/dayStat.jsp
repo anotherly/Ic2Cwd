@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>단말장치(LTE-R) 관리 WEB 시스템</title>
+    <title>인천2호선 혼잡도 관제시스템</title>
 	<meta charset="UTF-8">
     <jsp:include page="../cmn/top.jsp" flush="false" />
 <style>
@@ -57,14 +57,6 @@ table td {
 	$(document).ready(function(){
 		var now = new Date();
 		var yesterday = new Date(now.setDate(now.getDate() - 1));	
-		//console.log("chart 진입");
-		//$("#container_chart").hide();
-		var userAuth='${login.userAuth}';
-		if(userAuth==0){
-			$("#chtImg").load("/stat/mainAdminChart.do");
-		}else{
-			$("#chtImg").load("/stat/mainUserChart.do");
-		}
 		//데이트타임피커
 		 $('#datetimepicker1').datetimepicker({
 			 format:"YYYY-MM-DD" ,

@@ -203,15 +203,7 @@
 		//접어두기 시 전체차트 소환
 		$("#flip").on('click',function(){
 			timerReset();
-		    /* $("#all_chart").show();
-			$("#container_chart").hide(); */
 			$("#all_chart").empty();
-			var userAuth='${login.userAuth}';
-			if(userAuth==0){
-				$("#all_chart").load("/chart/mainAdminChart.do");
-			}else{
-				$("#all_chart").load("/chart/mainUserChart.do");
-			}
 		});
 	});
 </script>

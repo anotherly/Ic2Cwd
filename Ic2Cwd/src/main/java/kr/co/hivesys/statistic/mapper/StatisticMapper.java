@@ -11,6 +11,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 import kr.co.hivesys.user.vo.UserVO;
 import kr.co.hivesys.statistic.vo.StkAreaVO;
 import kr.co.hivesys.terminal.vo.TerminalVo;
+import kr.co.hivesys.statistic.vo.ChartVo;
 import kr.co.hivesys.statistic.vo.ChkDateVO;
 import kr.co.hivesys.statistic.vo.LogDataVO;
 import kr.co.hivesys.statistic.vo.MainStVo;
@@ -33,7 +34,11 @@ import kr.co.hivesys.statistic.vo.ScatterVO;
 @Mapper("statisticMapper")
 public interface StatisticMapper{
 
-	
+	// 메인화면 게이지 차트
+	List<ChartVo> mainGaugeChart(TerminalVo cmsVo);
+	// 메인화면 바 차트
+	List<ChartVo> mainBarChart(TerminalVo cmsVo);
+		
 	List<TerminalVo>  selectDayLilst(TerminalVo inputVo);
 	
 	List<TerminalVo>  mainChart1(TerminalVo inputVo);

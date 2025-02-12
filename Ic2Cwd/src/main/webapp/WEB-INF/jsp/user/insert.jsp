@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>단말장치(LTE-R) 관리 WEB 시스템</title>
+<title>인천2호선 혼잡도 관제시스템</title>
 <meta charset="UTF-8">
 <jsp:include page="../cmn/top.jsp" flush="false" />
  	 
@@ -72,13 +72,6 @@
 					
 					if(validChk){
 						var dept = $("#cpyCode option:selected").val()+"-"+$("#hqCode option:selected").val()+"-"+$("#teamCode option:selected").val();
-						//240112 수정 - 메인 관리자 권한일땐 공란으로
-						if($("select[name='userAuth']").val()==0){
-							$("#departCode").val("");
-						}else{
-							$("#departCode").val(dept);
-						}
-						
 						var insertChecker = confirm('이대로 등록하시겠습니까?');
 						
 						if(insertChecker) {
