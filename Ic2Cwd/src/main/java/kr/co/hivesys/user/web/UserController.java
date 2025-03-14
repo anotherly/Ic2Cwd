@@ -61,7 +61,7 @@ public class UserController {
 	}
 	
 	//목록 조회
-	@RequestMapping(value="/user/list.ajax")
+	@RequestMapping(value="/user/userList.ajax")
 	public @ResponseBody ModelAndView reqList( 
 			HttpServletRequest request
 			//@RequestParam(required=false, value="idArr[]")List<String> listArr
@@ -82,7 +82,7 @@ public class UserController {
 		return mav;
 	}
 	//등록 화면
-	@RequestMapping(value="/user/insert.do")
+	@RequestMapping(value="/user/userInsert.do")
 	public @ResponseBody ModelAndView reqInsert (HttpServletRequest request) throws Exception{
 		url = request.getRequestURI().substring(request.getContextPath().length()).split(".do")[0];
 		ModelAndView mav = new ModelAndView(url);
@@ -95,7 +95,7 @@ public class UserController {
 		return mav;
 	}
 	//등록 저장
-	@RequestMapping(value="/user/insert.ajax")
+	@RequestMapping(value="/user/userInsert.ajax")
 	public ModelAndView insertReq(HttpSession httpSession, 
 			HttpServletRequest request,Model model
 			,@ModelAttribute("UserVO") UserVO inputVo
@@ -117,7 +117,7 @@ public class UserController {
 	}
 	
 	//(상셰)
-	@RequestMapping(value="/user/detail.do")
+	@RequestMapping(value="/user/userDetail.do")
 	public @ResponseBody ModelAndView reqDetail( 
 	HttpServletRequest request, HttpServletResponse response
 	,@ModelAttribute("UserVO") UserVO inputVo
@@ -139,7 +139,7 @@ public class UserController {
 	}
 	
 	//사용자 수정 페이지 진입
-	@RequestMapping(value="/user/update.do")
+	@RequestMapping(value="/user/userUpdate.do")
 	public @ResponseBody ModelAndView userUpdate( 
 			HttpServletRequest request, HttpServletResponse response
 			,@ModelAttribute("UserVO") UserVO inputVo
@@ -161,7 +161,7 @@ public class UserController {
 	}
 	
 	//수정 저장
-	@RequestMapping(value="/user/update.ajax")
+	@RequestMapping(value="/user/userUpdate.ajax")
 	public @ResponseBody ModelAndView reqUpdate(
 			 HttpServletRequest request, HttpServletResponse response
 			,@ModelAttribute("UserVO") UserVO inputVo
@@ -181,7 +181,7 @@ public class UserController {
 	}
 	
 	//사용자 삭제
-	@RequestMapping(value="/user/delete.ajax")
+	@RequestMapping(value="/user/userDelete.ajax")
 	public @ResponseBody ModelAndView userDelete
 	( @RequestParam(value="idArr[]")List<String> dataArr,HttpServletRequest request) throws Exception{
 		logger.debug("▶▶▶▶▶▶▶.회원정보 삭제!!!!!!!!!!!!!!!!");
@@ -199,7 +199,7 @@ public class UserController {
 	
 	
 	//상세에서 사용자 삭제
-	@RequestMapping(value="/user/deleteD.ajax")
+	@RequestMapping(value="/user/userDeleteD.ajax")
  	public @ResponseBody ModelAndView userDetailDelete(@RequestParam(value="userId") String userId , HttpServletRequest request) throws Exception {
 		logger.debug("▶▶▶▶▶▶▶상세에서 회원정보 삭제!!!!!!!!!!!!!!!!");
 		

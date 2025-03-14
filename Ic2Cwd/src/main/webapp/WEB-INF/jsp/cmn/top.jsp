@@ -8,8 +8,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 	<!-- 드롭다운 메뉴 -->
 	<!-- css -->
+	<link type="text/css" rel="stylesheet" href="/css/import.css" media="all">
 	<link rel="stylesheet" href="<%=request.getContextPath()%>/css/top.css">
-	<link type="text/css" rel="stylesheet" href="<%=request.getContextPath()%>/css/import.css" media="all">
 	<!-- JS -->
 	<script src="<%=request.getContextPath()%>/js/jquery.js"></script>
 	<script src="<%=request.getContextPath()%>/js/jquery.migrate.js"></script>
@@ -26,7 +26,6 @@
 	<link rel="stylesheet" href="<%=request.getContextPath()%>/css/svc.css">
 	<link rel="stylesheet" href="<%=request.getContextPath()%>/css/dtb.css">
 	<link rel="stylesheet" href="<%=request.getContextPath()%>/css/user.css">
-	<link rel="stylesheet" href="<%=request.getContextPath()%>/css/resize.css">
 	<!-- DataTable -->
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/DataTables/datatables.min.css" />
 	<script type="text/javascript" src="<%=request.getContextPath()%>/DataTables/datatables.min.js"></script>
@@ -47,7 +46,6 @@
 	<link href="<%=request.getContextPath()%>/css/c3/tomorrow-d7cf0921.css" media="screen" rel="stylesheet" type="text/css" />
 	<link href="<%=request.getContextPath()%>/css/c3/c3-eb4b9be8.css" media="screen" rel="stylesheet" type="text/css" />
 	<link href="<%=request.getContextPath()%>/css/c3/style-99fb8989.css" media="screen" rel="stylesheet" type="text/css" />
-	<link href="<%=request.getContextPath()%>/css/c3/samples/chart_combination-da39a3ee.css" media="screen" rel="stylesheet" type="text/css" />
 	
 	<script src="<%=request.getContextPath()%>/js/c3/vendor/modernizr-2.6.1.min-68fdcc99.js" type="text/javascript"></script>
 	<script src="<%=request.getContextPath()%>/js/c3/foundation.min-1dfe8110.js" type="text/javascript"></script>
@@ -82,29 +80,15 @@
 			alert("로그인이 필요한 서비스이므로 로그인 창으로 이동합니다");
 			logBfurl=location.href;
 			location.href="/login/login.do";
-			
-			/* if(location.href.indexOf("/chart/") == -1
-			&&location.href.indexOf("/stat/") == -1){
-				//console.log("로그인 페이지로 이동");
-				alert("로그인이 필요한 서비스이므로 로그인 창으로 이동합니다");
-				logBfurl=location.href;
-				location.href="/login/login.do";
-			} */
 		}
 		
 		$('.menu-inner').load("/cmn/menu.do");
 		$('#header').load("/cmn/header.do");
 		//$('.menu-inner').hide();
-		// 메뉴 항목 클릭 시
-		$(".goUrlMenu").on("click", function() {
-			allTimerReset();
-			//goMenuSite($(this).attr('id'));
-		});
 		
 		window.onload = function() {
 			//console.log("윈도우 온로드");
-			document.querySelector(".lnb-control").addEventListener(
-			"click", function() {
+			document.querySelector(".lnb-control").addEventListener("click", function() {
 				if ($('body').attr('class') == 'open') {
 					$('.menu-inner div').show();
 				} else {
@@ -113,16 +97,6 @@
 				document.body.classList.toggle('open');
 			});
 		}
-		
-		// 윈도우 resize이벤트를 통한 전체화면 여부 체크
-		$(window).on('resize', function() {
-			if(screen.width === window.innerWidth && screen.height === window.innerHeight){
-				//console.log("full screen");
-			} else {
-				//console.log("nomal screen");
-			}
-		});
 	});
 </script>
-<body></body>
 </html>

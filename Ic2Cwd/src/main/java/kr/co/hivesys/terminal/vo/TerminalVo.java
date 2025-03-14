@@ -1,8 +1,9 @@
 package kr.co.hivesys.terminal.vo;
 
 import kr.co.hivesys.comm.BaseVO;
+import kr.co.hivesys.setting.vo.AspVO;
 
-public class TerminalVo  extends BaseVO{
+public class TerminalVo  extends AspVO{
 	
 	//차상단말기 정보
 	private String trainNo;
@@ -15,6 +16,7 @@ public class TerminalVo  extends BaseVO{
 	private String deviceUser;
 	private String etc;
 	private String regDt;
+	
 	//차상단말기 로그
 	private String rcvDt;
 	
@@ -24,6 +26,7 @@ public class TerminalVo  extends BaseVO{
 	private String activeCap;
 	private String trainCnt;
 	private String trainAddCnt;
+	
 	private int kpa1;
 	private int kpa2;
 	private int kpa3;
@@ -32,6 +35,7 @@ public class TerminalVo  extends BaseVO{
 	private int kpa6;
 	private int kpa7;
 	private int kpa8;
+	
 	private int rate1;
 	private int rate2;
 	private int rate3;
@@ -40,6 +44,20 @@ public class TerminalVo  extends BaseVO{
 	private int rate6;
 	private int rate7;
 	private int rate8;
+	
+	//보통,주의,혼잡,심각의 4단계
+	private int cwd1;
+	private int cwd2;
+	private int cwd3;
+	private int cwd4;
+	private int cwd5;
+	private int cwd6;
+	private int cwd7;
+	private int cwd8;
+	
+	private int stationId;
+	private String stationName;
+
 	private int avgCwd;
 	
 	private String errorRange;
@@ -300,6 +318,86 @@ public class TerminalVo  extends BaseVO{
 		this.rate8 = rate8;
 	}
 
+	public int getCwd1() {
+		return cwd1;
+	}
+
+	public void setCwd1(int cwd1) {
+		this.cwd1 = cwd1;
+	}
+
+	public int getCwd2() {
+		return cwd2;
+	}
+
+	public void setCwd2(int cwd2) {
+		this.cwd2 = cwd2;
+	}
+
+	public int getCwd3() {
+		return cwd3;
+	}
+
+	public void setCwd3(int cwd3) {
+		this.cwd3 = cwd3;
+	}
+
+	public int getCwd4() {
+		return cwd4;
+	}
+
+	public void setCwd4(int cwd4) {
+		this.cwd4 = cwd4;
+	}
+
+	public int getCwd5() {
+		return cwd5;
+	}
+
+	public void setCwd5(int cwd5) {
+		this.cwd5 = cwd5;
+	}
+
+	public int getCwd6() {
+		return cwd6;
+	}
+
+	public void setCwd6(int cwd6) {
+		this.cwd6 = cwd6;
+	}
+
+	public int getCwd7() {
+		return cwd7;
+	}
+
+	public void setCwd7(int cwd7) {
+		this.cwd7 = cwd7;
+	}
+
+	public int getCwd8() {
+		return cwd8;
+	}
+
+	public void setCwd8(int cwd8) {
+		this.cwd8 = cwd8;
+	}
+
+	public int getStationId() {
+		return stationId;
+	}
+
+	public void setStationId(int stationId) {
+		this.stationId = stationId;
+	}
+
+	public String getStationName() {
+		return stationName;
+	}
+
+	public void setStationName(String stationName) {
+		this.stationName = stationName;
+	}
+
 	public int getAvgCwd() {
 		return avgCwd;
 	}
@@ -325,10 +423,10 @@ public class TerminalVo  extends BaseVO{
 				+ trainCnt + ", trainAddCnt=" + trainAddCnt + ", kpa1=" + kpa1 + ", kpa2=" + kpa2 + ", kpa3=" + kpa3
 				+ ", kpa4=" + kpa4 + ", kpa5=" + kpa5 + ", kpa6=" + kpa6 + ", kpa7=" + kpa7 + ", kpa8=" + kpa8
 				+ ", rate1=" + rate1 + ", rate2=" + rate2 + ", rate3=" + rate3 + ", rate4=" + rate4 + ", rate5=" + rate5
-				+ ", rate6=" + rate6 + ", rate7=" + rate7 + ", rate8=" + rate8 + ", avgCwd=" + avgCwd + ", errorRange="
-				+ errorRange + "]";
+				+ ", rate6=" + rate6 + ", rate7=" + rate7 + ", rate8=" + rate8 + ", cwd1=" + cwd1 + ", cwd2=" + cwd2
+				+ ", cwd3=" + cwd3 + ", cwd4=" + cwd4 + ", cwd5=" + cwd5 + ", cwd6=" + cwd6 + ", cwd7=" + cwd7
+				+ ", cwd8=" + cwd8 + ", stationId=" + stationId + ", stationName=" + stationName + ", avgCwd=" + avgCwd
+				+ ", errorRange=" + errorRange + "]";
 	}
-
-	
 	
 }

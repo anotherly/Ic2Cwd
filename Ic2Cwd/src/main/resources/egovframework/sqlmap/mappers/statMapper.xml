@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.hivesys.stat.mapper.StatMapper">
+<!-- 
+수정일           수정자         수정내용 
+========= ======= ================================================= 
+2020.07.23 정다빈     최초 생성 
+-->
+	
+	<resultMap type="terminalVO" id="resultTerminalVo">
+		<result property="trainNo" column="train_no"/>
+		<result property="deviceIp" column="device_ip"/>
+		<result property="deviceMac" column="device_mac"/>
+		<result property="insLocTxt" column="INS_LOC_TXT"/>
+		<result property="deviceUsed" column="device_used"/>
+		<result property="gatewayIp" column="gateway_ip"/>
+		<result property="deviceUser" column="device_user"/>
+		<result property="etc" column="etc"/>
+		<result property="regDt" column="reg_dt"/>
+		
+		<result property="rcvDt" column="rcv_dt"/>
+		<result property="trainNo" column="train_no"/>
+		<result property="formationNo" column="formation_no"/>
+		<result property="activeCap" column="active_cap"/>
+		<result property="trainCnt" column="train_cnt"/>
+		<result property="trainAddCnt" column="train_add_cnt"/>
+		<result property="deviceIp" column="device_ip"/>
+		<result property="deviceMac" column="device_mac"/>
+		<result property="kpa1" column="kpa1"/>
+		<result property="kpa2" column="kpa2"/>
+		<result property="kpa3" column="kpa3"/>
+		<result property="kpa4" column="kpa4"/>
+		<result property="kpa5" column="kpa5"/>
+		<result property="kpa6" column="kpa6"/>
+		<result property="kpa7" column="kpa7"/>
+		<result property="kpa8" column="kpa8"/>
+		<result property="rate1" column="rate1"/>
+		<result property="rate2" column="rate2"/>
+		<result property="rate3" column="rate3"/>
+		<result property="rate4" column="rate4"/>
+		<result property="rate5" column="rate5"/>
+		<result property="rate6" column="rate6"/>
+		<result property="rate7" column="rate7"/>
+		<result property="rate8" column="rate8"/>
+		<result property="errorRange" column="error_range"/>
+	</resultMap>
+	
+		
+	<resultMap type="statVO" id="resultStatVo">
+		<result property="keyDate" column="key_date"/>
+		<result property="weekFlag" column="week_flag"/>
+		<result property="weekName" column="week_name"/>
+		<result property="updownFlag" column="updown_flag"/>
+		<result property="updownName" column="updown_name"/>
+		<result property="amMaxRate" column="am_max_rate"/>
+		<result property="amRcvDt" column="am_rcv_dt"/>
+		<result property="amStationId" column="am_station_id"/>
+		<result property="amStationName" column="am_station_name"/>
+		<result property="amAvgRate" column="am_avg_rate"/>
+		<result property="pmMaxRate" column="pm_max_rate"/>
+		<result property="pmRcvDt" column="pm_rcv_dt"/>
+		<result property="pmStationId" column="pm_station_id"/>
+		<result property="pmStationName" column="pm_station_name"/>
+		<result property="pmAvgRate" column="pm_avg_rate"/>
+	</resultMap>
+	
+	<!-- 메인화면 게이지 차트 -->
+	<select id="mainGaugeChart" parameterType="terminalVO" resultType="chartVo">
+	    <![CDATA[ 
+	    WITH gauge AS (
+			SELECT 
+			    a.train_no
+			    ,a.rcv_dt
+			    ,a.train_cnt AS sum_rate1
+				,a.rate1,a.rate2,a.rate3,a.rate4,a.rate5,a.rate6
+			   ,IF(a.RATE1>cwd_st,1,0)+IF(a.RATE2>cwd_st,1,0)+IF(a.RATE3>cwd_st,1,0)+IF(a.RATE4>cwd_st,1,0)+IF(a.RATE5>cwd_st,1,0)+IF(a.RATE6>cwd_st,1,0)+IF(a.RATE7>cwd_st,1,0)+IF(a.RATE8>cwd_st,1,0)			   			   
+			   AS sum_rate2
+			FROM tcms_log a,asp_rate_info b
+		]]>
+			WHERE 1=1
+			<if test="formationNo !=null and formationNo neq ''"> 
+				AND formation_no=#{formationNo}-100
+			</if>
+			AND RCV_DT <![CDATA[ >= ]]> CURDATE()
+		)
+		SELECT 
+		ROUND((SUM(sum_rate2) / SUM(sum_rate1)) * 100,0) as gaugePointCnt
+		FROM gauge a
+
+
+	</select>
+	
+	<!-- 메인화면 바 차트 -->
+	<select id="mainBarChart" parameterType="terminalVO" resultType="chartVo">
+	    
+	    <![CDATA[ 
+			 WITH RECURSIVE DT_TABLE AS (
+			    SELECT NOW() dt, 1 lv FROM dual
+			    UNION all
+			    SELECT 
+			    	 DATE_ADD(NOW(), INTERVAL DT_TABLE.lv HOUR) dt
+			    	,DT_TABLE.lv+1 AS lv 
+			    FROM DT_TABLE 
+			    WHERE DT_TABLE.lv < 24 
+			)
+			SELECT tm.dt AS xVal
+			,IFNULL(val.yVal,0) as yVal 
+			,IFNULL(val.yVal2,0) as yVal2
+			from		
+			(SELECT 
+			   HOUR(dt) AS dt
+			FROM DT_TABLE
+			ORDER BY dt ASC
+			)tm
+		    left join
+			(
+				SELECT B.*,C.yVal2 FROM 
+				(
+					SELECT xVal
+					,ROUND(AVG(sum_rate),0) AS yVal
+					FROM
+					(
+						SELECT 
+							 DATE_FORMAT(RCV_DT, '%H') AS xVal
+							 ,train_cnt
+							 ,train_add_cnt
+							 ,round((rate1+rate2)/train_cnt,0)AS sum_rate
+						FROM tcms_log 
+						WHERE 1=1
+						AND formation_no=#{formationNo}-100
+						AND RCV_DT>=CURDATE()
+					)A
+					GROUP BY xVal
+				)B
+				LEFT JOIN
+				(
+					SELECT  
+					DATE_FORMAT(RCV_DT, '%H') AS xVal
+					,round(GREATEST(MAX(rate1),MAX(rate2)),0) AS yVal2
+					FROM tcms_log 
+					WHERE 1=1
+					AND formation_no=#{formationNo}-100
+					AND RCV_DT>=CURDATE()
+					GROUP BY xVal
+				)C
+				ON B.xVal=C.xVal
+				
+			)val
+			on tm.dt=val.xVal
+			where tm.dt   >=  5
+			ORDER BY xVal 
+		]]>
+	</select>
+	
+	
+	<!-- 일월년 통계 막대 -->
+	<select id="statBarData" parameterType="statVO" resultType="chartVo">
+		WITH up_val as(
+		SELECT station_id,updown_flag,MAX(max_rate) AS yval FROM stat_info
+		WHERE 1=1 
+		<choose>
+		    <when test="keyType eq 'monStat'">
+				AND  DATE_FORMAT(key_date, '%Y-%m') = #{keyDate}
+		    </when>
+		    <when test="keyType eq 'yearStat'">
+				AND  DATE_FORMAT(key_date, '%Y') = #{keyDate}
+		    </when>
+		    <otherwise>
+		     	AND KEY_DATE=#{keyDate}
+		    </otherwise>
+		</choose>
+		and updown_flag='U'
+		GROUP BY station_id,updown_flag
+		)
+		
+		,down_val as(
+		SELECT station_id,updown_flag,MAX(max_rate) AS yval2 FROM stat_info
+		WHERE 1=1 
+		<choose>
+		    <when test="keyType eq 'monStat'">
+				AND  DATE_FORMAT(key_date, '%Y-%m') = #{keyDate}
+		    </when>
+		    <when test="keyType eq 'yearStat'">
+				AND  DATE_FORMAT(key_date, '%Y') = #{keyDate}
+		    </when>
+		    <otherwise>
+		     	AND KEY_DATE=#{keyDate}
+		    </otherwise>
+		</choose>
+		and updown_flag='D'
+		GROUP BY station_id,updown_flag
+		)
+		
+		SELECT j1.*,IFNULL(c.yval2,0) AS yVal2 FROM 
+		(
+			SELECT a.station_id,a.up_num,a.down_num,a.station_name as xVal,IFNULL(b.yval,0) AS yVal
+			FROM station_info a
+			LEFT JOIN 
+			up_val b
+			ON 		
+			(
+				b.station_id=a.up_num
+				or
+				b.station_id=a.down_num
+		 	)
+		)j1
+		
+		LEFT JOIN
+		down_val c
+		ON 		
+		(
+			c.station_id=j1.up_num
+			or
+			c.station_id=j1.down_num
+	 	)
+	</select> 
+	
+	<!-- 비교화면 데이터 -->
+	<select id="versusData" parameterType="statVO" resultType="chartVo">
+		WITH nowval AS 
+		(
+			SELECT updown_flag,max(max_rate) AS y1 FROM stat_info
+			WHERE 1=1
+			<choose>
+			    <when test="keyType eq 'monStat'">
+					<!-- 현재 월 -->
+					AND  DATE_FORMAT(key_date, '%Y-%m') =#{keyDate}
+			    </when>
+			    <when test="keyType eq 'yearStat'">
+			        <!-- 현재 연도 -->
+					AND  DATE_FORMAT(key_date, '%Y') = #{keyDate}
+			    </when>
+			    <otherwise>
+			     	AND KEY_DATE=#{keyDate}
+			    </otherwise>
+			</choose>
+			GROUP BY updown_flag
+		)
+		,bfval AS
+		(
+			SELECT updown_flag,max(max_rate) AS y2 FROM stat_info
+			WHERE 1=1
+			<choose>
+			    <when test="keyType eq 'monStat'">
+					<!-- 월기준 전월 -->
+					AND  DATE_FORMAT(key_date, '%Y-%m')
+					 = DATE_FORMAT(STR_TO_DATE(CONCAT(#{keyDate},'-01'),'%Y-%m-%d') - INTERVAL 1 MONTH ,'%Y-%m')
+			    </when>
+			    <when test="keyType eq 'yearStat'">
+			        <!-- 연도기준 전년 -->
+					AND  DATE_FORMAT(key_date, '%Y') = #{keyDate}-1
+			    </when>
+			    <otherwise>
+			        <!-- 일기준 전일 -->
+			     	AND KEY_DATE= STR_TO_DATE(#{keyDate},'%Y-%m-%d') - interval 1 day
+			    </otherwise>
+			</choose>
+			GROUP BY updown_flag
+		)
+		,bfval2 AS
+		(
+		SELECT updown_flag,max(max_rate) AS y3 FROM stat_info
+		WHERE 1=1
+		
+		<choose>
+		    <when test="keyType eq 'monStat'">
+				<!-- 월기준 전전월 -->
+				AND  DATE_FORMAT(key_date, '%Y-%m')
+				 = DATE_FORMAT(STR_TO_DATE(CONCAT(#{keyDate},'-01'),'%Y-%m-%d') - INTERVAL 2 MONTH ,'%Y-%m')
+		    </when>
+		    <when test="keyType eq 'yearStat'">
+		        <!-- 연도기준 전전년 -->
+				AND  DATE_FORMAT(key_date, '%Y') = #{keyDate}-2
+		    </when>
+		    <otherwise>
+		        <!-- 일기준 전일 -->
+		     	AND KEY_DATE= STR_TO_DATE(#{keyDate},'%Y-%m-%d') - interval 2 day
+		    </otherwise>
+		</choose>
+		GROUP BY updown_flag
+		)
+		SELECT j1.*
+		, IFNULL(j1.yVal,0) - IFNULL(c.y3,0) AS yVal3
+		FROM 
+		(
+			SELECT IF(a.updown_flag='D','상행','하행') AS xVal
+			,a.y1 AS yVal
+			, IFNULL(a.y1,0) - IFNULL(b.y2 ,0) AS yVal2
+			FROM nowval a
+			LEFT join
+			bfval b
+			ON a.updown_flag=b.updown_flag
+		)j1
+		LEFT JOIN
+		bfval2 c
+		ON j1.xVal=c.updown_flag
+		ORDER BY xVal
+	</select> 
+	
+	<!-- 통계화면 하단 표-->
+	<select id="selectDayLilst" parameterType="statVO" resultMap="resultStatVo">
+		WITH am_rh as
+		(	
+			SELECT A.*,B.STATION_NAME FROM
+			(
+				SELECT DATE_FORMAT(key_date,'%Y-%m') AS key_date
+				,week_flag,updown_flag, time_zone,station_id AS STID
+					,avg_rate
+				, max(max_rate) as max_rate
+				,MAX(rcv_dt) AS rcv_dt
+			  	from stat_info
+				WHERE 1=1 
+				<choose>
+				    <when test="keyType eq 'monStat'">
+						AND  DATE_FORMAT(key_date, '%Y-%m') = #{keyDate}
+				    </when>
+				    <when test="keyType eq 'yearStat'">
+						AND  DATE_FORMAT(key_date, '%Y') = #{keyDate}
+				    </when>
+				    <otherwise>
+				     	AND KEY_DATE=#{keyDate}
+				    </otherwise>
+				</choose>
+			  	AND time_zone='AM'
+				group BY 
+				<choose>
+				    <when test="keyType eq 'monStat'">
+						DATE_FORMAT(key_date, '%Y-%m')
+				    </when>
+				    <when test="keyType eq 'yearStat'">
+						DATE_FORMAT(key_date, '%Y')
+				    </when>
+				    <otherwise>
+				     	KEY_DATE
+				    </otherwise>
+				</choose>
+				,week_flag,updown_flag
+			)A
+			right join station_info B
+			ON 		
+			(
+				a.STID=b.up_num
+				or
+				a.STID=b.down_num
+		 	)
+		), 
+		
+		pm_rh as
+		(	
+		
+			SELECT A.*,B.STATION_NAME FROM 
+			(
+				SELECT DATE_FORMAT(key_date,'%Y-%m') AS key_date
+				,week_flag,updown_flag, time_zone,station_id AS STID
+				, max(max_rate) as max_rate
+				,avg_rate
+					,MAX(rcv_dt) AS rcv_dt
+			  	from stat_info
+				WHERE 1=1 
+				<choose>
+				    <when test="keyType eq 'monStat'">
+						AND  DATE_FORMAT(key_date, '%Y-%m') = #{keyDate}
+				    </when>
+				    <when test="keyType eq 'yearStat'">
+						AND  DATE_FORMAT(key_date, '%Y') = #{keyDate}
+				    </when>
+				    <otherwise>
+				     	AND KEY_DATE=#{keyDate}
+				    </otherwise>
+				</choose>
+			  	AND time_zone='PM'
+				group BY 
+				<choose>
+				    <when test="keyType eq 'monStat'">
+						DATE_FORMAT(key_date, '%Y-%m')
+				    </when>
+				    <when test="keyType eq 'yearStat'">
+						DATE_FORMAT(key_date, '%Y')
+				    </when>
+				    <otherwise>
+				     	KEY_DATE
+				    </otherwise>
+				</choose>
+				,week_flag,updown_flag			
+			)A
+			right JOIN station_info B
+			ON 		
+			(
+				a.STID=b.up_num
+				or
+				a.STID=b.down_num
+		 	)
+
+		)
+
+		SELECT 
+			a.key_date AS key_date
+			,CASE WHEN a.week_flag= 'D' THEN '평일' 
+			ELSE '주말' END AS week_flag
+			,CASE WHEN a.updown_flag= 'D' THEN '하선' 
+			ELSE '상선' END AS updown_flag
+			,a.max_rate AS am_max_rate
+			,a.rcv_dt AS am_rcv_dt
+			,a.STID AS am_station_id
+			,a.STATION_NAME AS am_station_name
+			,a.avg_rate AS am_avg_rate
+			,p.max_rate AS pm_max_rate
+			,p.rcv_dt AS pm_rcv_dt
+			,p.STID AS pm_station_id
+			,p.STATION_NAME AS pm_station_name
+			,p.avg_rate AS pm_avg_rate
+		FROM am_rh a
+		LEFT JOIN 
+		pm_rh p
+		ON a.week_flag=p.week_flag
+		AND a.updown_flag=p.updown_flag
+		AND a.STID=p.STID	
+		where a.key_date is not null 
+	</select>
+
+</mapper>

@@ -25,6 +25,8 @@ import kr.co.hivesys.comm.file.FileUploadSave;
 import kr.co.hivesys.comm.file.vo.FileVo;
 import kr.co.hivesys.depart.service.DepartService;
 import kr.co.hivesys.depart.vo.DepartVo;
+import kr.co.hivesys.setting.service.AspService;
+import kr.co.hivesys.setting.vo.AspVO;
 import kr.co.hivesys.terminal.vo.TerminalVo;
 import kr.co.hivesys.user.vo.UserVO;
 import kr.co.hivesys.terminal.service.TerminalService;
@@ -38,8 +40,8 @@ public class TerminalController {
 	@Resource(name="terminalService")
 	private TerminalService terminalService;
 	
-	@Resource(name="departService")
-	private DepartService departService;
+	@Resource(name="aspService")
+	private AspService aspService;
 	
 	//주소에 맞게 매핑
 	@RequestMapping(value= {"/chart/*.do","/terminal/*.do","/stat/*.do"})
@@ -65,6 +67,7 @@ public class TerminalController {
 		url = request.getRequestURI().substring(request.getContextPath().length()).split(".do")[0];
 		ModelAndView mav = new ModelAndView("jsonView");
 		List<TerminalVo> sList = null;
+		List<AspVO> aspList = null;
 		try {
 			UserVO reqLoginVo = (UserVO) request.getSession().getAttribute("login");
 			
@@ -84,9 +87,72 @@ public class TerminalController {
 		return mav;
 	}
 	
-	//목록 상세
-	@RequestMapping(value= {"/terminal/list.do","/terminal/detail.do"})
-	public @ResponseBody ModelAndView reqDetail( 
+	//목록 데이터 전송
+	@RequestMapping(value= "/terminal/terminalList.ajax")
+	public @ResponseBody ModelAndView terminalList( 
+	HttpServletRequest request, HttpServletResponse response
+	,@ModelAttribute("TerminalVo") TerminalVo inputVo
+	) throws Exception{
+		url = request.getRequestURI().substring(request.getContextPath().length()).split(".do")[0];
+		
+		ModelAndView mav = new ModelAndView("jsonView");
+		List<TerminalVo> sList= null;
+		try {
+			sList = terminalService.selectTerminal(inputVo);
+			mav.addObject("data", sList);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.debug(""+e);
+			mav.addObject("msg","에러가 발생했습니다.");
+		}
+		return mav;
+	}
+	
+	//목록 데이터 전송
+	@RequestMapping(value= "/terminal/terminalInsert.do")
+	public @ResponseBody ModelAndView terminalInsert( 
+			HttpServletRequest request, HttpServletResponse response
+			,@ModelAttribute("TerminalVo") TerminalVo inputVo
+			) throws Exception{
+		url = request.getRequestURI().substring(request.getContextPath().length()).split(".do")[0];
+		
+		ModelAndView mav = new ModelAndView(url);
+		List<AspVO> aspList= null;
+		try {
+			aspList = aspService.selectAspType(new AspVO());
+			mav.addObject("carTypeList", aspList);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.debug(""+e);
+			mav.addObject("msg","에러가 발생했습니다.");
+		}
+		return mav;
+	}
+	
+	//등록 저장
+	@RequestMapping(value="/terminal/terminalInsert.ajax")
+	public ModelAndView insertAjax(HttpSession httpSession, 
+			HttpServletRequest request,Model model
+			,@ModelAttribute("TerminalVo") TerminalVo inputVo
+			) throws Exception{
+		ModelAndView mav = new ModelAndView("jsonView");
+		try {
+			terminalService.insertTerminal(inputVo);
+			aspService.insertAsp(inputVo);
+		} catch (Exception e) {
+			logger.debug("에러메시지 : "+e.toString());
+			e.printStackTrace();
+			mav.addObject("msg","저장에 실패하였습니다");
+		}
+		return mav;
+	}
+	
+
+	//(상세)
+	@RequestMapping(value="/terminal/terminalDetail.do")
+	public @ResponseBody ModelAndView terminalDetail( 
 	HttpServletRequest request, HttpServletResponse response
 	,@ModelAttribute("TerminalVo") TerminalVo inputVo
 	) throws Exception{
@@ -95,7 +161,7 @@ public class TerminalController {
 		ModelAndView mav = new ModelAndView("jsonView");
 		TerminalVo data= null;
 		try {
-			data = terminalService.selectTerminal(inputVo).get(0);;
+			data = terminalService.selectTerminal(inputVo).get(0);
 			mav.addObject("data", data);
 			mav.setViewName(url);
 			
@@ -107,25 +173,8 @@ public class TerminalController {
 		return mav;
 	}
 	
-	//등록 저장
-	@RequestMapping(value="/terminal/insert.ajax")
-	public ModelAndView insertReq(HttpSession httpSession, 
-			HttpServletRequest request,Model model
-			,@ModelAttribute("TerminalVo") TerminalVo inputVo
-			) throws Exception{
-		ModelAndView mav = new ModelAndView("jsonView");
-		try {
-			terminalService.insertTerminal(inputVo);
-		} catch (Exception e) {
-			logger.debug("에러메시지 : "+e.toString());
-			e.printStackTrace();
-			mav.addObject("msg","저장에 실패하였습니다");
-		}
-		return mav;
-	}
-	
 	//사용자 수정 페이지 진입
-	@RequestMapping(value="/terminal/update.do")
+	@RequestMapping(value="/terminal/terminalUpdate.do")
 	public @ResponseBody ModelAndView userUpdate( 
 			HttpServletRequest request, HttpServletResponse response
 			,@ModelAttribute("TerminalVo") TerminalVo inputVo
@@ -139,7 +188,6 @@ public class TerminalController {
 		try {
 			
 			List<DepartVo> departList = new ArrayList<>();
-			departList = departService.selectDepartList(new DepartVo());
 			mav.addObject("departList", departList);
 			data = terminalService.selectTerminal(inputVo).get(0);
 			mav.addObject("data", data);
@@ -151,7 +199,7 @@ public class TerminalController {
 	}
 	
 	//수정 저장
-	@RequestMapping(value="/terminal/update.ajax")
+	@RequestMapping(value="/terminal/terminalUpdate.ajax")
 	public @ResponseBody ModelAndView reqUpdate(
 			 HttpServletRequest request, HttpServletResponse response
 			,@ModelAttribute("TerminalVo") TerminalVo inputVo
@@ -171,7 +219,7 @@ public class TerminalController {
 	}
 	
 	//단말기 삭제
-	@RequestMapping(value="/terminal/delete.ajax")
+	@RequestMapping(value="/terminal/terminalDelete.ajax")
 	public @ResponseBody ModelAndView userDelete( @RequestParam(value="idArr[]")List<String> dataArr,HttpServletRequest request) throws Exception{
 		logger.debug("▶▶▶▶▶▶▶.회원정보 삭제!!!!!!!!!!!!!!!!");
 		
@@ -187,7 +235,7 @@ public class TerminalController {
 	}
 	
 	//24-10-28 : 상세에서 단말기 삭제
-	@RequestMapping(value="/terminal/deleteD.ajax")
+	@RequestMapping(value="/terminal/terminalDeleteD.ajax")
  	public @ResponseBody ModelAndView terminalDetailDelete(@RequestParam(value="lteIp") String lteIp , HttpServletRequest request) throws Exception {
 		logger.debug("▶▶▶▶▶▶▶상세에서 회원정보 삭제!!!!!!!!!!!!!!!!");
 		

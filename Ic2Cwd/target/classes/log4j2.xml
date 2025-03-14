@@ -10,8 +10,8 @@
         
         <!-- 파일  -->
         <RollingFile name ="RollingFile">
-            <FileName>C:/log/tbn_log.txt</FileName>
-            <FilePattern>C:/log/tbn_log_%d{yyyy-MM-dd}.txt</FilePattern>
+            <FileName>C:/ic2_log/ic2_log.txt</FileName>
+            <FilePattern>C:/ic2_log/ic2_log_%d{yyyy-MM-dd}.txt</FilePattern>
             <PatternLayout>
                 <Pattern>%d %5p [%c] %m%n</Pattern>
             </PatternLayout>

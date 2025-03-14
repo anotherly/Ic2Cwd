@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.hivesys.setting.mapper.AspMapper">
+<!-- 
+수정일           수정자         수정내용 
+========= ======= ================================================= 
+2020.07.23 정다빈     최초 생성 
+-->
+
+	<!-- 전체 사용자 조회 -->
+	<!-- 전체 또는 특정 사용자 조회 -->
+	<resultMap type="aspVO" id="resultVo">
+	    <result property="carType" column="car_type"/>
+		<result property="carName" column="car_name"/>
+		<result property="stWgt1" column="st_wgt_1"/>
+		<result property="stWgt2" column="st_wgt_2"/>
+		<result property="stWgt3" column="st_wgt_3"/>
+		<result property="stWgt4" column="st_wgt_4"/>
+		<result property="stWgt5" column="st_wgt_5"/>
+		<result property="stWgt6" column="st_wgt_6"/>
+		<result property="stWgt7" column="st_wgt_7"/>
+		<result property="stWgt8" column="st_wgt_8"/>
+		<result property="fcWgt1" column="fc_wgt_1"/>
+		<result property="fcWgt2" column="fc_wgt_2"/>
+		<result property="fcWgt3" column="fc_wgt_3"/>
+		<result property="fcWgt4" column="fc_wgt_4"/>
+		<result property="fcWgt5" column="fc_wgt_5"/>
+		<result property="fcWgt6" column="fc_wgt_6"/>
+		<result property="fcWgt7" column="fc_wgt_7"/>
+		<result property="fcWgt8" column="fc_wgt_8"/>
+	</resultMap>
+	
+	<select id="selectAspList" parameterType="aspVO" resultMap="resultVo">
+		SELECT *	
+		FROM
+		ASP_INFO
+		ORDER BY car_type
+	</select>
+	
+	<select id="selectAspType" parameterType="aspVO" resultMap="resultVo">
+		SELECT *	
+		FROM
+		ASP_INFO
+		group by car_type
+		ORDER BY car_type
+	</select>
+	
+	
+	<select id="selectAsp" parameterType="AspVO" resultMap="resultVo">
+		SELECT *
+		FROM
+		ASP_INFO
+		WHERE car_type=#{carType}
+	</select>
+	
+	<!-- 사용자 등록 -->
+	<insert id="insertAsp" parameterType="AspVO">
+		INSERT INTO ASP_INFO(
+			 car_type
+			,car_name
+			,formation_no
+			,st_wgt_1
+			,st_wgt_2
+			,st_wgt_3
+			,st_wgt_4
+			,st_wgt_5
+			,st_wgt_6
+			,st_wgt_7
+			,st_wgt_8
+			,fc_wgt_1
+			,fc_wgt_2
+			,fc_wgt_3
+			,fc_wgt_4
+			,fc_wgt_5
+			,fc_wgt_6
+			,fc_wgt_7
+			,fc_wgt_8
+		)
+		VALUES (
+			 #{carType}
+			,#{carName}
+			,#{formation_no}
+			,#{stWgt1}
+			,#{stWgt2}
+			,#{stWgt3}
+			,#{stWgt4}
+			,#{stWgt5}
+			,#{stWgt6}
+			,#{stWgt7}
+			,#{stWgt8}
+			,#{fcWgt1}
+			,#{fcWgt2}
+			,#{fcWgt3}
+			,#{fcWgt4}
+			,#{fcWgt5}
+			,#{fcWgt6}
+			,#{fcWgt7}
+			,#{fcWgt8}
+		)
+	</insert>
+	
+	<!-- 사용자 정보 수정-->
+	<update id="updateAsp" parameterType="AspVO">
+		UPDATE ASP_INFO
+		SET
+			 car_type  =#{carType}
+			,car_name  =#{carName}
+			,formation_no =#{formation_no}
+			,st_wgt_1  =#{stWgt1}
+			,st_wgt_2  =#{stWgt2}
+			,st_wgt_3  =#{stWgt3}
+			,st_wgt_4  =#{stWgt4}
+			,st_wgt_5  =#{stWgt5}
+			,st_wgt_6  =#{stWgt6}
+			,st_wgt_7  =#{stWgt7}
+			,st_wgt_8  =#{stWgt8}
+			,fc_wgt_1  =#{fcWgt1}
+			,fc_wgt_2  =#{fcWgt2}
+			,fc_wgt_3  =#{fcWgt3}
+			,fc_wgt_4  =#{fcWgt4}
+			,fc_wgt_5  =#{fcWgt5}
+			,fc_wgt_6  =#{fcWgt6}
+			,fc_wgt_7  =#{fcWgt7}
+			,fc_wgt_8  =#{fcWgt8}
+		WHERE car_type =#{carType} 
+	</update>
+	
+	<!-- 사용자 삭제 -->
+	<delete id="deleteAsp" parameterType="AspVO">
+		DELETE FROM ASP_INFO 
+		WHERE car_type IN
+		<foreach collection="chkList" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+	</delete>
+
+</mapper>

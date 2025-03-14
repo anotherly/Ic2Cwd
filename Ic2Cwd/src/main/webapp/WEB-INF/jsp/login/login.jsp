@@ -43,10 +43,10 @@
 			</div>
             <form id="loginForm" class="login_form" name="loginForm" method="post" enctype="multipart/form-data">
                 <div class="login_fm_id">
-                	<input type="text" id="userId" name="userId" class="form-control"  maxlength="10" onkeyup="spaceChk(this);" onkeydown="spaceChk(this);"  required/>
+                	<input type="text" id="userId" name="userId" class="form-control"  maxlength="20" required/>
                 </div><!-- 아이디 -->
                 <div class="login_fm_pass"><!-- 비밀번호 -->
-                	<input type="password" id="userPw" name="userPw" class="form-control" maxlength="10" onkeyup="spaceChk(this);" onkeydown="spaceChk(this);"  required/>
+                	<input type="password" id="userPw" name="userPw" class="form-control" maxlength="20" required/>
                 </div>
                 <div class="login_fm_btn">
                     <button class="btn btn_primary" type="submit" role="button">로그인</button>

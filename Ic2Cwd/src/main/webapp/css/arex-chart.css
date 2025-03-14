@@ -4,7 +4,7 @@
 
 svg {
       width:  100%;
-      height: 38vh;
+      height: 50vh;
       min-height: 38vh;
       preserveAspectRatio:none;
 
@@ -36,7 +36,24 @@ svg {
     min-width: 643px;
     z-index: 10;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-evenly;
+}
+
+#all_chart{
+	position: absolute;
+    z-index: 200;
+    background:#031634;
+    border: 1px solid darkgray;
+}
+
+#flip{
+	font-size: 20px;
+	font-weight: bold;
+	color:yellow;
+	cursor: pointer;
+	position:absolute;
+	top:30px;
+	right:30px;
 }
 
 .pie_container{

@@ -1,34 +1,81 @@
 @charset "UTF-8";
 
+#trainDiv{
+	width:100%;
+	height: 100%;
+}
+
+#trainDiv div{
+	height: 100%;
+}
+
+/*카운트 수*/
+.router_top{
+	width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+.router_top span{
+    color: rgb(255, 255, 255);
+    width: 150px;
+    font-size: 20px;
+}
+
+
 .lte-table{
 	width: 100%;
     height: 100%;
     line-height: 2;
 }
 
-.lte-div{
-/* 	margin-left: 37px;
-	margin-top: 20px; */
+.lte-table tr{
+	height: 20% !important;
 }
 
 .td-div{
+	display:flex;
+	flex-direction: column;
+}
+
+.td-top{
+	display: flex;
+    flex-direction: row;
+}
+
+.td-cont{
 	width: 100%;
     height: 100%;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     align-content: center;
     justify-content: space-around;
     cursor: pointer;
 }
 
-.img-container{
-	display:flex;
+.img-container,.img-container2{
+	display: flex;
+    flex-direction: column;
+    /* height:65px; */
+}
+/* 중련x일 경우 이미지 크기 */
+.img-container>div {
+    width: 4.3vw;
+    height: 6vh; 
+    /* width: 110px;
+    height: 95px; */
+}
+/* 중련 있을때 */
+.img-container2{
+	/* height: 65% !important; */
+	/* width: 55px;
+    height: 47px; */
 }
 
-.img-container>div {
-    width: 3vw;
-    height: 9vh;
+.img-container2>div {
+	width: 55px;
+    height: 47px;
 }
 
 .td-div span{
@@ -52,21 +99,26 @@
 }
 
 .lte-table td{
-    border: 1px solid #c0c0c0;
+    border: 12px solid #031634;
     width: 65px;
     height: 50px;
     text-align: right;
-    padding: 10px 0;
+    padding: 10px;
     font-size: 15px;
-    /* background: #fff;*/
+    background: url(/images/bg/bg4.png);
+    background-size: cover;
 }
 
 .lte-table td.selected{
+	background: url(/images/bg/add1.png);
+	background-size: contain;
+}
+
+.lte-table td.added{
 	background: #006f6f;
 }
 
-
-.lte-table td.selected span{
+.lte-table td.selected span,.lte-table td.added span{
 	color: yellow;
 }
 
@@ -89,11 +141,21 @@
     width: 100%;
 }
 
-
-
 #paging span{
 	font-size:25px;
 	color:#fff;
 	cursor:pointer;
 }
-
+/* 산출식 관련 */
+.cwd_cal1{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 800px;
+    justify-content: space-evenly;
+}
+.cwd_cal2{
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+}

@@ -11,9 +11,12 @@
     <!-- jdb : 쿼리에 맞는 vo 설정 -->
 	<typeAliases>
 		<!-- 사용자 -->		
+		<typeAlias alias="chartVo" type="kr.co.hivesys.stat.vo.ChartVo" />
 		<typeAlias alias="userVo" type="kr.co.hivesys.user.vo.UserVO" />
 		<typeAlias alias="terminalVo" type="kr.co.hivesys.terminal.vo.TerminalVo" />
-		<typeAlias alias="chartVo" type="kr.co.hivesys.statistic.vo.ChartVo" />
+		<typeAlias alias="aspVo" type="kr.co.hivesys.setting.vo.AspVO" />
+		<typeAlias alias="cwdVO" type="kr.co.hivesys.setting.vo.CwdVO" />
+		<typeAlias alias="statVO" type="kr.co.hivesys.stat.vo.StatVO" />
 		<!-- <typeAlias alias="authVo" type="kr.co.hivesys.auth.vo.AuthVo" /> -->
 		<!-- <typeAlias alias="departVo" type="kr.co.hivesys.depart.vo.DepartVo" /> -->
 		<!-- <typeAlias alias="fileVo" type="kr.co.hivesys.comm.file.vo.FileVo" /> -->

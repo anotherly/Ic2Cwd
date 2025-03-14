@@ -15,6 +15,7 @@
 	
 	var typeId="dayStat";//일월연 구분
 	$(document).ready(function(){
+		console.log("stat - main");
 		//우측상단 탭 클릭시
 		//팀별 조회
 		$(".arex_tab").on('click',function(){
@@ -34,12 +35,11 @@
 			}else{
 				$("#statContainer").load("/stat/dayStat.do");
 			}
-		});
+		}); 
 		$("#statContainer").load("/stat/dayStat.do");
 	});
 	
 	// 셀렉트 박스 변경 시 값에 따라 스크롤바 생성
-	
 	$('select[name="tableList_length"]').on('change', function(){
 		var selectVal = $(this).val();
 		//console.log('현재 선택값 :' + selectVal);
@@ -48,7 +48,7 @@
 	
 </script>
 </head>
-<body class="open" style="background: url(../images/bg/yy_bg.png);background-size: cover;">
+<body class="open" style="background: url(../images/bg/bg0.png);background-size: cover;">
     <!-- lnb Start ------------------>
     <aside id="lnb" class="lnb">
         <a class="lnb-control" title="메뉴 펼침/닫침"><span class="menu-toggle">메뉴 펼침/닫침</span></a>

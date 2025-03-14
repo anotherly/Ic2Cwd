@@ -4,6 +4,7 @@
     font: 16px sans-serif;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     font-weight: bold;
+    overflow: visible !important;  /* ✅ SVG 내부 요소가 잘리지 않도록 설정 */
 }
 
 .c3 path, .c3 line {
@@ -40,6 +41,15 @@
 }
 
 /*-- Axis --*/
+.c3-axis-x text{
+    overflow: visible !important;  /* ✅ x축 레이블이 숨겨지지 않도록 */
+     clip-path: none !important; /* ✅ x축 텍스트가 짤리지 않도록 */
+    /* white-space: nowrap; */ /* ✅ 글자가 여러 줄로 줄 바꿈되지 않도록 */
+}
+.c3-axis-x text tspan{
+    overflow: visible !important;  /* ✅ x축 레이블이 숨겨지지 않도록 */
+    /* white-space: nowrap; */ /* ✅ 글자가 여러 줄로 줄 바꿈되지 않도록 */
+}
 /*-- Grid --*/
 .c3-grid line {
   stroke: #aaa;

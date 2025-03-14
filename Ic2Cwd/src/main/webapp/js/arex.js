@@ -6,15 +6,19 @@ var trCnt=1;//행 카운트
 var chkTerId;//최초 선택여부
 /////////////////////////////
 
-var mok=0;//전체 데이터를 td 수로(7) 나눴을때 몫 (이건 최대 페이지 개수를 구할때 쓰임)
+var mok=0;//전체 데이터를 td 수로(colCnt) 나눴을때 몫 (이건 최대 페이지 개수를 구할때 쓰임)
 var namage=0;//나머지(마지막 행에서 빈칸 채울때 씀)
 var maxPage=0;// 최대페이지 수 : 몫/6(한화면 행수)
 var plusPage=0;// 몫/6의 나머지 -> 남은 행수를 계산해서 채울때 씀
 
 /////////////////////////////
 
+//alData : 데이터
+//colCnt : 열 수
+//rowCnt : 행 수
+
 //차트화면 우측 단말기테이블
-function trainOne(alData){
+function trainOne(alData,colCnt,rowCnt){
 	//console.log("차트화면 우측 단말기테이블");
 	$("#lteTbd").empty();
 	//전역변수 초기화
@@ -25,14 +29,14 @@ function trainOne(alData){
 	startNum=0;
 	endNum=1;
 	
-	mok=Math.floor(alData.length/7,0);
-	namage=alData.length%7;
+	mok=Math.floor(alData.length/colCnt,0);
+	namage=alData.length%colCnt;
 	maxPage=Math.floor(mok/6,0);
 	
 	var oldName="";//팀이 변경되기 전 이전 팀
 	var enterLine=1;//현재 td number
 	var blankCnt=0;//페이지 안깨지기 위한 공백 카운트
-	var backName="";//여유보통주의혼잡상태
+	//var backName="";//여유보통주의혼잡상태
 	
 	for (var i = 0; i < alData.length; i++) {
 		if(i==0){
@@ -41,19 +45,11 @@ function trainOne(alData){
 		}else{
 			chkTerId=0;
 		}
-		/*공백처리안함*/
-		//배경 선택
-		backName=alData[i].avgCwd;
-		if(backName==null){
-			backName=0;
-		}
-		var spanVal = alData[i].formationNo;
-		
 		//td 내부 만듦
-		tbM+= tdCreate(alData[i].formationNo,backName,spanVal); 
+		tbM+= tdCreate(alData[i]); 
 		tbCnt++;
-		//7열 초과시 줄바꿈
-		if(parseInt((enterLine)%7)==0){
+		//colCnt열 초과시 줄바꿈
+		if(parseInt((enterLine)%colCnt)==0){
 			var tbCont = "<tr id='tr"+trCnt+"'>"+tbM+"</tr>";
 			$("#lteTbd").append(tbCont);	
 			tbM="";
@@ -85,39 +81,70 @@ function trCreate(){
 
 //중간에 들어가는 td값을 채움
 //tdid,tdCont,spanVal
-function tdCreate(tdid,backName,spanVal){
+function tdCreate(data){
 	console.log("tdCreate");
+	var tdid= data.formationNo;
+	var updown = "";
+	if(data.activeCap!=null && typeof data.activeCap !=="undefined"){
+		updown=data.activeCap
+	}
 	var funcTbCont="";
 	
-	//갱신전에 선택된 단말기였다면 선택배경 유지되도록
-	if(chkTerId==tdid){
-		funcTbCont=
-			"<td id='"+tdid+"' class='selected'>"
-			+"<div class='td-div'>"
-				+"<div class='img-container'>"
-					+"<div id="+backName+" style=" 
-						+"'background:url(../images/ic2/train_cwd_"+backName+".png) no-repeat;" 
-						+"background-size: contain;'>" 
+			if(data.trainCnt==4){
+				funcTbCont=
+				"<td id='"+tdid+"' class='added' style='border-right: none;border-left: none;'>"
+					+"<div class='td-div'>"
+						+"<div class='td-top' style='height: 53%;'>"
+							+"<span>"+data.formationNo+" "+updown+"</span>"
+							+"<span style='font-size: calc(1vw - 8px);'>"+data.stationName+"</span>"
+						+"</div>"
+						+"<div class='td-cont'>"
+							+"<div class='img-container'>"				
+								+"<div id='1ryang' style=" 
+									+"'background:url(../images/train/cong_"+data.cwd1+"_1.png) no-repeat;" 
+									+"background-size: contain;'>"
+								+"</div>"
+								+"<span>"+data.rate1+"%</span>"
+							+"</div>"
+							+"<div class='img-container'>"
+								+"<div id='2ryang' style=" 
+									+"'background:url(../images/train/cong_"+data.cwd2+"_2.png) no-repeat;" 
+									+"background-size: contain;'>" 
+								+"</div>"
+								+"<span>"+data.rate2+"%</span>"
+							+"</div>"
+						+"</div>"
 					+"</div>"
-				+"</div>"
-				+"<span>"+spanVal+"</span>"
-			+"</div>"
-		+"</td>";
-	}else{
-		funcTbCont=
-			"<td id='"+tdid+"'>"
-			+"<div class='td-div'>"
-				+"<div class='img-container'>"
-					+"<div id="+backName+" style=" 
-						+"'background:url(../images/ic2/train_cwd_"+backName+".png) no-repeat;" 
-						+"background-size: contain;'>" 
+				+"</td>";
+			}else{
+				funcTbCont=
+				"<td id='"+tdid+"'>"
+					+"<div class='td-div'>"
+						+"<div class='td-top' style='height: 53%;'>"
+							+"<span>"+data.formationNo+" "+updown+"</span>"
+							+"<span style='font-size: calc(1vw - 8px);'>"+data.stationName+"</span>"
+						+"</div>"
+						+"<div class='td-cont'>"
+							+"<div class='img-container'>"				
+								+"<div id='1ryang' style=" 
+									+"'background:url(../images/train/cong_"+data.cwd1+"_1.png) no-repeat;" 
+									+"background-size: contain;'>"
+								+"</div>"
+								+"<span>"+data.rate1+"%</span>"
+							+"</div>"
+							+"<div class='img-container'>"
+								+"<div id='2ryang' style=" 
+									+"'background:url(../images/train/cong_"+data.cwd2+"_2.png) no-repeat;" 
+									+"background-size: contain;'>" 
+								+"</div>"
+								+"<span>"+data.rate2+"%</span>"
+							+"</div>"
+						+"</div>"
 					+"</div>"
-				+"</div>"
-				// 첫번 째 언더바 바로 다음에 br 태그로 개행 처리
-				+"<span>"+spanVal+"</span>"
-			+"</div>"
-		+"</td>";
-	}
+				+"</td>";
+			}
+
+	
 	return funcTbCont;
 }
 

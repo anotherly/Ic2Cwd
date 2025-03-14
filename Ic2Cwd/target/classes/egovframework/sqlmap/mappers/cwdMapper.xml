@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.hivesys.setting.mapper.CwdMapper">
+<!-- 
+수정일           수정자         수정내용 
+========= ======= ================================================= 
+2020.07.23 정다빈     최초 생성 
+-->
+
+	<!-- 전체 사용자 조회 -->
+	<!-- 전체 또는 특정 사용자 조회 -->
+	<resultMap type="cwdVO" id="resultVo">
+		<result property="boradStCnt" column="borad_st_cnt"/>
+		<result property="maxPsCnt" column="max_ps_cnt"/>
+		<result property="standardKg" column="standard_kg"/>
+		<result property="calcNum" column="calc_num"/>
+		<result property="multipNum" column="multip_num"/>
+		<result property="calcLocation" column="calc_location"/>
+	</resultMap>
+	
+	<select id="selectCwdList" parameterType="cwdVO" resultMap="resultVo">
+		SELECT *	
+		FROM
+		CONFIG_INFO
+	</select>
+	
+	
+	<select id="selectCwd" parameterType="cwdVO" resultMap="resultVo">
+		SELECT *
+		FROM
+		CONFIG_INFO
+	</select>
+	
+	<!-- 사용자 등록 -->
+	<insert id="insertCwd" parameterType="cwdVO">
+		INSERT INTO CONFIG_INFO(
+			borad_st_cnt
+			,max_ps_cnt
+			,standard_kg
+			,calc_num
+			,multip_num
+			,calc_location
+		)
+		VALUES (
+			 #{boradStCnt}
+			,#{maxPsCnt}
+			,#{standardKg}
+			,#{calcNum}
+			,#{multipNum}
+			,#{calcLocation}
+		)
+	</insert>
+	
+	<!-- 사용자 정보 수정-->
+	<update id="updateCwd" parameterType="cwdVO">
+		UPDATE CONFIG_INFO
+		SET
+			borad_st_cnt=#{boradStCnt}
+			,max_ps_cnt=#{maxPsCnt}
+			,standard_kg=#{standardKg}
+			,calc_num=#{calcNum}
+			,multip_num=#{multipNum}
+			,calc_location=#{calcLocation}
+	</update>
+	
+	<!-- 사용자 삭제 -->
+	<delete id="deleteCwd" parameterType="cwdVO">
+		DELETE FROM CONFIG_INFO 
+		
+	</delete>
+
+</mapper>

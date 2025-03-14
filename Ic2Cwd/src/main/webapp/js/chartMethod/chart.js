@@ -102,51 +102,46 @@ function cssNonChart(){
 2021.05.10   정다빈       최초작성
  ************************************************************************/
 
-function barChart(divId,alData,legnd,w,h){
+function barChart(divId,xList,yList,yList2,w,h){
 	console.log("막대 차트 생성함수 진입");
 	var legend='';
 	if(typeof legnd !=="undefined"){
 		legend=legnd
 	}
-	//db에서 조회한 데이터를 상황에 맞게 배열에 삽입
-	var xList=[];
-	var yList=[];
+	var xlgnd=xList[0];
+	var ylgnd=yList[0];
+	var ylgnd2='y2';//어차피 값 안들어올땐 y2로 인식된다 쳤을때
+	var dataList=[];
+	//y2 값이 없으니 아무일도 일어나지 않음
+	if(typeof yList2 !== "undefined" || yList2 != null){
+		ylgnd2=yList2[0];
+		dataList=[xList,yList,yList2];
+	}else{//y2없음
+		dataList=[xList,yList];
+	}
 	
-	if(typeof alData !== "undefined" && alData != null || alData.length !=0){
 	
-		for (var i = 0; i < alData.length; i++) {
-			if(i==0){
-				xList.push("시간");
-				yList.push("혼잡도");
-			}else{
-				xList.push(alData[i].xVal);
-				yList.push(alData[i].yVal);
-			}
-		}
-		//xList=['a','b','c','d','e'];
-		console.log(xList);
 		var rstC =  c3.generate({
 			bindto: '#'+divId,
 			size: {
 		        height: h,
 		        width: w,
 		    },
+		    
 		    data: {
-		    	x:'시간',
-		    	columns: [
-		    		xList,yList
-		        ],
+		    	x:xlgnd,
+		    	columns: dataList,
 		        type: 'bar',
-
+		        //상황에 따라 아래 변수 수정 필요!
 	        	colors: {
-	        		혼잡도: function(d) {
-	        	    	//console.log("d"+d.value);
+	        		"최대 혼잡도": function(d) {
+	        	    	
 		    			var color=""
-	        	    	if(d.value==1){
+	        	    	if(d.value<=130){
 	        	    		color='#50E94F';
-	        	    	}else if(d.value==2){
+	        	    	}else if(d.value<=150){
 	        	    		color='#F5E001';
-	        	    	}else if(d.value==3){
+	        	    	}else if(d.value<=170){
 	        	    		color='#F68F00';
 	        	    	}else{
 	        	    		color='#FE0000';
@@ -154,14 +149,31 @@ function barChart(divId,alData,legnd,w,h){
 	        	        return color;
 	        	      }
 	        	},
+	        //y값 위에 나오는 글자
+        	 labels: {
+	               format:{
+	            	   //키값을 고정값이 아닌 변수를 대입하고 싶으면 아래처럼 표기하면 된다...
+	            	   [`${ylgnd}`]:function (v, id, i, j) {
+	            		   if(v!=null && v>=10){
+		   						var format= d3.format(',');
+		   		                return format(v);
+		   					}else{
+		   						return "";
+		   					}
+		            	   return d3.format(v); 
+		               },  
+		               [`${ylgnd2}`]:function (v, id, i, j) {
+			        		if(v!=null && v>=10){
+		   						var format= d3.format(',');
+		   		                return format(v);
+		   					}else{
+		   						return "";
+		   					} 
+			        	}  
+	               } 
+	           }
+	        	
 		    },
-
-		    /*colors: {
-		  	      value: function(d) {
-		  	    	console.log("d"+d);
-		  	        return '#'+(0xff0000+(d.value-25)*256*3).toString(16);
-		  	      }
-		  	},*/
 		    
 		    axis: {
 			    x: {
@@ -173,7 +185,7 @@ function barChart(divId,alData,legnd,w,h){
 	                }
 			    },
 	            y: {
-                    max: 4,
+                    max: 220,
                     min:0,
                     padding: {top: 20, bottom: 0},
                     tick: {
@@ -185,6 +197,10 @@ function barChart(divId,alData,legnd,w,h){
                           return d;
                         }
                     }
+                    ,label: {
+	                    text: '혼잡률',
+	                    position: 'top',
+	                }
 	            }
 		   },
 		    bar: {
@@ -206,10 +222,6 @@ function barChart(divId,alData,legnd,w,h){
 		      }
 		});
 		return rstC;
-	}else{
-		return 0;
-	}
-	
 }
 
 /************************************************************************
@@ -235,7 +247,7 @@ function gaugeChart(divId,per,w,h){
 		    },
 		    data: {
 		        columns: [
-		            ['주의/혼잡 비율', per]
+		            ['금일 전체대비 혼잡&심각 비율', per]
 		        ],
 		        type: 'gauge',
 //		        onclick: function (d, i) { console.log("onclick", d, i); },

@@ -19,8 +19,8 @@ body {
 	display: flex;
     justify-content: flex-start;
     width: 100%;
-    /* padding-right: 50%; */
-    /* margin-bottom:10px; */
+    padding-right: 50%;
+    margin-bottom: 10px;
 }
 
 .arex_tab{
@@ -1248,6 +1248,13 @@ input:focus{
     padding: 10px 20px;
     box-sizing: border-box;
     margin-top: 20px;
+}
+
+/* 셀렉트박스 */
+.ctn_select_box1{
+	width: 200px;
+    height: 35px;
+    text-align: center;
 }
 .description_box .txt_info{
     margin: 5px 0;

@@ -55,9 +55,7 @@ table td {
 </style>
 <script>
 	$(document).ready(function(){
-		var now = new Date();
-		var yesterday = new Date(now.setDate(now.getDate() - 1));	
-
+		console.log("월별 통계");
 		//최대일과 현재일이 같을 경우 발생할수 있는 문제에 대해 최대일에 +1초 
 		//먼저 변수 선언
 		var maxD = moment().add(1, 'seconds').format("YYYY");
@@ -68,11 +66,12 @@ table td {
 			 maxDate : maxD, 
 			 defaultDate: defaultD
 		 }).on('dp.change', function (e) {
-		 	//변경일시에 해당하는 데이터로 호출
-		 	$("#chtImg").load("/stat/mainAdminChart.do");
-			tbSearch("tableList","/stat/list.ajax",{"keyDate":$("#sDate").val(),"keyType":typeId});
+			 	//변경일시에 해당하는 데이터로 호출
+			 	$("#chtImg").load("/stat/statChart.do");
+				tbSearch("tableList","/stat/list.ajax",{"keyDate":$("#sDate").val(),"keyType":typeId});
 		 });
 		
+		//console.log("월별통계");
 		//테이블 기본설정 세팅
 		dtTbSetting();
 		iidx = 3;
@@ -85,30 +84,24 @@ table td {
                 "type":"POST",
                 "dataType": "json",
                 data: function (d) {
-
+                    
                     d.keyDate = $("#sDate").val(); 
-                    d.keyType = typeId;
+                    d.keyType = "yearStat";
                 }
             },  
             columns: [
-                {
-            		data:   "lteRUsed",
-                },
-                {
-            		data:   "lteRIp",
-                	"render": function (data, type, row, meta) {
-                        ////console.log(data);
-                        return data;
-                    }
-                },
-                {data:"rssi"},
-                {data:"rsrp"},
-                {data:"rsrq"},
-                {data:"memCritVal"},
-                {data:"lteRComUpVal"},
-                {data:"lteRComDnVal"},
-                {data:"failureRegYdt"},
-                /* {data:"failbackYdt"}, */
+            	{data:"weekFlag"},
+            	{data:"updownFlag"},
+            	
+            	{data:"amMaxRate"},
+            	{data:"amRcvDt"},
+            	{data:"amStationId"},
+            	{data:"amAvgRate"},
+            	
+            	{data:"pmMaxRate"},
+            	{data:"pmRcvDt"},
+            	{data:"pmStationId"},
+            	{data:"pmAvgRate"},
             ],
             "lengthMenu": [ [5, 10, 20], [5, 10, 20] ],
             "pageLength": 5,
@@ -139,13 +132,13 @@ table td {
 			$('#tableList input:checkbox[name="chk"]').each(function(i,list) {
 				$(this).attr("id","chk"+i);
 			});
-		});
+		}); 
 
 		$("#btnDownload").click(function() {
 			//console.log("다운로드 버튼 클릭");
 			//엑셀 다운로드 후 언로드 방지
 			cssNonChart();
-			c3Title="YEAR";
+			c3Title="MONTH";
 			c3TagId="_("+$("#sDate").val()+")";
 			$("#title_val0").val($("#chart_title0").text());
 			$("#title_val1").val($("#chart_title1").text());
@@ -162,15 +155,10 @@ table td {
 </head>
 		<!-- contents Start ------------------>
 		<div id="containerAll" class="containerAll" style="flex-direction: column;">
-			<!-- 내용 부분 -->
-			<!-- <div id="container_chart" class="container_b"></div> -->
-			
 			<div id="chtImg" class="container_b" style="width: 100%;"></div>
-			<!-- 우측 단말기 테이블 전체-->
-
 			<!-- 단말기 테이블 -->
-			<div style="display: flex;width: 100%;height: 50px;flex-direction: row;align-items: center;justify-content: space-between;margin-bottom: 10px;padding-left:37px;">
-				<h3 class="chart-title">단말기별 연 평균 수치값</h3>
+			<div style="display: flex;width: 100%;height: 50px;flex-direction: row;align-items: center;justify-content: space-between;margin-bottom: 10px; padding-left:37px;">
+				<h3 class="chart-title">시간대/구간별 월 평균 수치값</h3>
 				<!-- 엑셀 다운로드 -->
 				<div style="display: flex;justify-content: space-between;width: 350px;align-items: center;">
 					<div class='input-group date' id='datetimepicker1'>
@@ -178,34 +166,40 @@ table td {
 						<span class="input-group-addon">
 							<span class="glyphicon glyphicon-calendar"></span>
 						</span>
-					</div>			
+					</div>				
 					<div id="btnIns" style="display: flex;justify-content: space-around;">
 						<input type="button" class="btn btn_primary" id="btnDownload" value="다운로드">
 					</div>
 				</div>
 			</div>
 				
-			<div id="container_b" class="container_b"style="padding-left:37px;width: 100%;">
+			<!-- 우측 단말기 테이블 전체-->
+			<div id="container_s" class="container_s" >
 				<div style="width:100%;display:flex;margin-bottom:10px;">
 				</div>
 				<!-- 팀별 선택 현황 -->
-				
-				<div id="trainDiv"style="width: 100%;height: 100%;" >
+				<div id="trainDivStat"style="width: 100%;height: 100%;" >
 					<table id="tableList" class="table table-bordered" style="width: 100%;">
-						<thead>
+						<thead class="thead">
 							<tr>
-								<th>사용 용도</th>
-								<th>WAN_IP</th>
-								<th>RSSI</th>
-								<th>RSRP</th>
-								<th>RSRQ</th>
-								<th>MEMORY</th>
-								<th>UPLOAD</th>
-								<th>DOWNLOAD</th>
-								<th>장애발생시각</th>
-								<!-- <th>장애복구시각</th> -->
+								<th rowspan="2" style="text-align:center; vertical-align: middle;">주중/주말</th>
+								<th rowspan="2" style="text-align:center; vertical-align: middle;">구분</th>
+								<th colspan="4" style="text-align:center; vertical-align: middle;">오전 RH</th>
+								<th colspan="4" style="text-align:center; vertical-align: middle;">오후 RH</th>
+							</tr>
+							<tr>
+								<th>최대 혼잡도</th>
+								<th>시간대</th>
+								<th>구간</th>
+								<th>평균 혼잡도</th>
+								
+								<th>최대 혼잡도</th>
+								<th>시간대</th>
+								<th>구간</th>
+								<th>평균 혼잡도</th>
 							</tr>
 						</thead>
+						
 					</table>
 				</div>
 			</div>
