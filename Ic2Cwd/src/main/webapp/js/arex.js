@@ -90,7 +90,7 @@ function tdCreate(data){
 	}
 	var funcTbCont="";
 	
-			if(data.trainCnt==4){
+			if(data.trainCnt==4){//중련됬을 경우
 				funcTbCont=
 				"<td id='"+tdid+"' class='added' style='border-right: none;border-left: none;'>"
 					+"<div class='td-div'>"

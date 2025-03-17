@@ -37,6 +37,6 @@ public interface AspService {
 	public void deleteAsp(List<String> AspArr);
 	
 	//상세에서 사용자 삭제
-	public void deleteAspD(String AspId);
+	public void deleteAspD(AspVO AspVO);
 	
 }

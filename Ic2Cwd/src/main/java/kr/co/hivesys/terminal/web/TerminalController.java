@@ -45,13 +45,17 @@ public class TerminalController {
 	
 	//주소에 맞게 매핑
 	@RequestMapping(value= {"/chart/*.do","/terminal/*.do","/stat/*.do"})
-	public ModelAndView urlMapping(HttpSession httpSession, HttpServletRequest request,Model model
+	public String urlMapping(HttpSession httpSession, HttpServletRequest request,Model model
 			) throws Exception{
-		logger.debug("▶▶▶▶▶▶▶.단말기 최초 컨트롤러");
+		/*logger.debug("▶▶▶▶▶▶▶.단말기 최초 컨트롤러");
 		url = request.getRequestURI().substring(request.getContextPath().length()).split(".do")[0];
 		logger.debug("▶▶▶▶▶▶▶.보내려는 url : "+url);
 		ModelAndView mav = new ModelAndView(url);
-		return mav;
+		return mav;*/
+		logger.debug("▶▶▶▶▶▶▶.단말기 최초 컨트롤러");
+		url = request.getRequestURI().substring(request.getContextPath().length()).split(".do")[0];
+		logger.debug("▶▶▶▶▶▶▶.보내려는 url : "+url);
+		return url;
 	}
 	
 	//메인화면 - 목록 조회
@@ -185,10 +189,10 @@ public class TerminalController {
 		
 		ModelAndView mav = new ModelAndView("jsonView");
 		TerminalVo data= null;
+		List<AspVO> aspList= null;
 		try {
-			
-			List<DepartVo> departList = new ArrayList<>();
-			mav.addObject("departList", departList);
+			aspList = aspService.selectAspType(new AspVO());
+			mav.addObject("carTypeList", aspList);
 			data = terminalService.selectTerminal(inputVo).get(0);
 			mav.addObject("data", data);
 			mav.setViewName(url);
@@ -210,6 +214,8 @@ public class TerminalController {
 		TerminalVo thvo= null;
 		try {
 			terminalService.updateTerminal(inputVo);
+			//aspService.deleteAspD(inputVo);
+			aspService.updateAsp(inputVo);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.debug(""+e);
@@ -228,6 +234,7 @@ public class TerminalController {
 		ModelAndView mav = new ModelAndView("jsonView");
 		try {
 			terminalService.deleteTerminal(dataArr);
+			aspService.deleteAsp(dataArr);
 		} catch (Exception e) {
 			mav.addObject("msg","에러가 발생하였습니다");
 		}
@@ -236,94 +243,18 @@ public class TerminalController {
 	
 	//24-10-28 : 상세에서 단말기 삭제
 	@RequestMapping(value="/terminal/terminalDeleteD.ajax")
- 	public @ResponseBody ModelAndView terminalDetailDelete(@RequestParam(value="lteIp") String lteIp , HttpServletRequest request) throws Exception {
+ 	public @ResponseBody ModelAndView terminalDetailDelete(
+ 			@ModelAttribute("TerminalVo") TerminalVo inputVo,
+ 			HttpServletRequest request) throws Exception {
 		logger.debug("▶▶▶▶▶▶▶상세에서 회원정보 삭제!!!!!!!!!!!!!!!!");
 		
 		url = request.getRequestURI().substring(request.getContextPath().length()).split(".do")[0];
 		ModelAndView mav = new ModelAndView("jsonView");
 		
 		try {
-			terminalService.deleteTerminalD(lteIp);
+			terminalService.deleteTerminalD(inputVo);
+			aspService.deleteAspD(inputVo);
 		} catch (Exception e) {
-			mav.addObject("msg","에러가 발생하였습니다");
-		}
-		return mav;
-	}
-	
-	//단말기 정보 가져오기
-	@RequestMapping(value="/terminal/deviceReload.ajax")
-	public @ResponseBody ModelAndView deviceReload(
-		HttpServletRequest request, HttpServletResponse response
-		,@ModelAttribute("TerminalVo") TerminalVo inputVo
-		) throws Exception{
-			url = request.getRequestURI().substring(request.getContextPath().length()).split(".do")[0];
-			
-			ModelAndView mav = new ModelAndView("jsonView");
-			TerminalVo data= null;
-			try {
-				data = terminalService.deviceReload(inputVo);
-				mav.addObject("rData", data);
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-				logger.debug(""+e);
-				mav.addObject("msg","에러가 발생했습니다.");
-			}
-			return mav;
-		}
-	
-	//차트 실시간 조회 최초
-	
-	// 단말기 선택 시, 좌측 메모리 up/down 현황 차트 
-	@RequestMapping(value="/realtimeChartFirst.ajax")
-	public @ResponseBody ModelAndView realtimeChartFirst
-	( 
-			HttpServletRequest request, HttpServletResponse response
-			,@ModelAttribute("TerminalVo") TerminalVo inputVo		
-	) throws Exception{
-		ModelAndView mav = new ModelAndView("jsonView");
-		List<TerminalVo>  tlist= new ArrayList<>();
-		try {
-			tlist = terminalService.chartQFirst(inputVo);
-			mav.addObject("data",tlist);
-		} catch (Exception e) {
-			e.printStackTrace();
-			mav.addObject("msg","에러가 발생하였습니다");
-		}
-		return mav;
-	}
-	
-	//차트 실시간 조회
-	@RequestMapping(value="/realtimeChart.ajax")
-	public @ResponseBody ModelAndView realtimeChart
-	( 
-			HttpServletRequest request, HttpServletResponse response
-			,@ModelAttribute("TerminalVo") TerminalVo inputVo		
-			) throws Exception{
-		ModelAndView mav = new ModelAndView("jsonView");
-		try {
-			TerminalVo tvo = terminalService.chartQ(inputVo);
-			mav.addObject("data",tvo);
-		} catch (Exception e) {
-			e.printStackTrace();
-			mav.addObject("msg","에러가 발생하였습니다");
-		}
-		return mav;
-	}
-	
-	
-	// 누적 운영 시간 차트 조회
-	@RequestMapping(value="/detailChart.ajax")
-	public @ResponseBody ModelAndView detailChart (HttpServletRequest request, HttpServletResponse response,
-			@ModelAttribute("TerminalVo") TerminalVo inputVo) throws Exception {
-		
-		ModelAndView mav = new ModelAndView("jsonView");
-		List<TerminalVo>  tlist= new ArrayList<>();
-		try {
-			tlist = terminalService.chartD(inputVo);
-			mav.addObject("data",tlist);
-		} catch (Exception e) {
-			e.printStackTrace();
 			mav.addObject("msg","에러가 발생하였습니다");
 		}
 		return mav;
@@ -354,66 +285,5 @@ public class TerminalController {
 		return mav;
 	}
 	
-	//메인차트 - 관리자
-	@RequestMapping(value="/chart/mainAdminChart.ajax")
-	public @ResponseBody ModelAndView mainAdminChart( 
-			HttpServletRequest request, HttpServletResponse response
-			,@ModelAttribute("TerminalVo") TerminalVo inputVo
-			) throws Exception{
-		url = request.getRequestURI().substring(request.getContextPath().length()).split(".do")[0];
-		
-		ModelAndView mav = new ModelAndView("jsonView");
-		List<TerminalVo>  data1= new ArrayList<>();
-		List<TerminalVo>  data2= new ArrayList<>();
-		List<TerminalVo>  data3= new ArrayList<>();
-		try {
-			data1= terminalService.mainChart1(inputVo);
-			data2= terminalService.mainChart2(inputVo);
-			data3= terminalService.barChart(inputVo);
-			mav.addObject("data1", data1);
-			mav.addObject("data2", data2);
-			mav.addObject("data3", data3);
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.debug(""+e);
-			mav.addObject("msg","에러가 발생했습니다.");
-		}
-		return mav;
-	}
-	
-	//메인차트 - 일반
-	@RequestMapping(value="/chart/mainUserChart.ajax")
-	public @ResponseBody ModelAndView mainUserChart( 
-			HttpServletRequest request, HttpServletResponse response
-			,@ModelAttribute("TerminalVo") TerminalVo inputVo
-			) throws Exception{
-		url = request.getRequestURI().substring(request.getContextPath().length()).split(".do")[0];
-		
-		ModelAndView mav = new ModelAndView("jsonView");
-		List<TerminalVo>  data1= new ArrayList<>();
-		List<TerminalVo>  data2= new ArrayList<>();
-		List<TerminalVo>  data3= new ArrayList<>();
-		
-		UserVO reqLoginVo = (UserVO) request.getSession().getAttribute("login");
-//		if(reqLoginVo!=null) {
-//			if(!(reqLoginVo.getUserAuth().equals("0"))) {
-//				inputVo.setDepartCode(reqLoginVo.getDepartCode());
-//			}
-//		}
-		try {
-			data1= terminalService.userRsrp(inputVo);
-			data2= terminalService.userRsrq(inputVo);
-			data3= terminalService.barChart(inputVo);
-			mav.addObject("data1", data1);
-			mav.addObject("data2", data2);
-			mav.addObject("data3", data3);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.debug(""+e);
-			mav.addObject("msg","에러가 발생했습니다.");
-		}
-		return mav;
-	}
 	
 }

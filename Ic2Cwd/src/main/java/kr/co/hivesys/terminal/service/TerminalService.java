@@ -12,8 +12,6 @@ public interface TerminalService {
 	List<TerminalVo> selectTerminalList(TerminalVo cmsVo);
 	
 	List<TerminalVo> selectTerminal(TerminalVo cmsVo);
-	
-	String creComId();
 
 	void insertTerminal(TerminalVo cmsVo);
 	
@@ -21,21 +19,6 @@ public interface TerminalService {
 	
 	public void deleteTerminal(List<String> listArr);
 
-	public void deleteTerminalD(String lteIp);
+	public void deleteTerminalD(TerminalVo cmsVo);
 	
-	TerminalVo chartQ(TerminalVo inputVo);
-	List<TerminalVo> chartD(TerminalVo inputVo);
-	
-	List<TerminalVo>  mainChart1(TerminalVo inputVo);
-	List<TerminalVo>  mainChart2(TerminalVo inputVo);
-	List<TerminalVo>  barChart(TerminalVo inputVo);
-	
-	List<TerminalVo>  userRsrp(TerminalVo inputVo);
-	List<TerminalVo>  userRsrq(TerminalVo inputVo);
-
-	List<TerminalVo> chartQFirst(TerminalVo inputVo);
-
-	List<TerminalVo> routerTeamCnt(TerminalVo terminalVo);
-
-	TerminalVo deviceReload(TerminalVo inputVo);
 }

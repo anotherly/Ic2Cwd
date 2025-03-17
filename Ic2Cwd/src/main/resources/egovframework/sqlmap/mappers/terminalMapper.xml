@@ -58,6 +58,11 @@
 		<result property="cwd7" column="cwd7"/>
 		<result property="cwd8" column="cwd8"/>
 		
+		<result property="stWgt1" column="st_wgt_1"/>
+		<result property="stWgt2" column="st_wgt_2"/>
+		<result property="fcWgt1" column="fc_wgt_1"/>
+		<result property="fcWgt2" column="fc_wgt_2"/>
+		
 		<result property="stationId" column="station_id"/>
 		<result property="stationName" column="station_name"/>
 		
@@ -111,7 +116,7 @@
 				    in (
 				    	select formation_no, max(rcv_dt) as rcv_dt 
 				        	from tcms_log 
-				        	where RCV_DT   <![CDATA[ > ]]>   NOW() - INTERVAL 2 MINUTE
+				        	where RCV_DT   <![CDATA[ > ]]>   NOW() - INTERVAL 3 HOUR
 				            group by formation_no
 				    )
 		 		) b
@@ -137,42 +142,25 @@
 	<!-- 단말기 화면에서의 목록/상세 -->	
 	<select id="selectTerminal" parameterType="terminalVO" resultMap="resultTerminalVo">
 		SELECT J1.*,c.car_name
+		,c.st_wgt_1,c.fc_wgt_1,c.st_wgt_2,c.fc_wgt_2
 		FROM 
 		(
 			SELECT 
 				a.formation_no
-				,IFNULL(b.tno2,'정보없음') AS train_no
 				,IFNULL(a.device_ip,'정보없음') AS device_ip
 				,IFNULL(a.device_mac,'정보없음') AS device_mac
 				,IFNULL(a.INS_LOC_TXT,'정보없음') AS INS_LOC_TXT
 				,IFNULL(a.device_used,'정보없음') AS device_used
 				,IFNULL(a.gateway_ip,'정보없음') AS gateway_ip
 				,IFNULL(a.device_user,'정보없음') AS device_user
-				,IF(b.active_cap=0,'상행','하행') AS active_cap
 				,a.car_type
-				,b.train_cnt
-				,IFNULL(b.train_add_cnt,'정보없음') as train_add_cnt
-				,DATE_FORMAT(b.rcv_dt, '%Y-%m-%d %H:%i:%s') AS rcv_dt
+				,a.etc
 				,DATE_FORMAT(a.reg_dt, '%Y-%m-%d') as reg_dt
 	 		FROM TCMS_INFO a
-	 		left join
-	 		(
-				SELECT 
-					TRAIN_NO AS tno2
-					,formation_no AS fno2
-					,rcv_dt
-					,active_cap
-					,train_cnt
-					,train_add_cnt
-	 			FROM tcms_log
-	 			WHERE RCV_DT <![CDATA[ > ]]> NOW() - INTERVAL 10 MINUTE
-				group by fno2
-	 		) b
-	 		ON a.formation_no-100=b.fno2
 		)J1
 		LEFT JOIN	
 		asp_info C
-		ON J1.car_type=c.car_type
+		ON J1.formation_no=c.formation_no
 	    WHERE 1=1
 		<if test="formationNo !=null and formationNo neq ''"> 
 			AND J1.formation_no=#{formationNo}
@@ -182,7 +170,7 @@
 		    AND <![CDATA[ J1.reg_dt >= #{sDate} AND J1.reg_dt <= #{eDate} ]]>
 		</if>
 		<if test="carType !=null and carType neq ''">
-		    AND J1.carType =#{carType}
+		    AND J1.car_type =#{carType}
 		</if>
 		<if test="schType !=null and schType neq ''"> 
 			<choose>
@@ -204,7 +192,7 @@
 	<!-- 차상단말기 등록 -->
 	<insert id="insertTerminal" parameterType="terminalVO">
 		INSERT INTO TCMS_INFO(
-			  train_no
+			  formation_no
 			 ,car_type
 			 ,device_ip
 			 ,device_mac
@@ -216,7 +204,7 @@
 			 ,reg_dt
 		)
 		VALUES (
-			 #{trainNo}
+			 #{formationNo}
 			,#{carType}
 			,#{deviceIp}
 			,#{deviceMac}
@@ -257,7 +245,7 @@
 	<!--  상세에서 사용자 삭제  -->
 	<delete id="deleteTerminalD" >
 	    DELETE FROM TCMS_INFO
-	    WHERE formation_no=#{formationNo}-100
+	    WHERE formation_no=#{formationNo}
 	</delete>
 	
 </mapper>

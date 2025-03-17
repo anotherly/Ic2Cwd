@@ -203,7 +203,7 @@
 			<div id="work" class="work-wrap list_page">
 			
 				<div class="ctn_tbl_header">
-					<div class="ttl_ctn">무선장치 목록</div>
+					<div class="ttl_ctn">차량 목록</div>
 				</div>
                 <!-- search_box Start -->
                 <div class="search_box">

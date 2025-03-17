@@ -81,7 +81,7 @@
 		VALUES (
 			 #{carType}
 			,#{carName}
-			,#{formation_no}
+			,#{formationNo}
 			,#{stWgt1}
 			,#{stWgt2}
 			,#{stWgt3}
@@ -107,7 +107,6 @@
 		SET
 			 car_type  =#{carType}
 			,car_name  =#{carName}
-			,formation_no =#{formation_no}
 			,st_wgt_1  =#{stWgt1}
 			,st_wgt_2  =#{stWgt2}
 			,st_wgt_3  =#{stWgt3}
@@ -124,16 +123,23 @@
 			,fc_wgt_6  =#{fcWgt6}
 			,fc_wgt_7  =#{fcWgt7}
 			,fc_wgt_8  =#{fcWgt8}
-		WHERE car_type =#{carType} 
+		WHERE 
+		formation_no =#{formationNo}
 	</update>
 	
-	<!-- 사용자 삭제 -->
+	<!-- 제조사별 일괄 삭제 -->
 	<delete id="deleteAsp" parameterType="AspVO">
 		DELETE FROM ASP_INFO 
-		WHERE car_type IN
+		WHERE formation_no IN
 		<foreach collection="chkList" item="item" index="index" separator="," open="(" close=")">
             #{item}
         </foreach>
+	</delete>
+	
+	<!-- 편성 별 삭제 -->
+	<delete id="deleteAspD" parameterType="AspVO">
+		DELETE FROM ASP_INFO 
+		WHERE formation_no =#{formationNo}
 	</delete>
 
 </mapper>

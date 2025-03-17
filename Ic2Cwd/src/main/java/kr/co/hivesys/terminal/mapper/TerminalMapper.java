@@ -19,30 +19,12 @@ public interface TerminalMapper {
 	
 	List<TerminalVo> selectTerminal(TerminalVo cmsVo);
 	
-	String creComId();
-	
 	void insertTerminal(TerminalVo cmsVo);
 
 	void updateTerminal(TerminalVo cmsVo);
 
 	void deleteTerminal(HashMap<String, Object> map);
 
-	void deleteTerminalD(String lteIp);
-	
-	TerminalVo chartQ(TerminalVo inputVo);
-	List<TerminalVo> chartD(TerminalVo inputVo);
-	
-	List<TerminalVo>  mainChart1(TerminalVo inputVo);
-	List<TerminalVo>  mainChart2(TerminalVo inputVo);
-	List<TerminalVo>  barChart(TerminalVo inputVo);
-	
-	List<TerminalVo>  userRsrp(TerminalVo inputVo);
-	List<TerminalVo>  userRsrq(TerminalVo inputVo);
-
-	List<TerminalVo> chartQFirst(TerminalVo inputVo);
-	
-	List<TerminalVo> routerTeamCnt(TerminalVo inputVo);
-	
-	TerminalVo deviceReload(TerminalVo inputVo);
+	void deleteTerminalD(TerminalVo cmsVo);
 	
 }

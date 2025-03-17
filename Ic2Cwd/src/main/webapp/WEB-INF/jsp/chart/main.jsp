@@ -115,14 +115,14 @@
 			<div id="container_b" class="container_b" style="padding: 20px;width:100%;">
 			
 				<!-- 팀별 선택 현황 -->
-				<div class="router_top">
-					<!-- <div id="teamSlt" class="tab_container"></div> -->
+				<!-- <div class="router_top">
+					<div id="teamSlt" class="tab_container"></div>
 					<span id="countRouter"></span>
-					<!-- <div id="paging" style="width: 150px;">
+					<div id="paging" style="width: 150px;">
 						<span id="pageStart" class="pg-btn">◀</span>
 						<span id="pageEnd"  class="pg-btn">▶</span>
-					</div> -->
-				</div>
+					</div>
+				</div> -->
 				
 				<!-- 단말기 테이블 -->
 				<div id="trainDiv">

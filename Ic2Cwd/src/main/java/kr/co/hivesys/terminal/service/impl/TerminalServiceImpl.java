@@ -32,10 +32,6 @@ public class TerminalServiceImpl implements TerminalService{
 		return TerminalMapper.selectTerminal(cmsVo);
 	}
 
-	@Override
-	public String creComId() {
-		return TerminalMapper.creComId();
-	}
 	
 	@Override
 	public void insertTerminal(TerminalVo cmsVo) {
@@ -57,51 +53,8 @@ public class TerminalServiceImpl implements TerminalService{
 	
 	//사용자 삭제 (상세에서)
 	@Override
-	public void deleteTerminalD(String lteIp) {
-		TerminalMapper.deleteTerminalD(lteIp);
-	}
-	
-	@Override
-	public TerminalVo chartQ(TerminalVo inputVo) {
-		return TerminalMapper.chartQ(inputVo);
-	}
-	
-	@Override
-	public List<TerminalVo> chartD(TerminalVo inputVo) {
-		return TerminalMapper.chartD(inputVo);
-	}
-	
-	@Override
-	public List<TerminalVo>  mainChart1(TerminalVo inputVo) {
-		return TerminalMapper.mainChart1(inputVo);
-	}
-	@Override
-	public List<TerminalVo>  mainChart2(TerminalVo inputVo) {
-		return TerminalMapper.mainChart2(inputVo);
-	}
-	@Override
-	public List<TerminalVo>  barChart(TerminalVo inputVo) {
-		return TerminalMapper.barChart(inputVo);
-	}
-	@Override
-	public List<TerminalVo>  userRsrp(TerminalVo inputVo) {
-		return TerminalMapper.userRsrp(inputVo);
-	}
-	@Override
-	public List<TerminalVo>  userRsrq(TerminalVo inputVo) {
-		return TerminalMapper.userRsrq(inputVo);
-	}
-	@Override
-	public List<TerminalVo> chartQFirst(TerminalVo inputVo) {
-		return TerminalMapper.chartQFirst(inputVo);
-	}
-	@Override
-	public List<TerminalVo> routerTeamCnt(TerminalVo inputVo) {
-		return TerminalMapper.routerTeamCnt(inputVo);
-	}
-	@Override
-	public TerminalVo deviceReload(TerminalVo inputVo) {
-		return TerminalMapper.deviceReload(inputVo);
+	public void deleteTerminalD(TerminalVo cmsVo) {
+		TerminalMapper.deleteTerminalD(cmsVo);
 	}
 
 }

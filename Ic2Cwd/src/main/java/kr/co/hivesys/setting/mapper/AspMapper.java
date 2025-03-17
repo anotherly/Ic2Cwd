@@ -32,6 +32,6 @@ public interface AspMapper{
 	//사용자 삭제
 	public void deleteAsp(HashMap<String, Object> map);
 	//상세에서 사용자 삭제
-	public void deleteAspD(String AspId);
+	public void deleteAspD(AspVO AspVO);
 	
 }

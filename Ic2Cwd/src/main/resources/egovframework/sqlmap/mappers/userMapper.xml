@@ -108,7 +108,7 @@
 			<if test="userPw !=null and userPw  neq '' ">
 				,`USER_PW`=#{userPw}
 			</if>
-			USER_NAME    =	#{userName}
+			,USER_NAME    =	#{userName}
 			,USER_RANK   =	#{userRank}
 			,USER_DEPT   =	#{userDept}
 			,USER_PHONE  =	#{userPhone}

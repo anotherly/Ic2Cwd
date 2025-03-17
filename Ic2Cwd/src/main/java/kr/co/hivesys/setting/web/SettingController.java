@@ -205,28 +205,28 @@ public class SettingController {
 		ModelAndView mav = new ModelAndView("jsonView");
 		
 		try {
-			aspService.deleteAspD(settingId);
+			//aspService.deleteAspD(settingId);
 		} catch (Exception e) {
 			mav.addObject("msg","에러가 발생하였습니다");
 		}
 		return mav;
 	}
 	
-	//혼잡도 계산화면 최초
-	public @ResponseBody ModelAndView cwdList(@RequestParam(value="settingId") String settingId , HttpServletRequest request) throws Exception {
-		logger.debug("▶▶▶▶▶▶▶상세에서 회원정보 삭제!!!!!!!!!!!!!!!!");
-		
-		url = request.getRequestURI().substring(request.getContextPath().length()).split(".do")[0];
-		ModelAndView mav = new ModelAndView("jsonView");
-		
-		try {
-			aspService.deleteAspD(settingId);
-			mav.setViewName(url);
-		} catch (Exception e) {
-			mav.addObject("msg","에러가 발생하였습니다");
-		}
-		return mav;
-	}
+//	//혼잡도 계산화면 최초
+//	public @ResponseBody ModelAndView cwdList(@RequestParam(value="settingId") String settingId , HttpServletRequest request) throws Exception {
+//		logger.debug("▶▶▶▶▶▶▶상세에서 회원정보 삭제!!!!!!!!!!!!!!!!");
+//		
+//		url = request.getRequestURI().substring(request.getContextPath().length()).split(".do")[0];
+//		ModelAndView mav = new ModelAndView("jsonView");
+//		
+//		try {
+//			//aspService.deleteAspD(settingId);
+//			mav.setViewName(url);
+//		} catch (Exception e) {
+//			mav.addObject("msg","에러가 발생하였습니다");
+//		}
+//		return mav;
+//	}
 	
 	@RequestMapping(value="/setting/cwd/cwdList.do")
 	public @ResponseBody ModelAndView cwdList( 

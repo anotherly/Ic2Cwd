@@ -108,11 +108,8 @@
 							<div class="ctn_tbl_row">
 								<div class="ctn_tbl_th fm_rep">사용자 ID</div>
 								<div class="ctn_tbl_td">
-								<input type="text" 
-									name ="userId" 
-									maxlength="6" 
-									value="${data.userId}"
-									class="form-control input_base_require">
+								<input type="hidden" id="userId" name="userId" value="${data.userId}"/> 
+									${data.userId}
 								</div>
 								<div class="ctn_tbl_th fm_rep">사용자 이름</div>
 								<div class="ctn_tbl_td">
@@ -125,23 +122,22 @@
 							</div>
 							
 							<div class="ctn_tbl_row">
-								<div class="ctn_tbl_th fm_rep">비밀번호(변경시에만 입력)</div>
+								<div class="ctn_tbl_th">비밀번호<br>(변경시에만 입력)</div>
 								<div class="ctn_tbl_td">
 								<input type="text" 
 									id="userPw" name ="userPw" 
 									maxlength="15" 
-									class="form-control input_base_require">
-									<input type="password" id="userPw" name ="userPw" placeholder="" class="form-control input_base_require">
+									class="form-control">
 								</div>
-								<div class="ctn_tbl_th fm_rep">비밀번호 확인</div>
+								<div class="ctn_tbl_th">비밀번호 확인</div>
 								<div class="ctn_tbl_td">
 									<input type="text" 
 									id="userPw1" name ="userPw1" 
 									maxlength="15" 
-									class="form-control input_base_require">
+									class="form-control">
 								</div>
 							</div>
-							<div>
+							<div class="ctn_tbl_row">
 								<div class="ctn_tbl_th ">직급</div>
 								<div class="ctn_tbl_td">
 									<input type="text" 

@@ -14,8 +14,8 @@
 	</li>
 	<li class="menu-item" id="ROOT_TEST_SW">
 		<a href="/terminal/terminalList.do" class="menu-link" style="color: rgb(255, 255, 255);">
-			<i class="menu-icon n02"></i>
-			<div>단말기 관리</div>
+			<i class="menu-icon n09"></i>
+			<div>차량정보 관리</div>
 		</a>
 	</li>
 	<li class="menu-item" id="ROOT_TEST_SW">
@@ -30,10 +30,17 @@
 			<div>통계</div>
 		</a>
 	</li>
-	<li class="menu-item">
+	<li class="menu-item" id="ROOT_TEST_SW">
+		<a href="/setting/cwd/cwdList.do" class="menu-link" style="color: rgb(255, 255, 255);">
+			<i class="menu-icon n10"></i>
+			<div>설정</div>
+		</a>
+	</li>
+<!-- 	<li class="menu-item">
 		<a href="/setting/asp/aspList.do" class="menu-link menu-toggle"><i class="menu-icon n10"></i><div>설정</div></a>
 		<ul class="menu-sub">
 			<li class="menu-item"><a href="/setting/asp/aspList.do" class="menu-link"><div>제조사별 만차/공차 기준값 관리</div></a></li>
 			<li class="menu-item"><a href="/setting/cwd/cwdList.do" class="menu-link"><div>혼잡도 산출 기준값 관리</div></a></li>
 		</ul>
 	</li>
+ -->

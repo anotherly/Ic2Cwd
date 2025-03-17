@@ -62,7 +62,7 @@ public class AspServiceImpl implements AspService{
 	}
 	
 	// 상세에서 사용자 삭제
-	public void deleteAspD(String AspId) {
-		aspMapper.deleteAspD(AspId);
+	public void deleteAspD(AspVO AspVO) {
+		aspMapper.deleteAspD(AspVO);
 	}
 }
