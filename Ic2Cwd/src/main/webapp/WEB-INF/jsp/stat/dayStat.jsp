@@ -67,6 +67,7 @@ table td {
 			 defaultDate:moment().subtract(1, 'days'),
 			 maxDate : moment()
 		}).on('dp.change', function (e) {
+			console.log("change day calender");
 			$("#chtImg").load("/stat/statChart.do");
 			tbSearch("tableList","/stat/list.ajax",{"keyDate":$("#sDate").val(),"keyType":typeId});
 		});

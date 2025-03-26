@@ -72,6 +72,64 @@
 	
 	<!-- 메인화면 대시보드에서의 단말기목록 -->
 	<select id="mainTerminalList" parameterType="terminalVO" resultMap="resultTerminalVo">
+	    WITH tcms AS(
+	    <![CDATA[ 
+			SELECT *
+				FROM tcms_log
+				WHERE rcv_dt>= now() - interval 1 minute
+				and formation_no>=201 AND formation_no<=300
+				AND kpa1>50 and kpa2>50 and kpa3>50 and kpa4>50
+				and station_id >= 0 AND station_id<60
+		]]>
+		),
+		jjng as(
+		<![CDATA[
+			SELECT tt.formation_no AS jfno FROM 
+			(
+				SELECT rcv_dt,formation_no,station_id
+					,device_mac
+					,COUNT(*) AS cnt
+					FROM tcms_log
+					WHERE rcv_dt>= now() - interval 1 minute
+					and formation_no>=201 AND formation_no<=243
+					AND kpa1>50 and kpa2>50 and kpa3>50 and kpa4>50
+					and station_id >= 0 AND station_id<60
+					GROUP BY formation_no,device_mac
+					ORDER BY formation_no,device_mac
+			)tt
+			WHERE tt.device_mac IN(
+				SELECT 
+				device_mac
+				FROM
+				(
+					SELECT jng.*,COUNT(jng.formation_no) AS cnt2 from
+						(
+							SELECT rcv_dt,formation_no,station_id
+							,device_mac
+							FROM 
+							(
+								SELECT rcv_dt,formation_no,station_id
+								,device_mac
+								,COUNT(*) AS cnt
+								FROM tcms_log
+								WHERE rcv_dt>= now() - interval 1 minute
+								and formation_no>=201 AND formation_no<=243
+								AND kpa1>50 and kpa2>50 and kpa3>50 and kpa4>50
+								and station_id >= 0 AND station_id<60
+								GROUP BY formation_no,device_mac
+								ORDER BY formation_no,device_mac
+							)tcms
+							GROUP BY formation_no,device_mac
+							ORDER BY formation_no,device_mac
+						)jng
+						GROUP BY formation_no
+						ORDER BY formation_no
+				)t1
+				WHERE t1.cnt2>1
+				)
+			]]>
+		)
+	    
 	    SELECT J2.*
 	    ,IFNULL(D.station_name ,'현재 미운행') as station_name
 	    from 
@@ -79,14 +137,15 @@
 		    SELECT J1.* 
 		    ,case when J1.RATE1 is null then 0 when J1.RATE1 <![CDATA[ < ]]> C.care_st then 1 when J1.RATE1 <![CDATA[ < ]]> C.cwd_st then 2 when J1.RATE1 <![CDATA[ < ]]> C.seve_st then 3 ELSE 4 END AS cwd1
 			,case when J1.RATE2 is null then 0 when J1.RATE2 <![CDATA[ < ]]> C.care_st then 1 when J1.RATE2 <![CDATA[ < ]]> C.cwd_st then 2 when J1.RATE2 <![CDATA[ < ]]> C.seve_st then 3 ELSE 4 END AS cwd2
-			,case when J1.RATE3 is null then 0 when J1.RATE3 <![CDATA[ < ]]> C.care_st then 1 when J1.RATE3 <![CDATA[ < ]]> C.cwd_st then 2 when J1.RATE3 <![CDATA[ < ]]> C.seve_st then 3 ELSE 4 END AS cwd3
-			,case when J1.RATE4 is null then 0 when J1.RATE4 <![CDATA[ < ]]> C.care_st then 1 when J1.RATE4 <![CDATA[ < ]]> C.cwd_st then 2 when J1.RATE4 <![CDATA[ < ]]> C.seve_st then 3 ELSE 4 END AS cwd4
 			from 
 		    (
 				SELECT 
 					  a.*
 					 ,b.*
-		 		FROM TCMS_INFO a
+					 <!-- 혼잡률이 0보다 작을경우 0으로 표기 -->						
+					,if(b.rate_t1<![CDATA[ < ]]>0,0,b.rate_t1) AS rate1
+					,if(b.rate_t2<![CDATA[ < ]]>0,0,b.rate_t2) AS rate2
+		 		FROM ASP_INFO a
 		 		left join
 		 		(
 					SELECT 
@@ -95,32 +154,30 @@
 						
 						,rcv_dt
 						
-						,IF(station_id%2=1,'(상)','(하)') AS active_cap
+						,case when station_id=0 then ''
+						else 
+							case when station_id%2=1 then '(상)' 
+							 when station_id%2=0 then '(하)'ELSE '' END 
+						end AS active_cap
 						,train_cnt
-						,train_add_cnt
-						
-						<!-- 혼잡률이 0보다 작을경우 0으로 표기 -->
-						
-						,if(rate1<![CDATA[ < ]]>0,0,rate1) AS rate1
-						,if(rate2<![CDATA[ < ]]>0,0,rate2) AS rate2
-						,if(rate3<![CDATA[ < ]]>0,0,rate3) AS rate3
-						,if(rate4<![CDATA[ < ]]>0,0,rate4) AS rate4
-						
+						,ROUND(calc_kpa((kpa1+kpa2)/2,formation_no,1)*range_kpa((kpa1+kpa2)/2,formation_no),1) AS rate_t1
+						,ROUND(calc_kpa((kpa3+kpa4)/2,formation_no,2)*range_kpa((kpa3+kpa4)/2,formation_no),1) AS rate_t2
 						,station_id
-						
-		 			FROM tcms_log
+						,if(a.formation_no=b.jfno,1,0) as train_add_cnt
+		 			FROM tcms a left join jjng b ON a.formation_no=b.jfno
 		 			<!-- 그룹 함수 중 최신 시간껄 가져올때 쓸 것 !!
 		 			기본적으로 옛날시간거 가져온다 ㅡㅡ 
 		 			 -->
 		 			where (formation_no, rcv_dt) 
 				    in (
-				    	select formation_no, max(rcv_dt) as rcv_dt 
-				        	from tcms_log 
-				        	where RCV_DT   <![CDATA[ > ]]>   NOW() - INTERVAL 3 HOUR
-				            group by formation_no
+					    <![CDATA[  
+					    	select formation_no, max(rcv_dt) as rcv_dt 
+					        	from tcms 
+					            group by formation_no
+					    ]]>
 				    )
 		 		) b
-		 		ON a.formation_no-100=b.fno2
+		 		ON a.formation_no=b.fno2
 				WHERE 1=1
 				<if test="formationNo !=null and formationNo neq ''"> 
 					AND formation_no=#{formationNo}
@@ -141,8 +198,7 @@
 	
 	<!-- 단말기 화면에서의 목록/상세 -->	
 	<select id="selectTerminal" parameterType="terminalVO" resultMap="resultTerminalVo">
-		SELECT J1.*,c.car_name
-		,c.st_wgt_1,c.fc_wgt_1,c.st_wgt_2,c.fc_wgt_2
+		SELECT J1.*,c.*
 		FROM 
 		(
 			SELECT 

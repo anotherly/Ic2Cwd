@@ -57,4 +57,9 @@ public class TerminalServiceImpl implements TerminalService{
 		TerminalMapper.deleteTerminalD(cmsVo);
 	}
 
+	@Override
+	public List<TerminalVo> joongryon(TerminalVo cmsVo) {
+		return TerminalMapper.joongryon(cmsVo);
+	}
+
 }

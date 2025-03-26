@@ -12,7 +12,7 @@
 			console.log("terminal insert");
 			
 			var tagId=$('#carType').val();
-			emptyFullset(tagId);
+			//emptyFullset(tagId);
 			
 			
 			$("#btnSave").on('click',function(){
@@ -105,43 +105,14 @@
 									<input type="hidden" id="formationNo" name="formationNo" value="${data.formationNo}"/> 
 									${data.formationNo}
 								</div>
-								<div class="ctn_tbl_th">담당자</div>
-								<div class="ctn_tbl_td">
-									<input type="text" 
-									id="deviceUser" name ="deviceUser"
-									maxlength="10" 
-									value="${data.deviceUser}"
-									class="form-control">	
-								</div>
-							</div>
-							<div class="ctn_tbl_row">
-								<div class="ctn_tbl_th">장비명(사용 용도)</div>
-								<div class="ctn_tbl_td">
-									<input type="text" 
-									id="deviceUsed" name ="deviceUsed"
-									maxlength="15" 
-									value="${data.deviceUsed}"
-									class="form-control">	
-								</div>
-								<div class="ctn_tbl_th">설치 위치</div>
-								<div class="ctn_tbl_td">
-									<input type="text" 
-									id="insLocTxt" name ="insLocTxt"
-									maxlength="15" 
-									value="${data.insLocTxt}"
-									class="form-control">	
-								</div>
-							</div>
-							<div class="ctn_tbl_row">
+							
 								<div class="ctn_tbl_th fm_rep">제조사</div>
 								<div class="ctn_tbl_td">
-								
 									<!-- 최대값을 저장할 변수를 설정 -->
 									<c:set var="maxValue" value="-999999" />
 									<select id ="carType" name="carType" class ="ctn_select_box1">
 										<c:forEach var="carVo" items="${carTypeList}">
 											<c:if test="${carVo.carType ne 0}">
-											
 												<!-- <option value="${carVo.carType}">${carVo.carName}</option> -->
 												<option value="${carVo.carType}" <c:if test="${data.carType == carVo.carType}">selected</c:if>>${carVo.carName}</option>
 											</c:if>
@@ -166,6 +137,7 @@
 									<input type="number" 
 									id="stWgt1" name ="stWgt1"
 									maxlength="3" 
+									value="${data.stWgt1}"
 									class="form-control">
 								</div>
 								<div class="ctn_tbl_th fm_rep">1량 만차값</div>
@@ -173,6 +145,7 @@
 									<input type="number" 
 									id="fcWgt1" name ="fcWgt1"
 									maxlength="3" 
+									value="${data.fcWgt1}"
 									class="form-control">
 								</div>
 							</div>
@@ -182,6 +155,7 @@
 									<input type="number" 
 									id="stWgt2" name ="stWgt2"
 									maxlength="3" 
+									value="${data.stWgt2}"
 									class="form-control">
 								</div>
 								<div class="ctn_tbl_th fm_rep">2량 만차값</div>
@@ -189,15 +163,159 @@
 									<input type="number" 
 									id="fcWgt2" name ="fcWgt2"
 									maxlength="3" 
+									value="${data.fcWgt2}"
+									class="form-control">
+								</div>
+							</div>
+							
+							<div class="ctn_tbl_row">
+								<div class="ctn_tbl_th fm_rep">최대승객하중(단위 :톤)</div>
+								<div class="ctn_tbl_td">
+								<input type="hidden" id="boardStCnt" name ="boardStCnt"  value="103" class="form-control">
+									<input type="number" 
+									id="maxPsCnt" name ="maxPsCnt"
+									maxlength="3"
+									value="${data.maxPsCnt}"
+									class="form-control">
+								</div>
+								<div class="ctn_tbl_th fm_rep">기준몸무게</div>
+								<div class="ctn_tbl_td">
+									<input type="number" 
+									id="standardKg" name ="standardKg"
+									maxlength="3"
+									value="${data.standardKg}"
 									class="form-control">
 								</div>
 							</div>
 							<div class="ctn_tbl_row">
-	                            <div class="ctn_tbl_th">비고(기타사항)</div>
-	                            <div class="ctn_tbl_td">
-	                                <textarea id="CONTENT" name="etc" class="long-cont" style="height:400px;resize:none;width: 100%;border: 1px solid lightgray;">${data.etc}</textarea>
-	                            </div>
-	                        </div>
+								<div class="ctn_tbl_th">보정율(~70)Kpa</div>
+								<div class="ctn_tbl_td" style="flex: 0.4;">
+									<input type="number"
+									id="kpa_00_70" name ="kpa_00_70"
+									maxlength="3"
+									value="${data.kpa_00_70}"
+									class="form-control">
+								</div>
+							</div>
+							<div class="ctn_tbl_row">
+								<div class="ctn_tbl_th">보정율(71~75)Kpa</div>
+								<div class="ctn_tbl_td">
+									<input type="number" 
+									id="kpa_71_75" name ="kpa_71_75"
+									maxlength="3"
+									value="${data.kpa_71_75}"
+									class="form-control">
+								</div>
+								<div class="ctn_tbl_th">보정율(76~80)Kpa</div>
+								<div class="ctn_tbl_td">
+									<input type="number" 
+									id="kpa_76_80" name ="kpa_76_80"
+									maxlength="3"
+									value="${data.kpa_76_80}"
+									class="form-control">
+								</div>
+							</div>
+							<div class="ctn_tbl_row">
+								<div class="ctn_tbl_th">보정율(81~85)Kpa</div>
+								<div class="ctn_tbl_td">
+									<input type="number" 
+									id="kpa_81_85" name ="kpa_81_85"
+									maxlength="3" 
+									value="${data.kpa_81_85}"
+									class="form-control">
+								</div>
+								<div class="ctn_tbl_th">보정율(86~90)Kpa</div>
+								<div class="ctn_tbl_td">
+									<input type="number" 
+									id="kpa_86_90" name ="kpa_86_90"
+									maxlength="3"
+									value="${data.kpa_86_90}"
+									class="form-control">
+								</div>
+							</div>
+							<div class="ctn_tbl_row">
+								<div class="ctn_tbl_th">보정율(91~95)Kpa</div>
+								<div class="ctn_tbl_td">
+									<input type="number" 
+									id="kpa_91_95" name ="kpa_91_95"
+									maxlength="3"
+									value="${data.kpa_91_95}" 
+									class="form-control">
+								</div>
+								<div class="ctn_tbl_th">보정율(96~100)Kpa</div>
+								<div class="ctn_tbl_td">
+									<input type="number" 
+									id="kpa_96_100" name ="kpa_96_100"
+									maxlength="3"
+									value="${data.kpa_96_100}" 
+									class="form-control">
+								</div>
+							</div>
+							<div class="ctn_tbl_row">
+								<div class="ctn_tbl_th">보정율(101~105)Kpa</div>
+								<div class="ctn_tbl_td">
+									<input type="number" 
+									id="kpa_101_105" name ="kpa_101_105"
+									maxlength="3" 
+									value="${data.kpa_101_105}"
+									class="form-control">
+								</div>
+								<div class="ctn_tbl_th">보정율(106~110)Kpa</div>
+								<div class="ctn_tbl_td">
+									<input type="number" 
+									id="kpa_106_110" name ="kpa_106_110"
+									maxlength="3"
+									value="${data.kpa_106_110}"
+									class="form-control">
+								</div>
+							</div>
+							<div class="ctn_tbl_row">
+								<div class="ctn_tbl_th">보정율(111~115)Kpa</div>
+								<div class="ctn_tbl_td">
+									<input type="number" 
+									id="kpa_111_115" name ="kpa_111_115"
+									maxlength="3"
+									value="${data.kpa_111_115}"
+									class="form-control">
+								</div>
+								<div class="ctn_tbl_th">보정율(116~120)Kpa</div>
+								<div class="ctn_tbl_td">
+									<input type="number" 
+									id="kpa_116_120" name ="kpa_116_120"
+									maxlength="3"
+									value="${data.kpa_116_120}"
+									class="form-control">
+								</div>
+							</div>
+							<div class="ctn_tbl_row">
+								<div class="ctn_tbl_th">보정율(121~125)Kpa</div>
+								<div class="ctn_tbl_td">
+									<input type="number" 
+									id="kpa_121_125" name ="kpa_121_125"
+									maxlength="3"
+									value="${data.kpa_121_125}" 
+									class="form-control">
+								</div>
+								<div class="ctn_tbl_th">보정율(126~130)Kpa</div>
+								<div class="ctn_tbl_td">
+									<input type="number" 
+									id="kpa_126_130" name ="kpa_126_130"
+									maxlength="3"
+									value="${data.kpa_126_130}" 
+									class="form-control">
+								</div>
+							</div>
+							<div class="ctn_tbl_row">
+								<div class="ctn_tbl_th">보정율(131~)Kpa</div>
+								<div class="ctn_tbl_td" style="flex: 0.4;">
+									<input type="number"
+									id="kpa_131_if" name ="kpa_131_if"
+									maxlength="3"
+									value="${data.kpa_131_if}"  
+									class="form-control">
+								</div>
+							</div>
+							
 						</div>
 						
 						<!-- btn_box Start -->

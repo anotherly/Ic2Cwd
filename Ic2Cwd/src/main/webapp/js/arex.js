@@ -10,7 +10,8 @@ var mok=0;//전체 데이터를 td 수로(colCnt) 나눴을때 몫 (이건 최�
 var namage=0;//나머지(마지막 행에서 빈칸 채울때 씀)
 var maxPage=0;// 최대페이지 수 : 몫/6(한화면 행수)
 var plusPage=0;// 몫/6의 나머지 -> 남은 행수를 계산해서 채울때 씀
-
+var opVal1="";//자식창으로 보낼 값
+var opVal2="";//자식창으로 보낼 값
 /////////////////////////////
 
 //alData : 데이터
@@ -68,7 +69,7 @@ function trainOne(alData,colCnt,rowCnt){
 	plusPage=6-($("#lteTbd tr").length%6);
 	
 	/*hideTr(startNum*6,endNum*6);*/
-
+	//newSoundAlert(243,"혼잡");
 }
 
 //tr을 생성하고 행번호를 생성
@@ -90,61 +91,70 @@ function tdCreate(data){
 	}
 	var funcTbCont="";
 	
-			if(data.trainCnt==4){//중련됬을 경우
-				funcTbCont=
-				"<td id='"+tdid+"' class='added' style='border-right: none;border-left: none;'>"
-					+"<div class='td-div'>"
-						+"<div class='td-top' style='height: 53%;'>"
-							+"<span>"+data.formationNo+" "+updown+"</span>"
-							+"<span style='font-size: calc(1vw - 8px);'>"+data.stationName+"</span>"
+		if(data.trainAddCnt==1){//중련됬을 경우
+			funcTbCont=
+			"<td id='"+tdid+"' class='added' style='border-right: none;border-left: none;'>"
+				+"<div class='td-div'>"
+					+"<div class='td-top' style='height: 53%;'>"
+						+"<span>"+data.formationNo+"</span>"
+						+"<span style='font-size: calc(1vw - 8px);'>"+data.stationName+" "+updown+"</span>"
+					+"</div>"
+					+"<div class='td-cont'>"
+						+"<div class='img-container'>"				
+							+"<div id='1ryang' style=" 
+								+"'background:url(../images/train/cong_"+data.cwd1+"_1.png) no-repeat;" 
+								+"background-size: contain;'>"
+							+"</div>"
+							+"<span>"+data.rate1+"%</span>"
 						+"</div>"
-						+"<div class='td-cont'>"
-							+"<div class='img-container'>"				
-								+"<div id='1ryang' style=" 
-									+"'background:url(../images/train/cong_"+data.cwd1+"_1.png) no-repeat;" 
-									+"background-size: contain;'>"
-								+"</div>"
-								+"<span>"+data.rate1+"%</span>"
+						+"<div class='img-container'>"
+							+"<div id='2ryang' style=" 
+								+"'background:url(../images/train/cong_"+data.cwd2+"_2.png) no-repeat;" 
+								+"background-size: contain;'>" 
 							+"</div>"
-							+"<div class='img-container'>"
-								+"<div id='2ryang' style=" 
-									+"'background:url(../images/train/cong_"+data.cwd2+"_2.png) no-repeat;" 
-									+"background-size: contain;'>" 
-								+"</div>"
-								+"<span>"+data.rate2+"%</span>"
-							+"</div>"
+							+"<span>"+data.rate2+"%</span>"
 						+"</div>"
 					+"</div>"
-				+"</td>";
-			}else{
-				funcTbCont=
-				"<td id='"+tdid+"'>"
-					+"<div class='td-div'>"
-						+"<div class='td-top' style='height: 53%;'>"
-							+"<span>"+data.formationNo+" "+updown+"</span>"
-							+"<span style='font-size: calc(1vw - 8px);'>"+data.stationName+"</span>"
+				+"</div>"
+			+"</td>";
+		}else{
+			funcTbCont=
+			"<td id='"+tdid+"'>"
+				+"<div class='td-div'>"
+					+"<div class='td-top' style='height: 53%;'>"
+						+"<span>"+data.formationNo+"</span>"
+						+"<span style='font-size: calc(1vw - 8px);'>"+data.stationName+" "+updown+"</span>"
+					+"</div>"
+					+"<div class='td-cont'>"
+						+"<div class='img-container'>"				
+							+"<div id='1ryang' style=" 
+								+"'background:url(../images/train/cong_"+data.cwd1+"_1.png) no-repeat;" 
+								+"background-size: contain;'>"
+							+"</div>"
+							+"<span>"+data.rate1+"%</span>"
 						+"</div>"
-						+"<div class='td-cont'>"
-							+"<div class='img-container'>"				
-								+"<div id='1ryang' style=" 
-									+"'background:url(../images/train/cong_"+data.cwd1+"_1.png) no-repeat;" 
-									+"background-size: contain;'>"
-								+"</div>"
-								+"<span>"+data.rate1+"%</span>"
+						+"<div class='img-container'>"
+							+"<div id='2ryang' style=" 
+								+"'background:url(../images/train/cong_"+data.cwd2+"_2.png) no-repeat;" 
+								+"background-size: contain;'>" 
 							+"</div>"
-							+"<div class='img-container'>"
-								+"<div id='2ryang' style=" 
-									+"'background:url(../images/train/cong_"+data.cwd2+"_2.png) no-repeat;" 
-									+"background-size: contain;'>" 
-								+"</div>"
-								+"<span>"+data.rate2+"%</span>"
-							+"</div>"
+							+"<span>"+data.rate2+"%</span>"
 						+"</div>"
 					+"</div>"
-				+"</td>";
-			}
-
-	
+				+"</div>"
+			+"</td>";
+		}
+		//혼잡 심각의 경우
+		if(
+			(data.rate1>170 && data.rate1<=190)||(data.rate2>170 && data.rate2<=190)		
+		){
+			newSoundAlert(data.formationNo,"혼잡");
+		}
+		if(
+			data.rate1>190 || data.rate2>190	
+		){
+			newSoundAlert(data.formationNo,"심각");
+		}
 	return funcTbCont;
 }
 
@@ -179,4 +189,19 @@ function hideTr(startPage,endPage){
 	});
 }
 
+//혼잡,심각의 경우 경고사운드창 띄움
+function newSoundAlert(forNum,status){
+	opVal1=forNum;
+	opVal2=status;
+	console.log("경고창 팝업");
+    var url = "/chart/cwd.do";
+    var windowName = "경고 창";
+    
+    var popupW = 800;  // 팝업 넓이
+    var popupH = 400;  // 팝업 높이
+    var left = Math.ceil((window.screen.width - popupW)/2);
+    var top = Math.ceil((window.screen.height - popupH)/2);
+    window.open(url, windowName, ',width=' + popupW +  ', height=' + popupH +  ', left=' + left +  ', top=' + top + ', toolbar=no, location=no, status=no, menubar=no, scrollbars=no, resizable=no');
+    
+}
 

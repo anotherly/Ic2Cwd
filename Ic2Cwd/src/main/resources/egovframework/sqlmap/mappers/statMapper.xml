@@ -81,7 +81,7 @@
 		]]>
 			WHERE 1=1
 			<if test="formationNo !=null and formationNo neq ''"> 
-				AND formation_no=#{formationNo}-100
+				AND formation_no=#{formationNo}
 			</if>
 			AND RCV_DT <![CDATA[ >= ]]> CURDATE()
 		)
@@ -129,7 +129,7 @@
 							 ,round((rate1+rate2)/train_cnt,0)AS sum_rate
 						FROM tcms_log 
 						WHERE 1=1
-						AND formation_no=#{formationNo}-100
+						AND formation_no=#{formationNo}
 						AND RCV_DT>=CURDATE()
 					)A
 					GROUP BY xVal
@@ -141,7 +141,7 @@
 					,round(GREATEST(MAX(rate1),MAX(rate2)),0) AS yVal2
 					FROM tcms_log 
 					WHERE 1=1
-					AND formation_no=#{formationNo}-100
+					AND formation_no=#{formationNo}
 					AND RCV_DT>=CURDATE()
 					GROUP BY xVal
 				)C

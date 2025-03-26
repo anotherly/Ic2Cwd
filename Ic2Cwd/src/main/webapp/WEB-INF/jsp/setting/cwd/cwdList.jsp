@@ -41,7 +41,8 @@
 						 
 						 $.ajax({
 						   type : 'POST',		// 요청 메서드
-						   url : 'http://grkeeper.kr:15000/ic2api',	// 요청 URI	
+						   url : 'http://grkeeper.kr:15000/ic2api',	// 요청 URI - 개발	
+						   //url : 'http://127.0.0.1:15000/ic2api',	// 요청 URI - 실제
 						   header : {"content-type" : "application/json"},	// header - 요청 헤더(JSON형식으로 보냄)
 						   data : JSON.stringify(synData),	// data - 서버로 전송할 데이터. stringify()로 직렬화 필요.
 						   // success, error -> 콜백함수

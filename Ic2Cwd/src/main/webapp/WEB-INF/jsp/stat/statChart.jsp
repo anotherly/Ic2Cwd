@@ -184,8 +184,156 @@
 		      }
 		}); 
 		
-		bar2= barChart('bar_chart2',x2List,y2List);
-		bar3= barChart('bar_chart3',x2List,y3List);
+		/* bar2= barChart('bar_chart2',x2List,y2List);
+		 */
+		var ylgnd2= y2List[0];
+		bar2 =  c3.generate({
+			bindto: '#bar_chart2',
+		    
+		    data: {
+		    	x:x2List[0],
+		    	columns: [x2List,y2List],
+		        type: 'bar',
+		        //상황에 따라 아래 변수 수정 필요!
+	        //y값 위에 나오는 글자
+        	/*  labels: {
+	               format:{
+	            	   //키값을 고정값이 아닌 변수를 대입하고 싶으면 아래처럼 표기하면 된다...
+	            	   [`${ylgnd2}`]:function (v, id, i, j) {
+	            		   if(v!=null && v>=10){
+		   						var format= d3.format(',');
+		   		                return format(v);
+		   					}else{
+		   						return "";
+		   					}
+		            	   return d3.format(v); 
+		               }
+	               } 
+	           }
+		     */
+		    },
+		    axis: {
+			    x: {
+			    	type: 'category',
+			        categories: xList,
+			        label: {
+	                    text: '시간',
+	                    /*position: 'bottom',*/
+	                }
+			    },
+	            y: {
+                    max: 220,
+                    min:0,
+                    padding: {top: 20, bottom: 0},
+                    tick: {
+                        // format: d3.format('d')
+                        format: function(d) {
+                          if (Math.floor(d) != d){
+                            return;
+                          }
+                          return d;
+                        }
+                    }
+                    ,label: {
+	                    text: '혼잡률',
+	                    position: 'top',
+	                }
+	            }
+		   },
+		    bar: {
+		        width: {//막대 두께
+		            ratio: 0.3 // this makes bar width 50% of length between ticks
+		        }
+		        // or
+		        //width: 100 // this makes bar width 100px
+		    }
+		    ,legend: {
+		        padding: 15,
+		        item: {
+		          tile: {
+		            width: 20,
+		            height: 20
+		          }
+		        }
+		    	,show: false
+		      }
+		});
+		
+		//############################## 3번째 차트
+		//bar3= barChart('bar_chart3',x2List,y3List);
+		var ylgnd3= y3List[0];
+		bar3 =  c3.generate({
+			bindto: '#bar_chart3',
+		    
+		    data: {
+		    	x:x2List[0],
+		    	columns: [x2List,y3List],
+		        type: 'bar',
+		        //상황에 따라 아래 변수 수정 필요!
+	        //y값 위에 나오는 글자
+        	/*  labels: {
+	               format:{
+	            	   //키값을 고정값이 아닌 변수를 대입하고 싶으면 아래처럼 표기하면 된다...
+	            	   [`${ylgnd3}`]:function (v, id, i, j) {
+	            		   if(v!=null && v>=10){
+		   						var format= d3.format(',');
+		   		                return format(v);
+		   					}else{
+		   						return "";
+		   					}
+		            	   return d3.format(v); 
+		               }
+	               } 
+	           }
+		    }, */
+		    },
+		    axis: {
+			    x: {
+			    	type: 'category',
+			        categories: xList,
+			        label: {
+	                    text: '시간',
+	                    /*position: 'bottom',*/
+	                }
+			    },
+	            y: {
+                    max: 220,
+                    min:0,
+                    padding: {top: 20, bottom: 0},
+                    tick: {
+                        // format: d3.format('d')
+                        format: function(d) {
+                          if (Math.floor(d) != d){
+                            return;
+                          }
+                          return d;
+                        }
+                    }
+                    ,label: {
+	                    text: '혼잡률',
+	                    position: 'top',
+	                }
+	            }
+		   },
+		    bar: {
+		        width: {//막대 두께
+		            ratio: 0.3 // this makes bar width 50% of length between ticks
+		        }
+		        // or
+		        //width: 100 // this makes bar width 100px
+		    }
+		    ,legend: {
+		        padding: 15,
+		        item: {
+		          tile: {
+		            width: 20,
+		            height: 20
+		          }
+		        }
+		    	,show: false
+		      }
+		});
+		
 		//최초 사이즈 지정
  		$("#bar_chart1").css('min-width','40vw');
 		$("#bar_chart1").css('min-height','35vh');
@@ -196,10 +344,6 @@
 		$("#bar_chart3").css('min-width','25vw');
 		$("#bar_chart3").css('min-height','35vh'); 
 		
-		//거지같은 범례 내리기 트랜스레이트
-		/* $("g.c3-legend-item.c3-legend-item-UP").css("transform","translateY(10px)");
-		$("g.c3-legend-item.c3-legend-item-DOWN").css("transform","translateY(10px)");
-		 */
 		//반응형 화면 사이즈에 맞춰 사이즈 조정
 		bar1.resize();
 		bar2.resize();

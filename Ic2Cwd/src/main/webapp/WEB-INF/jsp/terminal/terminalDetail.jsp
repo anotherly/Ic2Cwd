@@ -74,70 +74,129 @@
 					<!-- 컨텐츠 테이블 헤더 End -->
 					<!-- 컨텐츠 테이블 영역 Start -->
 					<div class="ctn_tbl_area">
-							<div class="ctn_tbl_row">
-								<div class="ctn_tbl_th fm_rep">편성번호</div>
-								<div class="ctn_tbl_td">
-									${data.formationNo}
-								</div>
-								<div class="ctn_tbl_th">담당자</div>
-								<div class="ctn_tbl_td">
-									${data.deviceUser}
-								</div>
+						<div class="ctn_tbl_row">
+							<div class="ctn_tbl_th fm_rep">편성번호</div>
+							<div class="ctn_tbl_td">
+								${data.formationNo}
 							</div>
-							<div class="ctn_tbl_row">
-								<div class="ctn_tbl_th">장비명(사용 용도)</div>
-								<div class="ctn_tbl_td">
-									${data.deviceUsed}
-								</div>
-								<div class="ctn_tbl_th">설치 위치</div>
-								<div class="ctn_tbl_td">
-									${data.insLocTxt}
-								</div>
+							<div class="ctn_tbl_th fm_rep">제조사</div>
+							<div class="ctn_tbl_td">
+								${data.carName}
 							</div>
-							<div class="ctn_tbl_row">
-								<div class="ctn_tbl_th fm_rep">제조사</div>
-								<div class="ctn_tbl_td">
-									${data.carName}
-								</div>
-							</div>
-							<div class="ctn_tbl_row">
-								<div class="ctn_tbl_th fm_rep">1량 공차값</div>
-								<div class="ctn_tbl_td">
-									${data.stWgt1}
-									
-								</div>
-								<div class="ctn_tbl_th fm_rep">1량 만차값</div>
-								<div class="ctn_tbl_td">
-									${data.fcWgt1}
-								</div>
-							</div>
-							<div class="ctn_tbl_row">
-								<div class="ctn_tbl_th fm_rep">2량 공차값</div>
-								<div class="ctn_tbl_td">
-									${data.stWgt2}
-								</div>
-								<div class="ctn_tbl_th fm_rep">2량 만차값</div>
-								<div class="ctn_tbl_td">
-									${data.fcWgt2}
-								</div>
-							</div>
-							<div class="ctn_tbl_row">
-	                            <div class="ctn_tbl_th">비고(기타사항)</div>
-	                            <div class="ctn_tbl_td">
-	                                <textarea id="CONTENT" name="etc" class="long-cont" style="height:400px;resize:none;width: 100%;border: 1px solid lightgray;" readonly>${data.etc}</textarea>
-	                            </div>
-	                        </div>
 						</div>
+						<div class="ctn_tbl_row">
+							<div class="ctn_tbl_th fm_rep">1량 공차값</div>
+							<div class="ctn_tbl_td">
+								${data.stWgt1}
+							</div>
+							<div class="ctn_tbl_th fm_rep">1량 만차값</div>
+							<div class="ctn_tbl_td">
+								${data.fcWgt1}
+							</div>
+						</div>
+						<div class="ctn_tbl_row">
+							<div class="ctn_tbl_th fm_rep">2량 공차값</div>
+							<div class="ctn_tbl_td">
+								${data.stWgt2}
+							</div>
+							<div class="ctn_tbl_th fm_rep">2량 만차값</div>
+							<div class="ctn_tbl_td">
+								${data.fcWgt2}
+							</div>
+						</div>
+						<div class="ctn_tbl_row">
+							<div class="ctn_tbl_th fm_rep">최대승객하중</div>
+							<div class="ctn_tbl_td">
+								${data.maxPsCnt}
+							</div>
+							<div class="ctn_tbl_th fm_rep">기준몸무게</div>
+							<div class="ctn_tbl_td">
+								${data.standardKg}
+							</div>
+						</div>
+						<div class="ctn_tbl_row">
+							<div class="ctn_tbl_th">보정율(~70)Kpa</div>
+							<div class="ctn_tbl_td" style="flex: 0.4;">
+								${data.kpa_00_70}
+							</div>
+						</div>
+						<div class="ctn_tbl_row">
+							<div class="ctn_tbl_th">보정율(71~75)Kpa</div>
+							<div class="ctn_tbl_td">
+								${data.kpa_71_75}
+							</div>
+							<div class="ctn_tbl_th">보정율(76~80)Kpa</div>
+							<div class="ctn_tbl_td">
+								${data.kpa_76_80}
+							</div>
+						</div>
+						<div class="ctn_tbl_row">
+							<div class="ctn_tbl_th">보정율(81~85)Kpa</div>
+							<div class="ctn_tbl_td">
+								${data.kpa_81_85}
+							</div>
+							<div class="ctn_tbl_th">보정율(86~90)Kpa</div>
+							<div class="ctn_tbl_td">
+								${data.kpa_86_90}
+							</div>
+						</div>
+						<div class="ctn_tbl_row">
+							<div class="ctn_tbl_th">보정율(91~95)Kpa</div>
+							<div class="ctn_tbl_td">
+								${data.kpa_91_95}
+							</div>
+							<div class="ctn_tbl_th">보정율(96~100)Kpa</div>
+							<div class="ctn_tbl_td">
+								${data.kpa_96_100}
+							</div>
+						</div>
+						<div class="ctn_tbl_row">
+							<div class="ctn_tbl_th">보정율(101~105)Kpa</div>
+							<div class="ctn_tbl_td">
+								${data.kpa_101_105}
+							</div>
+							<div class="ctn_tbl_th">보정율(106~110)Kpa</div>
+							<div class="ctn_tbl_td">
+								${data.kpa_106_110}
+							</div>
+						</div>
+						<div class="ctn_tbl_row">
+							<div class="ctn_tbl_th">보정율(111~115)Kpa</div>
+							<div class="ctn_tbl_td">
+								${data.kpa_111_115}
+							</div>
+							<div class="ctn_tbl_th">보정율(116~120)Kpa</div>
+							<div class="ctn_tbl_td">
+								${data.kpa_116_120}
+							</div>
+						</div>
+						<div class="ctn_tbl_row">
+							<div class="ctn_tbl_th">보정율(121~125)Kpa</div>
+							<div class="ctn_tbl_td">
+								${data.kpa_121_125}
+							</div>
+							<div class="ctn_tbl_th">보정율(126~130)Kpa</div>
+							<div class="ctn_tbl_td">
+								${data.kpa_126_130}
+							</div>
+						</div>
+						<div class="ctn_tbl_row">
+							<div class="ctn_tbl_th">보정율(131~)Kpa</div>
+							<div class="ctn_tbl_td" style="flex: 0.4;">
+								${data.kpa_131_if}
+							</div>
+						</div>
+					</div>
 						
-						<!-- btn_box Start -->
-						<div class="btn_box">
-							<div class="right">
-								<input type="button" class="btn btn_primary" id="btnSave" alt="저장" value="수정" />
-								<input type='button' id='btnDelete' class='btn btn_primary' value='삭제'>
-								<input type="button" class="btn" id="btnCancel" alt="취소" value="취소" />
-							</div>
+					<!-- btn_box Start -->
+					<div class="btn_box">
+						<div class="right">
+							<input type="button" class="btn btn_primary" id="btnSave" alt="저장" value="수정" />
+							<input type='button' id='btnDelete' class='btn btn_primary' value='삭제'>
+							<input type="button" class="btn" id="btnCancel" alt="취소" value="취소" />
 						</div>
-						<!-- btn_box End -->
+					</div>
+					<!-- btn_box End -->
 				</div>
 				<!-- contents_box End -->
 

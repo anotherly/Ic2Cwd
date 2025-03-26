@@ -30,19 +30,9 @@
 		var alData=ajaxMethod("/terminal/mainTerminalList.ajax");
 		var Fcounter = alData.data.length;
 		
-		countRouter(teamCode,Fcounter); // 단말기 총 개수를 세는 함수
 		trainOne(alData.data,9);
 		hideTr(nowPage*6,nextPage*6);
 		
-		// 단말기 총 개수 함수
-		function countRouter(teamCode,counter) {	
-			if(counter == 0 || counter == "undefined" || counter == null || counter == '') {
-				$('#countRouter').text("차량 개수 : 0개" );
-			} else {
-				$('#countRouter').text("차량 개수 : " + counter + " 개" );
-				$('#countRouter').css('color','#fff');
-			}
-		}
 	});	
 	//동적 테이블(삭제 및 갱신)시 td 클릭 이벤트
 	//차트 상세
@@ -70,22 +60,6 @@
 		trainOne(alData.data,9);
 	
 	}, 30*1000);
-	//열차별로 상대값 달리 보여줌
-	/* var firstTimer = setInterval(function() {
-		
-		$('#trainTb tr td').each(function(index, value){
-		    var cwd = $(this).find('.img-container div').attr('id');
-		    if($(this).attr('class')!='selected' && cwd!=0&& index>iidx){
-		    	console.log("선택인가");
-		    	$(this).trigger('click');
-		    	iidx=index;
-		    	return false;
-		    }
-		    if(index==$('#trainTb tr td').size()-1){
-		    	iidx=-1;
-		    }
-		});
-	}, 5000); */
 	
 </script>
 </head>

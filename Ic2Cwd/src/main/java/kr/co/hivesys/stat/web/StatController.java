@@ -137,7 +137,7 @@ public class StatController {
 		List<ChartVo> xyList = null;
 		try {
 			UserVO reqLoginVo = (UserVO) request.getSession().getAttribute("login");
-			tList = terminalService.selectTerminal(inputVo);
+			tList = terminalService.mainTerminalList(inputVo);
 			sList = statService.mainGaugeChart(inputVo);
 			xyList = statService.mainBarChart(inputVo);
 			

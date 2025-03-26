@@ -49,8 +49,8 @@
 		
 		var tbM='';
 			tbM+='<tr><td>편성번호</td><td>'+alData.train.formationNo+'</td></tr>'
-			tbM+='<tr><td>열차번호</td><td>'+alData.train.trainNo+'</td></tr>'
-			tbM+='<tr><td>운행방향</td><td>'+alData.train.activeCap+'</td></tr>'
+			/* tbM+='<tr><td>열차번호</td><td>'+alData.train.trainNo+'</td></tr>' */
+			/* tbM+='<tr><td>운행방향</td><td>'+alData.train.activeCap+'</td></tr>' */
 			tbM+='<tr><td>중련갯수</td><td>'+alData.train.trainAddCnt+'</td></tr>'
 			tbM+='<tr><td>'
 					+'<sapn style="margin-right: 10px;">제</sapn>'
