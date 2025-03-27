@@ -58,8 +58,8 @@ public class TerminalServiceImpl implements TerminalService{
 	}
 
 	@Override
-	public List<TerminalVo> joongryon(TerminalVo cmsVo) {
-		return TerminalMapper.joongryon(cmsVo);
+	public List<TerminalVo> selectLog(TerminalVo cmsVo) {
+		return TerminalMapper.selectLog(cmsVo);
 	}
 
 }

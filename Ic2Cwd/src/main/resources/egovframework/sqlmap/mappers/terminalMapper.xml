@@ -68,11 +68,10 @@
 		
 		<result property="errorRange" column="error_range"/>
 	</resultMap>
-
 	
 	<!-- 메인화면 대시보드에서의 단말기목록 -->
 	<select id="mainTerminalList" parameterType="terminalVO" resultMap="resultTerminalVo">
-	    WITH tcms AS(
+	   	WITH tcms AS(
 	    <![CDATA[ 
 			SELECT *
 				FROM tcms_log
@@ -84,49 +83,57 @@
 		),
 		jjng as(
 		<![CDATA[
-			SELECT tt.formation_no AS jfno FROM 
-			(
-				SELECT rcv_dt,formation_no,station_id
-					,device_mac
-					,COUNT(*) AS cnt
-					FROM tcms_log
-					WHERE rcv_dt>= now() - interval 1 minute
-					and formation_no>=201 AND formation_no<=243
-					AND kpa1>50 and kpa2>50 and kpa3>50 and kpa4>50
-					and station_id >= 0 AND station_id<60
-					GROUP BY formation_no,device_mac
-					ORDER BY formation_no,device_mac
-			)tt
-			WHERE tt.device_mac IN(
-				SELECT 
-				device_mac
-				FROM
+			SELECT joong2.formation_no AS jfno
+				FROM 
 				(
-					SELECT jng.*,COUNT(jng.formation_no) AS cnt2 from
-						(
-							SELECT rcv_dt,formation_no,station_id
-							,device_mac
-							FROM 
+					SELECT tt.formation_no ,tt.device_mac FROM 
 							(
 								SELECT rcv_dt,formation_no,station_id
-								,device_mac
-								,COUNT(*) AS cnt
-								FROM tcms_log
-								WHERE rcv_dt>= now() - interval 1 minute
-								and formation_no>=201 AND formation_no<=243
-								AND kpa1>50 and kpa2>50 and kpa3>50 and kpa4>50
-								and station_id >= 0 AND station_id<60
-								GROUP BY formation_no,device_mac
-								ORDER BY formation_no,device_mac
-							)tcms
-							GROUP BY formation_no,device_mac
-							ORDER BY formation_no,device_mac
-						)jng
-						GROUP BY formation_no
-						ORDER BY formation_no
-				)t1
-				WHERE t1.cnt2>1
-				)
+									,device_mac
+									,COUNT(*) AS cnt
+									FROM tcms_log
+									WHERE 1=1
+									and rcv_dt>= now() - INTERVAL 2 minute
+									and formation_no>=201 AND formation_no<=243
+									AND kpa1>50 and kpa2>50 and kpa3>50 and kpa4>50
+									and station_id >= 0 AND station_id<60
+									GROUP BY formation_no,device_mac
+									ORDER BY formation_no,device_mac
+							)tt
+							WHERE (tt.formation_no) IN(
+								SELECT 
+								formation_no
+								FROM
+								(
+									SELECT jng.*,COUNT(*) AS cnt2 from
+										(
+											SELECT rcv_dt,formation_no,station_id
+											,device_mac
+											FROM 
+											(
+												SELECT rcv_dt,formation_no,station_id
+												,device_mac
+												,COUNT(*) AS cnt
+												FROM tcms_log
+												WHERE 1=1
+												and rcv_dt>= now() - interval 2 minute
+												and formation_no>=201 AND formation_no<=243
+												AND kpa1>50 and kpa2>50 and kpa3>50 and kpa4>50
+												and station_id >= 0 AND station_id<60
+												GROUP BY formation_no,device_mac
+												ORDER BY formation_no,device_mac
+											)tcms
+											GROUP BY formation_no,device_mac
+											ORDER BY formation_no,device_mac
+										)jng
+										GROUP BY formation_no
+										ORDER BY formation_no
+								)t1
+								WHERE t1.cnt2>1
+							)
+				)joong1
+				LEFT JOIN tcms_info joong2
+				ON joong1.device_mac=joong2.device_mac
 			]]>
 		)
 	    
@@ -303,5 +310,116 @@
 	    DELETE FROM TCMS_INFO
 	    WHERE formation_no=#{formationNo}
 	</delete>
+	
+	<!-- 메인화면 대시보드에서의 단말기목록 -->
+	<select id="selectLog" parameterType="terminalVO" resultMap="resultTerminalVo">
+		WITH tt AS (
+			SELECT
+				DATE_FORMAT(RCV_DT,'%H:%i:%s') as RCV_DT
+				,FORMATION_NO,
+				kpa1,kpa2,kpa3,kpa4
+				,(kpa1+kpa2)/2 AS AVG1
+				,(kpa3+kpa4)/2 AS AVG2
+				,STATION_ID
+			FROM tcms_log_all
+			WHERE 1=1 
+			
+			<!-- 날짜 -->	
+			<choose>
+			    <when test="sDate !=null and sDate neq '' and eDate !=null and eDate neq '' ">
+					<![CDATA[    
+					AND DATE_FORMAT(RCV_dT,'%Y-%m-%d %H:%i:%s') >= #{sDate}
+					AND DATE_FORMAT(RCV_dT,'%Y-%m-%d %H:%i:%s') <= #{eDate}
+					]]>
+			    </when>
+			    <otherwise>
+					AND DATE_FORMAT(RCV_dT,'%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> concat(curdate()-interval 1 DAY," 07:10:00") 
+					AND DATE_FORMAT(RCV_dT,'%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> concat(curdate()-interval 1 DAY," 07:20:00") 
+			    </otherwise>
+			</choose>
+			<!-- 편성 -->	
+			<choose>
+			    <when test="formationNo !=null and formationNo neq ''">
+					and formation_no=#{formationNo}
+			    </when>
+			    <otherwise>
+					<![CDATA[    
+						and formation_no>=201 AND formation_no<=300
+					]]>
+			    </otherwise>
+			</choose>
+			
+			<!-- 상하행 -->	
+			<choose>
+			    <when test="activeCap !=null and activeCap neq ''">
+					<choose>
+					    <!--상행  -->
+					    <when test="activeCap eq 1">
+					        and station_id%2=1
+					    </when>
+					    <!--하행  -->
+					    <otherwise>
+					        and station_id%2=0
+					    </otherwise>
+					</choose>
+			    </when>
+			</choose>
+			<![CDATA[ 
+			and station_id >= 3 AND station_id<=56
+			AND kpa1>50 and kpa2>50 and kpa3>50 and kpa4>50
+			
+			]]>
+		)
+		SELECT T3.* FROM
+		(
+		
+			SELECT T2.*,B.station_name
+			,if(T2.station_id%2=1,'상행','하행') AS active_cap
+			FROM 
+			(
+			SELECT
+				T1.*
+				,round(calc_kpa(AVG1,formation_no,1),2) AS cal1
+				,round(calc_kpa(AVG2,formation_no,2),2) AS cal2
+				,round(range_kpa(AVG1,formation_no),2) AS range1
+				,round(range_kpa(AVG2,formation_no),2) AS range2
+				
+				,ROUND(calc_kpa(AVG1,formation_no,1)*range_kpa(AVG1,formation_no),1) AS rate1
+				,ROUND(calc_kpa(AVG2,formation_no,2)*range_kpa(AVG2,formation_no),1) AS rate2					FROM
+					(
+						SELECT a1.* from
+						(
+						SELECT tt.*, COUNT(*) AS cnt
+						FROM tt
+						GROUP BY station_id,kpa1,kpa2,kpa3,kpa4
+						)a1
+						WHERE 1=1
+						<choose>
+						    <when test="dufCnt !=null and dufCnt neq ''">
+								<![CDATA[ 
+									and a1.cnt>=#{dufCnt}
+								]]>
+						    </when>
+						    <otherwise>
+								<![CDATA[ 
+									and a1.cnt>=2
+								]]>
+						    </otherwise>
+						</choose>
+					)T1
+			)T2
+			LEFT JOIN
+			station_info B
+			ON 
+			(
+				T2.station_id=B.up_num
+				or
+				T2.station_id=B.down_num
+			)
+		
+		)T3
+		ORDER BY active_cap,formation_no,rcv_dt
+
+	</select>	   	
 	
 </mapper>

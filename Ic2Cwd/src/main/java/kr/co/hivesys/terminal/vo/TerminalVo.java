@@ -61,6 +61,72 @@ public class TerminalVo  extends AspVO{
 	private int avgCwd;
 	
 	private String errorRange;
+	//
+	private String dufCnt;
+	
+	private double AVG1;
+	private double AVG2;
+	
+	private double cal1;
+	private double cal2;
+	private double range1;
+	private double range2;
+	
+	public double getAVG1() {
+		return AVG1;
+	}
+
+	public void setAVG1(double aVG1) {
+		AVG1 = aVG1;
+	}
+
+	public double getAVG2() {
+		return AVG2;
+	}
+
+	public void setAVG2(double aVG2) {
+		AVG2 = aVG2;
+	}
+
+	public double getCal1() {
+		return cal1;
+	}
+
+	public void setCal1(double cal1) {
+		this.cal1 = cal1;
+	}
+
+	public double getCal2() {
+		return cal2;
+	}
+
+	public void setCal2(double cal2) {
+		this.cal2 = cal2;
+	}
+
+	public double getRange1() {
+		return range1;
+	}
+
+	public void setRange1(double range1) {
+		this.range1 = range1;
+	}
+
+	public double getRange2() {
+		return range2;
+	}
+
+	public void setRange2(double range2) {
+		this.range2 = range2;
+	}
+
+	public String getDufCnt() {
+		return dufCnt;
+	}
+
+	public void setDufCnt(String dufCnt) {
+		this.dufCnt = dufCnt;
+	}
 
 	public String getTrainNo() {
 		return trainNo;

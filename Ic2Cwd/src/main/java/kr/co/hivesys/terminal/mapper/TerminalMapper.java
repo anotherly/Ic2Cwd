@@ -10,7 +10,7 @@ import kr.co.hivesys.terminal.vo.TerminalVo;
 public interface TerminalMapper {
 	//메인화면 대시보드에서의 단말기목록 
 	List<TerminalVo> mainTerminalList(TerminalVo cmsVo);
-	List<TerminalVo> joongryon(TerminalVo cmsVo);
+	List<TerminalVo> selectLog(TerminalVo cmsVo);
 	// 메인화면 게이지 차트
 	List<TerminalVo> mainGaugeChart(TerminalVo cmsVo);
 	// 메인화면 바 차트
