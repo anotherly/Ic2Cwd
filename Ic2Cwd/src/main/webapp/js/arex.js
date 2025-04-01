@@ -68,8 +68,7 @@ function trainOne(alData,colCnt,rowCnt){
 	//테이블 생성 완료후 해야할 것들
 	plusPage=6-($("#lteTbd tr").length%6);
 	
-	/*hideTr(startNum*6,endNum*6);*/
-	//newSoundAlert(243,"혼잡");
+	
 }
 
 //tr을 생성하고 행번호를 생성
@@ -91,6 +90,14 @@ function tdCreate(data){
 	}
 	var funcTbCont="";
 	
+	var vRate1=data.rate1;
+	var vRate2=data.rate2;
+	
+	if(data.stationName=="현재 미운행"){
+		vRate1=0;
+		vRate2=0;
+	}
+	
 		if(data.trainAddCnt==1){//중련됬을 경우
 			funcTbCont=
 			"<td id='"+tdid+"' class='added' style='border-right: none;border-left: none;'>"
@@ -105,14 +112,14 @@ function tdCreate(data){
 								+"'background:url(../images/train/cong_"+data.cwd1+"_1.png) no-repeat;" 
 								+"background-size: contain;'>"
 							+"</div>"
-							+"<span>"+data.rate1+"%</span>"
+							+"<span>"+vRate1+"%</span>"
 						+"</div>"
 						+"<div class='img-container'>"
 							+"<div id='2ryang' style=" 
 								+"'background:url(../images/train/cong_"+data.cwd2+"_2.png) no-repeat;" 
 								+"background-size: contain;'>" 
 							+"</div>"
-							+"<span>"+data.rate2+"%</span>"
+							+"<span>"+vRate2+"%</span>"
 						+"</div>"
 					+"</div>"
 				+"</div>"
@@ -131,27 +138,23 @@ function tdCreate(data){
 								+"'background:url(../images/train/cong_"+data.cwd1+"_1.png) no-repeat;" 
 								+"background-size: contain;'>"
 							+"</div>"
-							+"<span>"+data.rate1+"%</span>"
+							+"<span>"+vRate1+"%</span>"
 						+"</div>"
 						+"<div class='img-container'>"
 							+"<div id='2ryang' style=" 
 								+"'background:url(../images/train/cong_"+data.cwd2+"_2.png) no-repeat;" 
 								+"background-size: contain;'>" 
 							+"</div>"
-							+"<span>"+data.rate2+"%</span>"
+							+"<span>"+vRate2+"%</span>"
 						+"</div>"
 					+"</div>"
 				+"</div>"
 			+"</td>";
 		}
 		//혼잡 심각의 경우
+		
 		if(
-			(data.rate1>170 && data.rate1<=190)||(data.rate2>170 && data.rate2<=190)		
-		){
-			newSoundAlert(data.formationNo,"혼잡");
-		}
-		if(
-			data.rate1>190 || data.rate2>190	
+			data.rate1>=190 || data.rate2>190	
 		){
 			newSoundAlert(data.formationNo,"심각");
 		}

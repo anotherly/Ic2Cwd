@@ -33,18 +33,18 @@
 			
 			bar=barChart("bar_chart",xList,yList,yList2);
 		}
-		gauge=gaugeChart("gauge_chart",alData.gaugeCnt);
+		//gauge=gaugeChart("gauge_chart",alData.gaugeCnt);
 		
 		
 		
 		//최초 사이즈 지정
-		$("#gauge_chart").css('min-width','25vw');
-		$("#gauge_chart").css('min-height','30vh');
+		//$("#gauge_chart").css('min-width','25vw');
+		//$("#gauge_chart").css('min-height','30vh');
 		$("#bar_chart").css('min-width','45vw');
 		$("#bar_chart").css('min-height','38vh');
 		
 		//반응형 화면 사이즈에 맞춰 사이즈 조정
-		gauge.resize();
+		//gauge.resize();
 		bar.resize();
 		
 		var tbM='';
@@ -85,7 +85,8 @@
 			
 		</div>
 		<!-- 주의 혼잡 gauge -->
-		<div class="pie-contents">
+		<!-- class="pie_container" -->
+		<div style="width: 100%;display: flex;flex-direction: row;align-items: center;">
 			<div id="gauge_chart" class=""></div>
 		</div>
 	</div>

@@ -146,12 +146,19 @@
 			,case when J1.RATE2 is null then 0 when J1.RATE2 <![CDATA[ < ]]> C.care_st then 1 when J1.RATE2 <![CDATA[ < ]]> C.cwd_st then 2 when J1.RATE2 <![CDATA[ < ]]> C.seve_st then 3 ELSE 4 END AS cwd2
 			from 
 		    (
-				SELECT 
+		    <!-- 두 량 혼잡률이 30%이상 차이안나게 -->
+				select J0.*  
+				 ,IF(ABS(((rate_tt1+rate_tt2)/2)-rate_tt1) <![CDATA[ >= ]]> 15, rate12 ,rate_tt1)  as rate1
+				,IF(ABS(((rate_tt1+rate_tt2)/2)-rate_tt2) <![CDATA[ >= ]]> 15, rate12 ,rate_tt2)  as rate2
+				from
+				(
+					SELECT 
 					  a.*
 					 ,b.*
 					 <!-- 혼잡률이 0보다 작을경우 0으로 표기 -->						
-					,if(b.rate_t1<![CDATA[ < ]]>0,0,b.rate_t1) AS rate1
-					,if(b.rate_t2<![CDATA[ < ]]>0,0,b.rate_t2) AS rate2
+					,if(b.rate_t1<![CDATA[ < ]]>0,0,b.rate_t1) AS rate_tt1
+					,if(b.rate_t2<![CDATA[ < ]]>0,0,b.rate_t2) AS rate_tt2
+					,greatest(b.rate_t1,b.rate_t2) as rate12
 		 		FROM ASP_INFO a
 		 		left join
 		 		(
@@ -160,12 +167,13 @@
 						,formation_no AS fno2
 						
 						,rcv_dt
-						
-						,case when station_id=0 then ''
-						else 
+						<![CDATA[ 
+						,case when station_id<3 OR station_id>56 then ''
+							else 
 							case when station_id%2=1 then '(상)' 
 							 when station_id%2=0 then '(하)'ELSE '' END 
 						end AS active_cap
+ 						]]>
 						,train_cnt
 						,ROUND(calc_kpa((kpa1+kpa2)/2,formation_no,1)*range_kpa((kpa1+kpa2)/2,formation_no),1) AS rate_t1
 						,ROUND(calc_kpa((kpa3+kpa4)/2,formation_no,2)*range_kpa((kpa3+kpa4)/2,formation_no),1) AS rate_t2
@@ -185,10 +193,13 @@
 				    )
 		 		) b
 		 		ON a.formation_no=b.fno2
+		 		
 				WHERE 1=1
 				<if test="formationNo !=null and formationNo neq ''"> 
 					AND formation_no=#{formationNo}
 				</if>
+				)J0
+				
 			)J1
 			,asp_rate_info C
 	    )J2 
@@ -200,6 +211,8 @@
 			or
 			J2.station_id=D.down_num
 	 	)
+	 	<!-- 0(신규제조사 추가 시 기준값) 제외 -->
+		where j2.formation_no != 0
 	 	ORDER BY J2.train_add_cnt DESC, J2.FORMATION_NO
 	</select>
 	
