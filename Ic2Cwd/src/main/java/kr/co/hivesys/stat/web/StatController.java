@@ -139,7 +139,7 @@ public class StatController {
 			UserVO reqLoginVo = (UserVO) request.getSession().getAttribute("login");
 			tList = terminalService.mainTerminalList(inputVo);
 			sList = statService.mainGaugeChart(inputVo);
-			xyList = statService.mainBarChart(inputVo);
+			xyList = statService.mainBarChart(inputVo); // 최대, 평균 막대 그래프
 			
 			if(sList.get(0)!=null) {
 				mav.addObject("gaugeCnt", sList.get(0).getGaugePointCnt());

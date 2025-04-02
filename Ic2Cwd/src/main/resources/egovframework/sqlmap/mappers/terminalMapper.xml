@@ -67,6 +67,9 @@
 		<result property="stationName" column="station_name"/>
 		
 		<result property="errorRange" column="error_range"/>
+		
+		<result property="maxPsCnt" column="max_ps_cnt"/>
+		<result property="standardKg" column="standard_kg"/>
 	</resultMap>
 	
 	<!-- 메인화면 대시보드에서의 단말기목록 -->
@@ -433,6 +436,118 @@
 		)T3
 		ORDER BY active_cap,formation_no,rcv_dt
 
-	</select>	   	
+	</select>
+	
+	
+	<!-- 로그 금일 접수 -->
+	<select id="selectLogToday" parameterType="terminalVO" resultMap="resultTerminalVo">
+	    WITH tt AS (
+			SELECT
+				DATE_FORMAT(RCV_DT,'%H:%i:%s') as RCV_DT
+				,FORMATION_NO,
+				kpa1,kpa2,kpa3,kpa4
+				,(kpa1+kpa2)/2 AS AVG1
+				,(kpa3+kpa4)/2 AS AVG2
+				,STATION_ID
+			FROM tcms_log
+			WHERE 1=1 
+			
+			<!-- 날짜 -->	
+			<choose>
+			    <when test="sDate !=null and sDate neq '' and eDate !=null and eDate neq '' ">
+					<![CDATA[    
+					AND DATE_FORMAT(RCV_dT,'%Y-%m-%d %H:%i:%s') >= #{sDate}
+					AND DATE_FORMAT(RCV_dT,'%Y-%m-%d %H:%i:%s') <= #{eDate}
+					]]>
+			    </when>
+			    <otherwise>
+					AND DATE_FORMAT(RCV_dT,'%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> concat(curdate()," 07:10:00") 
+					AND DATE_FORMAT(RCV_dT,'%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> concat(curdate()," 07:20:00") 
+			    </otherwise>
+			</choose>
+			<!-- 편성 -->	
+			<choose>
+			    <when test="formationNo !=null and formationNo neq ''">
+					and formation_no=#{formationNo}
+			    </when>
+			    <otherwise>
+					<![CDATA[    
+						and formation_no>=201 AND formation_no<=300
+					]]>
+			    </otherwise>
+			</choose>
+			
+			<!-- 상하행 -->	
+			<choose>
+			    <when test="activeCap !=null and activeCap neq ''">
+					<choose>
+					    <!--상행  -->
+					    <when test="activeCap eq 1">
+					        and station_id%2=1
+					    </when>
+					    <!--하행  -->
+					    <otherwise>
+					        and station_id%2=0
+					    </otherwise>
+					</choose>
+			    </when>
+			</choose>
+			<![CDATA[ 
+			and station_id >= 3 AND station_id<=56
+			AND kpa1>50 and kpa2>50 and kpa3>50 and kpa4>50
+			
+			]]>
+		)
+		SELECT T3.* FROM
+		(
+		
+			SELECT T2.*,B.station_name
+			,if(T2.station_id%2=1,'상행','하행') AS active_cap
+			FROM 
+			(
+			SELECT
+				T1.*
+				,round(calc_kpa(AVG1,formation_no,1),2) AS cal1
+				,round(calc_kpa(AVG2,formation_no,2),2) AS cal2
+				,round(range_kpa(AVG1,formation_no),2) AS range1
+				,round(range_kpa(AVG2,formation_no),2) AS range2
+				
+				,ROUND(calc_kpa(AVG1,formation_no,1)*range_kpa(AVG1,formation_no),1) AS rate1
+				,ROUND(calc_kpa(AVG2,formation_no,2)*range_kpa(AVG2,formation_no),1) AS rate2					FROM
+					(
+						SELECT a1.* from
+						(
+						SELECT tt.*, COUNT(*) AS cnt
+						FROM tt
+						GROUP BY station_id,kpa1,kpa2,kpa3,kpa4
+						)a1
+						WHERE 1=1
+						<choose>
+						    <when test="dufCnt !=null and dufCnt neq ''">
+								<![CDATA[ 
+									and a1.cnt>=#{dufCnt}
+								]]>
+						    </when>
+						    <otherwise>
+								<![CDATA[ 
+									and a1.cnt>=2
+								]]>
+						    </otherwise>
+						</choose>
+					)T1
+			)T2
+			LEFT JOIN
+			station_info B
+			ON 
+			(
+				T2.station_id=B.up_num
+				or
+				T2.station_id=B.down_num
+			)
+		
+		)T3
+		ORDER BY active_cap,formation_no,rcv_dt
+	</select>
+
 	
 </mapper>

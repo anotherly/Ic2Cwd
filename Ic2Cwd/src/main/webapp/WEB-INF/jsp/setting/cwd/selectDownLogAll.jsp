@@ -63,7 +63,7 @@
 			"processing": true,
 		    //"serverSide": true,
 		    "ajax": {
-		        "url": "/terminal/selectDownLogListToday.ajax?" + $.param({ activeCap: 1 }),
+		        "url": "/terminal/selectDownLogList.ajax?" + $.param({ activeCap: 1 }),
 		        "type": "GET"
             },  
             columns: [
@@ -115,9 +115,8 @@
 		 // 오늘 날짜를 YYYY-MM-DD 형식으로 가져오기
 	    // Moment.js를 사용하여 어제 날짜의 05:50:00과 06:10:00 설정
 	    function getFormattedDateTime(hour, minute) {
-		    return moment().set({ hour: hour, minute: minute, second: 0 }).format('YYYY-MM-DD HH:mm:ss');
-		}
-
+        return moment().subtract(1, 'days').set({ hour: hour, minute: minute, second: 0 }).format('YYYY-MM-DD HH:mm:ss');
+    }
     
     let defaultStart = getFormattedDateTime(7, 10);
     let defaultEnd = getFormattedDateTime(7, 20);
@@ -125,17 +124,13 @@
     $("#datetimepicker1").datetimepicker({
         format: 'YYYY-MM-DD HH:mm:ss',
         useCurrent: false,
-        defaultDate: moment(defaultStart, 'YYYY-MM-DD HH:mm:ss'),
-        minDate: moment(defaultStart, 'YYYY-MM-DD HH:mm:ss').startOf('day'),  
-        maxDate: moment(defaultStart, 'YYYY-MM-DD HH:mm:ss').endOf('day')
+        defaultDate: moment(defaultStart, 'YYYY-MM-DD HH:mm:ss')
     });
     
     $("#datetimepicker2").datetimepicker({
         format: 'YYYY-MM-DD HH:mm:ss',
         useCurrent: false,
-        defaultDate: moment(defaultEnd, 'YYYY-MM-DD HH:mm:ss'),
-        minDate: moment(defaultEnd, 'YYYY-MM-DD HH:mm:ss').startOf('day'),  
-        maxDate: moment(defaultEnd, 'YYYY-MM-DD HH:mm:ss').endOf('day')
+        defaultDate: moment(defaultEnd, 'YYYY-MM-DD HH:mm:ss')
     });
 		
 		//데이터테이블 기본 검색 창 안보이게
@@ -146,7 +141,7 @@
 	 function search(){
 		 console.log("검색");
 		 let frm = $("#searchFrm").serialize();
-		 var tagUrl="/terminal/selectDownLogListToday.ajax";
+		 var tagUrl="/terminal/selectDownLogList.ajax";
 		 tbSearch("tableList",tagUrl,frm);
 	 }
 	/* 다운로드 */

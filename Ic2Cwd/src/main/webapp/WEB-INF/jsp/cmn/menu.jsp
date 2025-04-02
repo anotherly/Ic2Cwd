@@ -33,7 +33,7 @@
 	<li class="menu-item" id="ROOT_TEST_SW">
 		<a href="/setting/cwd/selectDownLog.do" class="menu-link" style="color: rgb(255, 255, 255);">
 			<i class="menu-icon n10"></i>
-			<div>설정</div>
+			<div>데이터 관리</div>
 		</a>
 	</li>
 <!-- 	<li class="menu-item">

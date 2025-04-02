@@ -82,7 +82,7 @@ function trCreate(){
 //중간에 들어가는 td값을 채움
 //tdid,tdCont,spanVal
 function tdCreate(data){
-	console.log("tdCreate");
+	/*console.log("tdCreate");*/
 	var tdid= data.formationNo;
 	var updown = "";
 	if(data.activeCap!=null && typeof data.activeCap !=="undefined"){

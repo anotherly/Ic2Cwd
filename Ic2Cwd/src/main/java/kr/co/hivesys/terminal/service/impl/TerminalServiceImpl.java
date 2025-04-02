@@ -57,9 +57,17 @@ public class TerminalServiceImpl implements TerminalService{
 		TerminalMapper.deleteTerminalD(cmsVo);
 	}
 
+	
+	// 로그 전체 조회
 	@Override
 	public List<TerminalVo> selectLog(TerminalVo cmsVo) {
 		return TerminalMapper.selectLog(cmsVo);
+	}
+	
+	// 로그 금일 조회
+	@Override
+	public List<TerminalVo> selectLogToday(TerminalVo cmsVo) {
+		return TerminalMapper.selectLogToday(cmsVo);
 	}
 
 }

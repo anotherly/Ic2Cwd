@@ -47,11 +47,18 @@
 		//gauge.resize();
 		bar.resize();
 		
+		var trainAddcnt = 0;
+		
+		if(alData.train.trainAddCnt == 0 || alData.train.trainAddCnt == null) {
+			trainAddcnt = '해당없음';
+		}
+		
+		
 		var tbM='';
 			tbM+='<tr><td>편성번호</td><td>'+alData.train.formationNo+'</td></tr>'
 			/* tbM+='<tr><td>열차번호</td><td>'+alData.train.trainNo+'</td></tr>' */
 			/* tbM+='<tr><td>운행방향</td><td>'+alData.train.activeCap+'</td></tr>' */
-			tbM+='<tr><td>중련갯수</td><td>'+alData.train.trainAddCnt+'</td></tr>'
+			tbM+='<tr><td>중련갯수</td><td>'+trainAddcnt+'</td></tr>'
 			tbM+='<tr><td>'
 					+'<sapn style="margin-right: 10px;">제</sapn>'
 					+'<sapn style="margin-right: 10px;">조</sapn>'
@@ -87,12 +94,15 @@
 		<!-- 주의 혼잡 gauge -->
 		<!-- class="pie_container" -->
 		<div style="width: 100%;display: flex;flex-direction: row;align-items: center;">
-			<div id="gauge_chart" class=""></div>
+			<div id="gauge_chart" class="pie_container">
+				<!-- 25-04-01 : 금일 최대 혼잡률(%) -->
+				<h1 class="chart-title">금일 최대 혼잡률(%)</h1>
+			</div>
 		</div>
 	</div>
 	<div>
 		<div id="bar_container">
-			<h1 class="chart-title"  id="chart_title2" style="padding-left: 30px;">금일 시간대별 평균 혼잡률</h1>
+			<h1 class="chart-title"  id="chart_title2" style="padding-left: 30px;">금일 시간대별 평균/최대 혼잡률</h1>
 			<div id="bar_chart" class=""></div>
 		</div>
 	</div>
