@@ -153,7 +153,7 @@
 	 function excelDownload(){
 		 console.log("엑셀 다운로드");
 		 let frm = $("#searchFrm").serialize();
-		 location.href='/terminal/excelDown.ajax?'+frm;
+		 location.href='/terminal/excelDownToday.ajax?'+frm;
 	 }
     
 </script>

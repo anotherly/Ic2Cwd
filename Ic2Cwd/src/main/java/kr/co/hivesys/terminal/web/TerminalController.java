@@ -339,7 +339,7 @@ public class TerminalController {
 	
 	
 	
-	//엑셀다운
+	//엑셀다운(전체)
 	@RequestMapping(value= "/terminal/excelDown.ajax")
 	public void excelDownload(
 			HttpServletRequest req, HttpServletResponse res
@@ -354,6 +354,98 @@ public class TerminalController {
 			
 			List<TerminalVo> sList= null;
 			sList = terminalService.selectLog(inputVo);
+			
+			//표제 부분
+			thMap.put(0,"시각");
+			thMap.put(1,"편성번호");
+			thMap.put(2,"상/하행");
+			thMap.put(3,"역사명");
+			
+			thMap.put(4,"kpa1");
+			thMap.put(5,"kpa2");
+			thMap.put(6,"kpa3");
+			thMap.put(7,"kpa4");
+			
+			thMap.put(8,"1량 평균");
+			thMap.put(9,"2량 평균");
+			
+			thMap.put(10,"1량 계산식");
+			thMap.put(11,"2량 계산식");
+			thMap.put(12,"1량 보정률");
+			thMap.put(13,"2량 보정률");
+			
+			thMap.put(14,"1량 혼잡률");
+			thMap.put(15,"2량 혼잡률");
+			
+			//표 내용 부분
+			for (int i = 0; i < sList.size(); i++) {
+				tbSubMap = new HashMap<Integer, String>();
+				tbSubMap.put(0,sList.get(i).getRcvDt());
+				tbSubMap.put(1,sList.get(i).getFormationNo());
+				tbSubMap.put(2,sList.get(i).getActiveCap());
+				tbSubMap.put(3,sList.get(i).getStationName());
+				
+				tbSubMap.put(4,Integer.toString(sList.get(i).getKpa1()));
+				tbSubMap.put(5,Integer.toString(sList.get(i).getKpa2()));
+				tbSubMap.put(6,Integer.toString(sList.get(i).getKpa3()));
+				tbSubMap.put(7,Integer.toString(sList.get(i).getKpa4()));
+				
+				tbSubMap.put(8,Double.toString(sList.get(i).getAVG1()));
+				tbSubMap.put(9,Double.toString(sList.get(i).getAVG2()));
+				
+				tbSubMap.put(10,Double.toString(sList.get(i).getCal1()));
+				tbSubMap.put(11,Double.toString(sList.get(i).getCal2()));
+				
+				tbSubMap.put(12,Double.toString(sList.get(i).getRange1()));
+				tbSubMap.put(13,Double.toString(sList.get(i).getRange2()));
+				
+				tbSubMap.put(14,Integer.toString(sList.get(i).getRate1()));
+				tbSubMap.put(15,Integer.toString(sList.get(i).getRate2()));
+				
+				tbMap.put(i,tbSubMap);
+				
+			}
+			
+			ExcelComport ex =new ExcelComport();
+			//별도의 엑셀 표 생성 함수 
+			XSSFWorkbook workbook = ex.createDfExcelContent(thMap,tbMap);
+			
+			//다운로드를 위한 헤더 핸들링
+			String forNum ="";
+			if(hasText(inputVo.getFormationNo())) {
+				forNum=inputVo.getFormationNo();
+			}else {
+				forNum="전체";
+			}
+			String heading = "";
+			if(hasText(inputVo.getActiveCap())) {
+				if(inputVo.getActiveCap().equals("1")) {
+					heading="상행";
+				}else {
+					heading="하행";
+				}
+			}else {
+				heading="전체";
+			}		
+			String fileName="편성 : "+forNum+" 방향 : "+heading+" 시간대 : "+inputVo.getsDate()+" ~ "+inputVo.geteDate();
+			ex.excelDownload(req,res,fileName,workbook);
+		}
+	
+	// 금일 엑셀 다운로드
+	@RequestMapping(value= "/terminal/excelDownToday.ajax")
+	public void excelDownloadToday(
+			HttpServletRequest req, HttpServletResponse res
+			,@ModelAttribute("TerminalVo") TerminalVo inputVo
+			) throws Exception{
+			
+			Map<String, Object> model = new HashMap<>();
+			
+			HashMap<Integer, String> thMap = new HashMap<Integer, String>();
+			HashMap<Integer, Map> tbMap = new HashMap<Integer,Map>();
+			HashMap<Integer, String> tbSubMap;
+			
+			List<TerminalVo> sList= null;
+			sList = terminalService.selectLogToday(inputVo);
 			
 			//표제 부분
 			thMap.put(0,"시각");
@@ -448,3 +540,5 @@ public class TerminalController {
 	}
 	
 }
+
+
