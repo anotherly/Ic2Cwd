@@ -14,60 +14,70 @@ import kr.co.hivesys.terminal.vo.TerminalVo;
 @Service("terminalService")
 public class TerminalServiceImpl implements TerminalService{
 	@Resource(name="terminalMapper")
-	private TerminalMapper TerminalMapper;
+	private TerminalMapper terminalMapper;
 	
 	//메인화면 대시보드에서의 단말기목록 
 	@Override
 	public List<TerminalVo> mainTerminalList(TerminalVo cmsVo) {
-		return TerminalMapper.mainTerminalList(cmsVo);
+		return terminalMapper.mainTerminalList(cmsVo);
 	}
 	
 	@Override
 	public List<TerminalVo> selectTerminalList(TerminalVo cmsVo) {
-		return TerminalMapper.selectTerminalList(cmsVo);
+		return terminalMapper.selectTerminalList(cmsVo);
 	}
 	
 	@Override
 	public List<TerminalVo> selectTerminal(TerminalVo cmsVo) {
-		return TerminalMapper.selectTerminal(cmsVo);
+		return terminalMapper.selectTerminal(cmsVo);
 	}
 
 	
 	@Override
 	public void insertTerminal(TerminalVo cmsVo) {
-		TerminalMapper.insertTerminal(cmsVo);
+		terminalMapper.insertTerminal(cmsVo);
 		
 	}
 	
 	@Override
 	public void updateTerminal(TerminalVo cmsVo) {
-		TerminalMapper.updateTerminal(cmsVo);
+		terminalMapper.updateTerminal(cmsVo);
 		
 	}
 	//사용자 삭제
 	public void deleteTerminal(List<String> listArr) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("chkList",listArr);
-		TerminalMapper.deleteTerminal(map);		
+		terminalMapper.deleteTerminal(map);		
 	}
 	
 	//사용자 삭제 (상세에서)
 	@Override
 	public void deleteTerminalD(TerminalVo cmsVo) {
-		TerminalMapper.deleteTerminalD(cmsVo);
+		terminalMapper.deleteTerminalD(cmsVo);
 	}
 
 	
 	// 로그 전체 조회
 	@Override
 	public List<TerminalVo> selectLog(TerminalVo cmsVo) {
-		return TerminalMapper.selectLog(cmsVo);
+		return terminalMapper.selectLog(cmsVo);
 	}
 	
 	// 로그 금일 조회
 	@Override
 	public List<TerminalVo> selectLogToday(TerminalVo cmsVo) {
-		return TerminalMapper.selectLogToday(cmsVo);
+		return terminalMapper.selectLogToday(cmsVo);
+	}
+	// AFC 데이터 다운로드 
+	@Override
+	public List<TerminalVo> selectAFC(TerminalVo cmsVo) {
+		return terminalMapper.selectAFC(cmsVo);
+	}
+
+	@Override
+	public List<TerminalVo> updownOrder() {
+		return terminalMapper.updownOrder();
 	}
 
 }

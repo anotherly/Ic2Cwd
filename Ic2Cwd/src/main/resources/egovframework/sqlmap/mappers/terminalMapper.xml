@@ -32,6 +32,7 @@
 		<result property="trainAddCnt" column="train_add_cnt"/>
 		<result property="deviceIp" column="device_ip"/>
 		<result property="deviceMac" column="device_mac"/>
+		
 		<result property="kpa1" column="kpa1"/>
 		<result property="kpa2" column="kpa2"/>
 		<result property="kpa3" column="kpa3"/>
@@ -40,6 +41,7 @@
 		<result property="kpa6" column="kpa6"/>
 		<result property="kpa7" column="kpa7"/>
 		<result property="kpa8" column="kpa8"/>
+		
 		<result property="rate1" column="rate1"/>
 		<result property="rate2" column="rate2"/>
 		<result property="rate3" column="rate3"/>
@@ -337,7 +339,7 @@
 				,(kpa1+kpa2)/2 AS AVG1
 				,(kpa3+kpa4)/2 AS AVG2
 				,STATION_ID
-			FROM tcms_log_all
+			FROM stat_log
 			WHERE 1=1 
 			
 			<!-- 날짜 -->	
@@ -401,28 +403,8 @@
 				,round(range_kpa(AVG2,formation_no),2) AS range2
 				
 				,ROUND(calc_kpa(AVG1,formation_no,1)*range_kpa(AVG1,formation_no),1) AS rate1
-				,ROUND(calc_kpa(AVG2,formation_no,2)*range_kpa(AVG2,formation_no),1) AS rate2					FROM
-					(
-						SELECT a1.* from
-						(
-						SELECT tt.*, COUNT(*) AS cnt
-						FROM tt
-						GROUP BY station_id,kpa1,kpa2,kpa3,kpa4
-						)a1
-						WHERE 1=1
-						<choose>
-						    <when test="dufCnt !=null and dufCnt neq ''">
-								<![CDATA[ 
-									and a1.cnt>=#{dufCnt}
-								]]>
-						    </when>
-						    <otherwise>
-								<![CDATA[ 
-									and a1.cnt>=2
-								]]>
-						    </otherwise>
-						</choose>
-					)T1
+				,ROUND(calc_kpa(AVG2,formation_no,2)*range_kpa(AVG2,formation_no),1) AS rate2					
+				FROM tt T1
 			)T2
 			LEFT JOIN
 			station_info B
@@ -513,7 +495,8 @@
 				,round(range_kpa(AVG2,formation_no),2) AS range2
 				
 				,ROUND(calc_kpa(AVG1,formation_no,1)*range_kpa(AVG1,formation_no),1) AS rate1
-				,ROUND(calc_kpa(AVG2,formation_no,2)*range_kpa(AVG2,formation_no),1) AS rate2					FROM
+				,ROUND(calc_kpa(AVG2,formation_no,2)*range_kpa(AVG2,formation_no),1) AS rate2					
+				FROM
 					(
 						SELECT a1.* from
 						(
@@ -549,5 +532,88 @@
 		ORDER BY active_cap,formation_no,rcv_dt
 	</select>
 
+	
+	<!-- 역을 상,하행 구분 정렬 -->
+	<select id="updownOrder" parameterType="terminalVO" resultMap="resultTerminalVo">
+		<!-- SELECT 
+		    up_num AS station_id,
+		    station_name,
+		    1 AS active_cap,
+		    up_num AS sort_order
+		FROM station_info
+		UNION ALL
+		SELECT 
+		    down_num AS station_id,
+		    station_name,
+		    2 AS active_cap,
+		    down_num AS sort_order  
+		FROM station_info
+		ORDER BY active_cap, sort_order -->
+		SELECT 
+ station_name
+
+		FROM station_info
+		ORDER BY station_id desc
+	</select>
+	
+	<!-- afc형식 통계 -->
+	<select id="selectAFC" parameterType="terminalVO" resultMap="resultTerminalVo">
+    	SELECT t1.*,(rate1+rate2)/2 AS avgCwd from
+		(
+			SELECT 
+				DATE_FORMAT(RCV_DT,'%H:%i:%s') as RCV_DT
+				,FORMATION_NO
+				,kpa1,kpa2,kpa3,kpa4
+				,kpa1+kpa2+kpa3+kpa4 as sumKpa
+				,(kpa1+kpa2)/2 AS AVG1
+				,(kpa3+kpa4)/2 AS AVG2
+				,STATION_ID
+				,station_name
+				,if(station_id%2=1,1,2) AS active_cap 
+			,ROUND(calc_kpa(AVG1,formation_no,1)*range_kpa(AVG1,formation_no),1) AS rate1
+			,ROUND(calc_kpa(AVG2,formation_no,2)*range_kpa(AVG2,formation_no),1) AS rate2
+			FROM stat_log t
+			WHERE 1=1  
+			<!-- and formation_no in (208,220) -->
+			<choose>
+			    <when test="sDate !=null and sDate neq '' and eDate !=null and eDate neq '' ">
+					and date(rcv_dt)= STR_TO_DATE(#{sDate},'%Y-%m-%d')
+			    </when>
+			    <otherwise>
+			        and date(rcv_dt)= curdate() - interval 1 day
+			    </otherwise>
+			</choose>
+				
+			<!-- 편성 -->	
+			<choose>
+			    <when test="formationNo !=null and formationNo neq ''">
+					and formation_no=#{formationNo}
+			    </when>
+			    <otherwise>
+					<![CDATA[    
+						and formation_no>=201 AND formation_no<=300
+					]]>
+			    </otherwise>
+			</choose>
+			
+			<!-- 상하행 -->	
+			<choose>
+			    <when test="activeCap !=null and activeCap neq ''">
+					<choose>
+					    <!--상행  -->
+					    <when test="activeCap eq 1">
+					        and station_id%2=1
+					    </when>
+					    <!--하행  -->
+					    <otherwise>
+					        and station_id%2=0
+					    </otherwise>
+					</choose>
+			    </when>
+			</choose>
+		)t1
+		order by active_cap,rcv_dt
+	</select>
+	
 	
 </mapper>

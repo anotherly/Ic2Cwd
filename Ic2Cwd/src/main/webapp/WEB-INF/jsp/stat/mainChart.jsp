@@ -96,7 +96,7 @@
 		<div style="width: 100%;display: flex;flex-direction: row;align-items: center;">
 			<div id="gauge_chart" class="pie_container">
 				<!-- 25-04-01 : 금일 최대 혼잡률(%) -->
-				<h1 class="chart-title">금일 최대 혼잡률(%)</h1>
+				<h1 class="chart-title"></h1>
 			</div>
 		</div>
 	</div>

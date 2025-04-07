@@ -36,6 +36,8 @@ public class TerminalVo  extends AspVO{
 	private int kpa7;
 	private int kpa8;
 	
+	private int sumKpa;
+	
 	private int rate1;
 	private int rate2;
 	private int rate3;
@@ -58,7 +60,7 @@ public class TerminalVo  extends AspVO{
 	private int stationId;
 	private String stationName;
 
-	private int avgCwd;
+	private double avgCwd;
 	
 	private String errorRange;
 	//
@@ -72,6 +74,15 @@ public class TerminalVo  extends AspVO{
 	private double range1;
 	private double range2;
 	
+	
+	public int getSumKpa() {
+		return sumKpa;
+	}
+
+	public void setSumKpa(int sumKpa) {
+		this.sumKpa = sumKpa;
+	}
+
 	public double getAVG1() {
 		return AVG1;
 	}
@@ -464,11 +475,11 @@ public class TerminalVo  extends AspVO{
 		this.stationName = stationName;
 	}
 
-	public int getAvgCwd() {
+	public double getAvgCwd() {
 		return avgCwd;
 	}
 
-	public void setAvgCwd(int avgCwd) {
+	public void setAvgCwd(double avgCwd) {
 		this.avgCwd = avgCwd;
 	}
 
