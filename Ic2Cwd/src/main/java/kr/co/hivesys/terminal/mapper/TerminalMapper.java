@@ -17,6 +17,9 @@ public interface TerminalMapper {
 	// 로그 금일 조회
 	List<TerminalVo> selectLogToday(TerminalVo cmsVo);
 	
+	//AFC 양식 다운로드
+	List<TerminalVo> selectAFC(TerminalVo cmsVo);
+	
 	// 메인화면 게이지 차트
 	List<TerminalVo> mainGaugeChart(TerminalVo cmsVo);
 	// 메인화면 바 차트
@@ -33,5 +36,7 @@ public interface TerminalMapper {
 	void deleteTerminal(HashMap<String, Object> map);
 
 	void deleteTerminalD(TerminalVo cmsVo);
+
+	List<TerminalVo> updownOrder();
 	
 }

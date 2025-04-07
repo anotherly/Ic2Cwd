@@ -150,6 +150,11 @@
 		 let frm = $("#searchFrm").serialize();
 		 location.href='/terminal/excelDown.ajax?'+frm;
 	 }
+	 function AFCDownload(){
+		 console.log("엑셀 다운로드");
+		 let frm = $("#searchFrm").serialize();
+		 location.href='/terminal/afcDown.ajax?'+frm;
+	 }
     
 </script>
 </head>
@@ -269,7 +274,10 @@
 						</div>
 					</div>
 					
-					<div id ="btnDiv" class="btn_box" style="display: flex;flex-direction: row-reverse;float:right;">
+					<div id ="btnDiv" class="btn_box" style="display: flex;flex-direction: row-reverse;float:right;justify-content: space-around;width: 250px;">
+						<button class="btn btn_primary" id="btnAFC" onclick="AFCDownload()">
+							<span class="langSpan">AFC 다운로드</span>
+						</button>
 						<button class="btn btn_primary" id="btnDownload" onclick="excelDownload()">
 							<span class="langSpan">다운로드</span>
 						</button>
