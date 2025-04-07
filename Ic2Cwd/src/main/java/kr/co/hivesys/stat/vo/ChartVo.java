@@ -30,6 +30,17 @@ public class ChartVo extends TerminalVo{
 	//표출하고자 하는 수치
 	private String gaugePointCnt;
 	
+	
+	private int stationId;
+	
+	public int getStationId() {
+		return stationId;
+	}
+
+	public void setStationId(int stationId) {
+		this.stationId = stationId;
+	}
+
 	public String getyVal3() {
 		return yVal3;
 	}

@@ -1,18 +1,36 @@
 package kr.co.hivesys.stat.web;
 
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.mindrot.jbcrypt.BCrypt;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
+import org.apache.poi.xssf.usermodel.XSSFCreationHelper;
+import org.apache.poi.xssf.usermodel.XSSFDrawing;
+import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFPicture;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -23,52 +41,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import kr.co.hivesys.comm.SessionListener;
 import kr.co.hivesys.stat.service.StatService;
-import kr.co.hivesys.stat.vo.StkAreaVO;
 import kr.co.hivesys.stat.vo.ChartVo;
-import kr.co.hivesys.stat.vo.LogDataVO;
-import kr.co.hivesys.stat.vo.MainStVo;
-import kr.co.hivesys.stat.vo.MainYTVo;
-import kr.co.hivesys.stat.vo.ScatterVO;
 import kr.co.hivesys.stat.vo.StatVO;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import org.apache.commons.codec.binary.Base64;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.DataValidation;
-import org.apache.poi.ss.usermodel.DataValidationConstraint;
-import org.apache.poi.ss.usermodel.DataValidationHelper;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
-import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.util.IOUtils;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
-import org.apache.poi.xssf.usermodel.XSSFColor;
-import org.apache.poi.xssf.usermodel.XSSFCreationHelper;
-import org.apache.poi.xssf.usermodel.XSSFDrawing;
-import org.apache.poi.xssf.usermodel.XSSFFont;
-import org.apache.poi.xssf.usermodel.XSSFPicture;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.poi.xssf.usermodel.extensions.XSSFCellBorder.BorderSide;
-
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
-
 import kr.co.hivesys.terminal.service.TerminalService;
 import kr.co.hivesys.terminal.vo.TerminalVo;
 import kr.co.hivesys.user.vo.UserVO;
@@ -146,6 +122,35 @@ public class StatController {
 			}else {
 				mav.addObject("gaugeCnt", 0);
 			}
+
+			
+			// 금일 최대 혼잡률 구하기
+			ChartVo firstMax = null;  // 첫번 째 값
+			ChartVo secondMax = null; // 두번 째 값
+			ChartVo thirdMax = null; // 세번 째 값
+
+			
+	        for (ChartVo vo : xyList) {
+	           
+	        	double yVal2 = Double.parseDouble(vo.getyVal2()); // vo에서 String 형으로 가져오기 때문에 double 사용하기 위해서 이처럼 진행함
+	            
+	            if (firstMax == null || yVal2 > Double.parseDouble(firstMax.getyVal2())) {
+	                thirdMax = secondMax;
+	                secondMax = firstMax;
+	                firstMax = vo;
+	            } else if (secondMax == null || yVal2 > Double.parseDouble(secondMax.getyVal2())) {
+	                thirdMax = secondMax;
+	                secondMax = vo;
+	            } else if (thirdMax == null || yVal2 > Double.parseDouble(thirdMax.getyVal2())) {
+	                thirdMax = vo;
+	            }
+	        }
+
+	        // 계산한 값 3개 화면으로 넘김
+	        mav.addObject("first", firstMax);
+	        mav.addObject("second", secondMax);
+	        mav.addObject("third", thirdMax);
+	        
 			mav.addObject("train", tList.get(0));
 			mav.addObject("xyList", xyList);
 			
