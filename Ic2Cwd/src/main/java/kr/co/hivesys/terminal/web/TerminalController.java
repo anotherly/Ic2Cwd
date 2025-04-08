@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -312,26 +313,67 @@ public class TerminalController {
 	}
 	
 	//로그조회 금일 데이터 조회
-		@RequestMapping(value= "/terminal/selectDownLogListToday.ajax")
-		public @ResponseBody ModelAndView downLogListToday( 
-		HttpServletRequest request, HttpServletResponse response
-		,@ModelAttribute("TerminalVo") TerminalVo inputVo
-		) throws Exception{
-			url = request.getRequestURI().substring(request.getContextPath().length()).split(".do")[0];
+	@RequestMapping(value= "/terminal/selectDownLogListToday.ajax")
+	public @ResponseBody ModelAndView downLogListToday( 
+	HttpServletRequest request, HttpServletResponse response
+	,@ModelAttribute("TerminalVo") TerminalVo inputVo
+	) throws Exception{
+		url = request.getRequestURI().substring(request.getContextPath().length()).split(".do")[0];
+		
+		ModelAndView mav = new ModelAndView("jsonView");
+		List<TerminalVo> sList= null;
+		try {
+			sList = terminalService.selectLogToday(inputVo);
+			mav.addObject("data", sList);
 			
-			ModelAndView mav = new ModelAndView("jsonView");
-			List<TerminalVo> sList= null;
-			try {
-				sList = terminalService.selectLogToday(inputVo);
-				mav.addObject("data", sList);
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-				logger.debug(""+e);
-				mav.addObject("msg","에러가 발생했습니다.");
-			}
-			return mav;
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.debug(""+e);
+			mav.addObject("msg","에러가 발생했습니다.");
 		}
+		return mav;
+	}
+	
+
+	//AFC download
+	@RequestMapping(value= "/terminal/afcDown.ajax")
+	public void afcDown(
+	HttpServletRequest req, HttpServletResponse res
+	,@ModelAttribute("TerminalVo") TerminalVo inputVo
+	) throws Exception{
+		List<TerminalVo> sList= null;
+		sList = terminalService.selectAFC(inputVo);
+		List<TerminalVo> sList2= null;
+		sList2 = terminalService.updownOrder();
+		
+		//별도의 엑셀 표 생성 함수 
+		ExcelComport ex =new ExcelComport();
+		XSSFWorkbook workbook = ex.exportExcel7(sList,sList2);
+				
+		//다운로드를 위한 헤더 핸들링
+		String forNum ="";
+		if(hasText(inputVo.getFormationNo())) {
+			forNum=inputVo.getFormationNo();
+		}else {
+			forNum="전체";
+		}
+		String heading = "";
+		if(hasText(inputVo.getActiveCap())) {
+			if(inputVo.getActiveCap().equals("1")) {
+				heading="상행";
+			}else {
+				heading="하행";
+			}
+		}else {
+			heading="전체";
+		}		
+		
+		String fileName="AFC 편성 : "+forNum+" 방향 : "+heading+" 시간대 : "+inputVo.getsDate()+" ~ "+inputVo.geteDate();
+		ex.excelDownload(req,res,fileName,workbook);
+		
+	}
+	
+	
 	
 	//엑셀다운
 	@RequestMapping(value= {"/terminal/excelDown.ajax","/terminal/excelDownToday.ajax"})
@@ -431,6 +473,8 @@ public class TerminalController {
 		ex.excelDownload(req,res,fileName,workbook);
 	}
 
+	
+	
 	//String null,빈공간 체크 
 	public static boolean hasText(String str) {
 	    return str != null && !str.isEmpty() && containsText(str);
@@ -445,6 +489,19 @@ public class TerminalController {
 	    }
 	    
 	    return false;
+	}
+	
+	@PostMapping("/uploadExcel")
+	@ResponseBody
+	public String uploadExcel(@RequestParam("file") MultipartFile file,
+	                          @RequestParam("activeCap") int activeCap) {
+	    try {
+	        terminalService.uploadExcelData(file, activeCap);
+	        return "success";
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return "fail";
+	    }
 	}
 	
 }
