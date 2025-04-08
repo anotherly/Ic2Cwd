@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
+import kr.co.hivesys.terminal.vo.AfcDataVO;
 import kr.co.hivesys.terminal.vo.TerminalVo;
 
 @Mapper("terminalMapper")
@@ -38,5 +39,7 @@ public interface TerminalMapper {
 	void deleteTerminalD(TerminalVo cmsVo);
 
 	List<TerminalVo> updownOrder();
+	
+	int insertAfcData(AfcDataVO vo);
 	
 }

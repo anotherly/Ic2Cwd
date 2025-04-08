@@ -615,5 +615,10 @@
 		order by active_cap,rcv_dt
 	</select>
 	
+	<insert id="insertAfcData" parameterType="afcDataVO">
+	    INSERT INTO afc_data (rcv_dt, station_id, people_cnt, rate, active_cap)
+	    VALUES (#{rcvDt}, #{stationId}, #{peopleCnt}, #{rate}, #{activeCap})
+	</insert>
+	
 	
 </mapper>

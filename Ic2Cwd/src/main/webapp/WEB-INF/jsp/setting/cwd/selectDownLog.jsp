@@ -46,7 +46,7 @@
 		
 		console.log(lastWord);
 		
-		$(".title_segments button").each(function(i,list){
+		/* $(".title_segments button").each(function(i,list){
 			console.log("진입");
 			if(lastWord == 'selectDownLog.do') { // 금일이라면
 				console.log("금일 진입");
@@ -55,7 +55,7 @@
 				console.log("전체 진입");
 				$("#all_menu").addClass("active");
 			}
-		});
+		}); */
 	
 		//데이터테이블은 백단에서 리스트나 배열로 안보내고 vo로 보내면 못읽음 ㅡㅡ
 		var tb2=$("#tableList").DataTable({
@@ -177,8 +177,9 @@
 		<div id="title" class="title-wrap">
 			<div class="title-inner">
 				<div class="title_segments" role="tablist">
-					<button id="today_menu" class="nav-link" role="tab" aria-selected="false" onclick="location.href='/setting/cwd/selectDownLog.do'">금일 목록</button>
+					<button id="today_menu" class="nav-link active" role="tab" aria-selected="false" onclick="location.href='/setting/cwd/selectDownLog.do'">금일 목록</button>
 					<button id="all_menu" class="nav-link" role="tab" aria-selected="false" onclick="location.href='/setting/cwd/selectDownLogAll.do'">전체 목록</button>
+					<button id="upload_menu" class="nav-link" role="tab" aria-selected="false" onclick="location.href='/setting/cwd/excelUpload.do'">데이터 업로드</button>
 				</div>
 			</div>
 		</div>

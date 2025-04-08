@@ -115,8 +115,12 @@
 							</div>
 						</div>
 						<div class="ctn_tbl_row">
+							<div class="ctn_tbl_th">MAC ADDRESS</div>
+							<div class="ctn_tbl_td" >
+								${data.deviceMac}
+							</div>
 							<div class="ctn_tbl_th">보정율(~70)Kpa</div>
-							<div class="ctn_tbl_td" style="flex: 0.4;">
+							<div class="ctn_tbl_td" >
 								${data.kpa_00_70}
 							</div>
 						</div>

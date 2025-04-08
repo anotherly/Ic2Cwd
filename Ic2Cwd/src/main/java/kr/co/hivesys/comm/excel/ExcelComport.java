@@ -24,42 +24,43 @@ import kr.co.hivesys.terminal.vo.TerminalVo;
 public class ExcelComport {
 
 
-	//테이블 속성제목 부 디자인
-	public XSSFCellStyle titleStyle(XSSFWorkbook workbook){
-		// Cell style(th 부분)
+    // 테이블 속성제목 부 디자인 (제목 스타일)
+    public XSSFCellStyle titleStyle(XSSFWorkbook workbook) {
         XSSFCellStyle titleStyle = workbook.createCellStyle();
-        //정렬
-        titleStyle.setAlignment(CellStyle.ALIGN_CENTER); //가운데 정렬
-        titleStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER); //높이 가운데 정렬
-        //배경색
+
+        // 정렬
+        titleStyle.setAlignment(HorizontalAlignment.CENTER);
+        titleStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
+        // 배경색
         titleStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-        titleStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
-        //테두리 선 (우,좌,위,아래)
-        titleStyle.setBorderRight(XSSFCellStyle.BORDER_THIN);
-        titleStyle.setBorderLeft(XSSFCellStyle.BORDER_THIN);
-        titleStyle.setBorderTop(XSSFCellStyle.BORDER_THIN);
-        titleStyle.setBorderBottom(XSSFCellStyle.BORDER_THIN);
-        /*셀 스타일 셋팅 종료*/
+        titleStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+        // 테두리 선 (우,좌,위,아래)
+        titleStyle.setBorderRight(BorderStyle.THIN);
+        titleStyle.setBorderLeft(BorderStyle.THIN);
+        titleStyle.setBorderTop(BorderStyle.THIN);
+        titleStyle.setBorderBottom(BorderStyle.THIN);
+
         return titleStyle;
-	}
-	
-	//테이블 내용 부 디자인
-	public XSSFCellStyle contentStyle(XSSFWorkbook workbook){
-		// Cell style(데이터 내용 tb)
-		XSSFCellStyle contentStyle = workbook.createCellStyle();
-		//배경색
-		//contentStyle.setFillForegroundColor(IndexedColors.LEMON_CHIFFON.index);
-		//contentStyle.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);
-		
-		//테두리 선 (우,좌,위,아래)
-		contentStyle.setBorderTop(CellStyle.BORDER_THIN);
-		contentStyle.setBorderBottom(CellStyle.BORDER_THIN);
-		contentStyle.setBorderLeft(CellStyle.BORDER_THIN);
-		contentStyle.setBorderRight(CellStyle.BORDER_THIN);
-		contentStyle.setAlignment(XSSFCellStyle.ALIGN_CENTER);
-		/*셀 스타일 셋팅 종료*/
-		return contentStyle;
-	}
+    }
+
+    // 테이블 내용 부 디자인 (내용 셀 스타일)
+    public XSSFCellStyle contentStyle(XSSFWorkbook workbook) {
+        XSSFCellStyle contentStyle = workbook.createCellStyle();
+
+        // 테두리 선
+        contentStyle.setBorderTop(BorderStyle.THIN);
+        contentStyle.setBorderBottom(BorderStyle.THIN);
+        contentStyle.setBorderLeft(BorderStyle.THIN);
+        contentStyle.setBorderRight(BorderStyle.THIN);
+
+        // 정렬
+        contentStyle.setAlignment(HorizontalAlignment.CENTER);
+        contentStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
+        return contentStyle;
+    }
 	
 	//
 	/**

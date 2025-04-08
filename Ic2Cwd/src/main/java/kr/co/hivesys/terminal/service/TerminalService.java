@@ -2,6 +2,8 @@ package kr.co.hivesys.terminal.service;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import kr.co.hivesys.terminal.vo.TerminalVo;
 
 public interface TerminalService {
@@ -31,5 +33,7 @@ public interface TerminalService {
 	public void deleteTerminalD(TerminalVo cmsVo);
 
 	List<TerminalVo> updownOrder();
+
+	void uploadExcelData(MultipartFile file, int activeCap) throws Exception;
 	
 }

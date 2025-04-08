@@ -186,8 +186,16 @@
 								</div>
 							</div>
 							<div class="ctn_tbl_row">
+								<div class="ctn_tbl_th">MAC ADDRESS</div>
+								<div class="ctn_tbl_td" >
+									<input type="text"
+									id="deviceMac" name ="deviceMac"
+									maxlength="20"
+									value=""
+									class="form-control">
+								</div>
 								<div class="ctn_tbl_th">보정율(~70)Kpa</div>
-								<div class="ctn_tbl_td" style="flex: 0.4;">
+								<div class="ctn_tbl_td" >
 									<input type="number"
 									id="kpa_00_70" name ="kpa_00_70"
 									maxlength="3"
