@@ -156,6 +156,28 @@
 	</select>
 	
 	
+	<select id="todayMaxList" parameterType="terminalVO" resultType="terminalVo">
+	SELECT a.formation_no as formationNo, a.station_id as stationId, b.station_name as stationName,
+       DATE_FORMAT(a.rcv_dt, '%H:%i') AS rcvDt, 
+       ROUND(calc_kpa((kpa1 + kpa2) / 2, formation_no, 1) * range_kpa((kpa1 + kpa2) / 2, formation_no), 1) AS rate1, 
+       ROUND(calc_kpa((kpa3 + kpa4) / 2, formation_no, 2) * range_kpa((kpa3 + kpa4) / 2, formation_no), 1) AS rate2, 
+       ROUND(
+           (calc_kpa((kpa1 + kpa2) / 2, formation_no, 1) * range_kpa((kpa1 + kpa2) / 2, formation_no) 
+           + calc_kpa((kpa3 + kpa4) / 2, formation_no, 2) * range_kpa((kpa3 + kpa4) / 2, formation_no)) / 2, 1
+       ) AS rate3 
+		FROM tcms_log a 
+		LEFT JOIN station_info b 
+		ON (a.station_id = b.up_num OR a.station_id = b.down_num) 
+		WHERE a.formation_no = #{formationNo}
+		GROUP BY rcvDt 
+		ORDER BY rate3 DESC, rcvDt DESC 
+		LIMIT 3
+	</select>
+	
+	
+	
+	
+	
 	<!-- 일월년 통계 막대 -->
 	<select id="statBarData" parameterType="statVO" resultType="chartVo">
 		WITH up_val as(

@@ -111,11 +111,13 @@ public class StatController {
 		List<TerminalVo> tList = null;
 		List<ChartVo> sList = null;
 		List<ChartVo> xyList = null;
+		List<TerminalVo> todayList = null;
 		try {
 			UserVO reqLoginVo = (UserVO) request.getSession().getAttribute("login");
 			tList = terminalService.mainTerminalList(inputVo);
 			sList = statService.mainGaugeChart(inputVo);
 			xyList = statService.mainBarChart(inputVo); // 최대, 평균 막대 그래프
+			todayList = statService.todayMaxList(inputVo); // 금일 최대 혼잡률 
 			
 			if(sList.get(0)!=null) {
 				mav.addObject("gaugeCnt", sList.get(0).getGaugePointCnt());
@@ -124,33 +126,7 @@ public class StatController {
 			}
 
 			
-			// 금일 최대 혼잡률 구하기
-			ChartVo firstMax = null;  // 첫번 째 값
-			ChartVo secondMax = null; // 두번 째 값
-			ChartVo thirdMax = null; // 세번 째 값
-
-			
-	        for (ChartVo vo : xyList) {
-	           
-	        	double yVal2 = Double.parseDouble(vo.getyVal2()); // vo에서 String 형으로 가져오기 때문에 double 사용하기 위해서 이처럼 진행함
-	            
-	            if (firstMax == null || yVal2 > Double.parseDouble(firstMax.getyVal2())) {
-	                thirdMax = secondMax;
-	                secondMax = firstMax;
-	                firstMax = vo;
-	            } else if (secondMax == null || yVal2 > Double.parseDouble(secondMax.getyVal2())) {
-	                thirdMax = secondMax;
-	                secondMax = vo;
-	            } else if (thirdMax == null || yVal2 > Double.parseDouble(thirdMax.getyVal2())) {
-	                thirdMax = vo;
-	            }
-	        }
-
-	        // 계산한 값 3개 화면으로 넘김
-	        mav.addObject("first", firstMax);
-	        mav.addObject("second", secondMax);
-	        mav.addObject("third", thirdMax);
-	        
+			mav.addObject("todayList", todayList);
 			mav.addObject("train", tList.get(0));
 			mav.addObject("xyList", xyList);
 			
@@ -244,7 +220,6 @@ public class StatController {
 			//,@RequestParam(required=false, value="imgVal")String imgVal
 			)
             throws Exception {
-		
 	}
 
 }

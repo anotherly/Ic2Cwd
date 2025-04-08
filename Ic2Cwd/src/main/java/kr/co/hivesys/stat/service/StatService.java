@@ -36,6 +36,8 @@ public interface StatService {
 	// 메인화면 바 차트
 	List<ChartVo> mainBarChart(TerminalVo cmsVo);
 	
+	List<TerminalVo> todayMaxList(TerminalVo cmsVo);
+	
 	List<ChartVo> statBarData(StatVO inputVo);
 	List<ChartVo> versusData(StatVO inputVo);
 	List<StatVO>  selectDayLilst(StatVO inputVo);

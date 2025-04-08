@@ -66,6 +66,11 @@ public class StatServiceImpl implements StatService{
 	}
 
 	@Override
+	public List<TerminalVo> todayMaxList(TerminalVo cmsVo) {
+		return statMapper.todayMaxList(cmsVo);
+	}
+	
+	@Override
 	public List<ChartVo> statBarData(StatVO inputVo) {
 		return statMapper.statBarData(inputVo);
 	}

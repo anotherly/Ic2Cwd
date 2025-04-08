@@ -15,7 +15,6 @@
 		console.log("/stat/mainChart");
 		var alData=ajaxMethod("/stat/mainChart.ajax",{"formationNo":$('#lteTbd').find('.selected').attr('id')});
 		console.log("결과 aldata : "+alData);
-		console.log("첫번째 값:" + alData.first.yVal2);
 		var xList=[]; var yList=[]; var yList2=[];
 		
 		if(typeof alData.xyList !== "undefined" && alData.xyList != null || alData.xyList.length !=0){
@@ -67,16 +66,12 @@
 			/* tbM+='<tr><td>최신 수신시각</td><td>'+alData.train.rcvDt+'</td></tr>' */
 			$("#train_info").append(tbM);
 		cssChart();
-		
+
 		/* 시간 형식으로 포맷하기 */
-		var firstVal = (alData.first.xVal < 10) ? '0' + alData.first.xVal + ':00' : alData.first.xVal + ':00';
-		var secondVal = (alData.second.xVal < 10) ? '0' + alData.second.xVal + ':00' : alData.second.xVal + ':00';
-		var thirdVal = (alData.third.xVal < 10) ? '0' + alData.third.xVal + ':00' : alData.third.xVal + ':00';
-		
 		var max='';
-		max += '<p style="font-size:24px; margin:0; color: white;">1. 시간( ' + firstVal + ' ) 혼잡률 ( ' + alData.first.yVal2 +' % )</p>';
-		max += '<p style="font-size:24px; margin:0; color: white;">2. 시간( ' + secondVal + ' ) 혼잡률 ( ' + alData.second.yVal2 +' % )</p>';
-		max += '<p style="font-size:24px; margin:0; color: white;">3. 시간( ' + thirdVal + ' ) 혼잡률 ( ' + alData.third.yVal2 +' % )</p>'
+		max += '<p style="font-size:24px; margin:0; color: white;">1. 구간( ' + alData.todayList[0].stationName + ' )시간( ' +  alData.todayList[0].rcvDt + ' ) 혼잡률 ( ' + alData.todayList[0].rate3 +' % )</p>';
+		max += '<p style="font-size:24px; margin:0; color: white;">2. 구간( ' + alData.todayList[1].stationName + ' )시간( ' +  alData.todayList[1].rcvDt + ' ) 혼잡률 ( ' + alData.todayList[1].rate3 +' % )</p>';
+		max += '<p style="font-size:24px; margin:0; color: white;">3. 구간( ' + alData.todayList[2].stationName + ' )시간( ' + alData.todayList[2].rcvDt + ' ) 혼잡률 ( ' + alData.todayList[2].rate3 +' % )</p>';
 		$("#gauge_chart").append(max);
 	});
 	
