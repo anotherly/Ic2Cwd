@@ -15,7 +15,7 @@
 			
 			var tagId=$('#carType').val();
 			emptyFullset(tagId);
-			
+			 
 			
 			$("#btnSave").on('click',function(){
 				var insertChecker = confirm('이대로 등록하시겠습니까?');
