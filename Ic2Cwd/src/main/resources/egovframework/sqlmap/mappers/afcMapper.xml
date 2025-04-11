@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.hivesys.afc.mapper.AfcMapper">
+<!-- 
+수정일           수정자         수정내용 
+========= ======= ================================================= 
+2020.07.23 정다빈     최초 생성 
+-->
+	
+	<resultMap type="terminalVO" id="resultTerminalVo">
+		<result property="trainNo" column="train_no"/>
+		<result property="formationNo" column="formation_no"/>
+		<result property="deviceIp" column="device_ip"/>
+		<result property="deviceMac" column="device_mac"/>
+		<result property="insLocTxt" column="INS_LOC_TXT"/>
+		<result property="deviceUsed" column="device_used"/>
+		<result property="gatewayIp" column="gateway_ip"/>
+		<result property="deviceUser" column="device_user"/>
+		<result property="etc" column="etc"/>
+		<result property="regDt" column="reg_dt"/>
+		
+		<result property="carType" column="car_type"/>
+		<result property="carName" column="car_name"/>
+		
+		<result property="rcvDt" column="rcv_dt"/>
+		<result property="tno2" column="tno2"/>
+		<result property="fno2" column="fno2"/>
+		<result property="activeCap" column="active_cap"/>
+		<result property="trainCnt" column="train_cnt"/>
+		<result property="trainAddCnt" column="train_add_cnt"/>
+		<result property="deviceIp" column="device_ip"/>
+		<result property="deviceMac" column="device_mac"/>
+		
+		<result property="kpa1" column="kpa1"/>
+		<result property="kpa2" column="kpa2"/>
+		<result property="kpa3" column="kpa3"/>
+		<result property="kpa4" column="kpa4"/>
+		<result property="kpa5" column="kpa5"/>
+		<result property="kpa6" column="kpa6"/>
+		<result property="kpa7" column="kpa7"/>
+		<result property="kpa8" column="kpa8"/>
+		
+		<result property="rate1" column="rate1"/>
+		<result property="rate2" column="rate2"/>
+		<result property="rate3" column="rate3"/>
+		<result property="rate4" column="rate4"/>
+		<result property="rate5" column="rate5"/>
+		<result property="rate6" column="rate6"/>
+		<result property="rate7" column="rate7"/>
+		<result property="rate8" column="rate8"/>
+		
+		<result property="cwd1" column="cwd1"/>
+		<result property="cwd2" column="cwd2"/>
+		<result property="cwd3" column="cwd3"/>
+		<result property="cwd4" column="cwd4"/>
+		<result property="cwd5" column="cwd5"/>
+		<result property="cwd6" column="cwd6"/>
+		<result property="cwd7" column="cwd7"/>
+		<result property="cwd8" column="cwd8"/>
+		
+		<result property="stWgt1" column="st_wgt_1"/>
+		<result property="stWgt2" column="st_wgt_2"/>
+		<result property="fcWgt1" column="fc_wgt_1"/>
+		<result property="fcWgt2" column="fc_wgt_2"/>
+		
+		<result property="stationId" column="station_id"/>
+		<result property="stationName" column="station_name"/>
+		
+		<result property="errorRange" column="error_range"/>
+		
+		<result property="maxPsCnt" column="max_ps_cnt"/>
+		<result property="standardKg" column="standard_kg"/>
+	</resultMap>
+	
+	<!-- 메인화면 대시보드에서의 단말기목록 -->
+	<select id="selectLog" parameterType="terminalVO" resultMap="resultTerminalVo">
+
+		WITH tt AS (
+			SELECT
+				DATE_FORMAT(RCV_DT,'%H:%i:%s') as RCV_DT
+				,FORMATION_NO,
+				kpa1,kpa2,kpa3,kpa4
+				,(kpa1+kpa2)/2 AS AVG1
+				,(kpa3+kpa4)/2 AS AVG2
+				,STATION_ID
+			FROM stat_log
+			WHERE 1=1 
+			
+			<!-- 날짜 -->	
+			<choose>
+			    <when test="sDate !=null and sDate neq '' and eDate !=null and eDate neq '' ">
+					<![CDATA[    
+					AND DATE_FORMAT(RCV_dT,'%Y-%m-%d %H:%i:%s') >= #{sDate}
+					AND DATE_FORMAT(RCV_dT,'%Y-%m-%d %H:%i:%s') <= #{eDate}
+					]]>
+			    </when>
+			    <otherwise>
+					AND DATE_FORMAT(RCV_dT,'%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> concat(curdate()-interval 1 DAY," 07:10:00") 
+					AND DATE_FORMAT(RCV_dT,'%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> concat(curdate()-interval 1 DAY," 07:20:00") 
+			    </otherwise>
+			</choose>
+			<!-- 편성 -->	
+			<choose>
+			    <when test="formationNo !=null and formationNo neq ''">
+					and formation_no=#{formationNo}
+			    </when>
+			    <otherwise>
+					<![CDATA[    
+						and formation_no>=201 AND formation_no<=300
+					]]>
+			    </otherwise>
+			</choose>
+			
+			<!-- 상하행 -->	
+			<choose>
+			    <when test="activeCap !=null and activeCap neq ''">
+					<choose>
+					    <!--상행  -->
+					    <when test="activeCap eq 1">
+					        and station_id%2=1
+					    </when>
+					    <!--하행  -->
+					    <otherwise>
+					        and station_id%2=0
+					    </otherwise>
+					</choose>
+			    </when>
+			</choose>
+			<![CDATA[ 
+			and station_id >= 3 AND station_id<=56
+			AND kpa1>50 and kpa2>50 and kpa3>50 and kpa4>50
+			
+			]]>
+		)
+		SELECT T3.* FROM
+		(
+		
+			SELECT T2.*,B.station_name
+			,if(T2.station_id%2=1,'상행','하행') AS active_cap
+			FROM 
+			(
+			SELECT
+				T1.*
+				,round(calc_kpa(AVG1,formation_no,1),2) AS cal1
+				,round(calc_kpa(AVG2,formation_no,2),2) AS cal2
+				,round(range_kpa(AVG1,formation_no),2) AS range1
+				,round(range_kpa(AVG2,formation_no),2) AS range2
+				
+				,ROUND(calc_kpa(AVG1,formation_no,1)*range_kpa(AVG1,formation_no),1) AS rate1
+				,ROUND(calc_kpa(AVG2,formation_no,2)*range_kpa(AVG2,formation_no),1) AS rate2					
+				FROM tt T1
+			)T2
+			LEFT JOIN
+			station_info B
+			ON 
+			(
+				T2.station_id=B.up_num
+				or
+				T2.station_id=B.down_num
+			)
+		
+		)T3
+		ORDER BY active_cap,formation_no,rcv_dt
+	    
+	</select>
+	
+	
+	<!-- 로그 금일 접수 -->
+	<select id="selectLogToday" parameterType="terminalVO" resultMap="resultTerminalVo">
+	   		WITH raw_data AS (
+		    SELECT
+		        rcv_dt,
+		        formation_no,
+		        ABS(kpa1) AS kpa1,
+		        ABS(kpa2) AS kpa2,
+		        ABS(kpa3) AS kpa3,
+		        ABS(kpa4) AS kpa4,
+		        rate1,
+		        rate2,
+		        ABS(kpa1) + ABS(kpa2) + ABS(kpa3) + ABS(kpa4) AS sum_kpa,
+		        (ABS(kpa1) + ABS(kpa2)) / 2 AS AVG1,
+		        (ABS(kpa3) + ABS(kpa4)) / 2 AS AVG2,
+		        station_id,
+		        COUNT(*) OVER (
+		            PARTITION BY station_id, formation_no, ABS(kpa1), ABS(kpa2), ABS(kpa3), ABS(kpa4)
+		        ) AS cnt
+		    FROM tcms_log
+		    WHERE 1=1
+		      AND formation_no BETWEEN 201 AND 243
+			<!-- 날짜 -->	
+			<choose>
+			    <when test="sDate !=null and sDate neq '' and eDate !=null and eDate neq '' ">
+					<![CDATA[    
+					AND DATE_FORMAT(RCV_dT,'%Y-%m-%d %H:%i:%s') >= #{sDate}
+					AND DATE_FORMAT(RCV_dT,'%Y-%m-%d %H:%i:%s') <= #{eDate}
+					]]>
+			    </when>
+			    <otherwise>
+					AND DATE_FORMAT(RCV_dT,'%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> concat(curdate()," 07:10:00") 
+					AND DATE_FORMAT(RCV_dT,'%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> concat(curdate()," 07:20:00") 
+			    </otherwise>
+			</choose>
+			<!-- 편성 -->	
+			<choose>
+			    <when test="formationNo !=null and formationNo neq ''">
+					and formation_no=#{formationNo}
+			    </when>
+			    <otherwise>
+					<![CDATA[    
+						and formation_no>=201 AND formation_no<=300
+					]]>
+			    </otherwise>
+			</choose>
+			
+			<!-- 상하행 -->	
+			<choose>
+			    <when test="activeCap !=null and activeCap neq ''">
+					<choose>
+					    <!--상행  -->
+					    <when test="activeCap eq 1">
+					        and station_id%2=1
+					    </when>
+					    <!--하행  -->
+					    <otherwise>
+					        and station_id%2=0
+					    </otherwise>
+					</choose>
+			    </when>
+			</choose>
+			<![CDATA[ 
+			and station_id >= 3 AND station_id<=56
+			AND kpa1>50 and kpa2>50 and kpa3>50 and kpa4>50
+			]]>
+		),
+		ranked_group AS (
+		    SELECT *,
+		        ROW_NUMBER() OVER (
+		            PARTITION BY station_id, formation_no, HOUR(rcv_dt)
+		            ORDER BY cnt DESC
+		        ) AS rn
+		    FROM raw_data
+		),
+		with_lag AS (
+		    SELECT *,
+		        LAG(station_id) OVER (ORDER BY formation_no,rcv_dt) AS prev_station,
+		        LEAD(station_id) OVER (ORDER BY formation_no,rcv_dt) AS next_station
+		    FROM ranked_group
+		    WHERE rn = 1
+		)
+		SELECT a.*,b.station_name FROM 
+		(
+			SELECT 
+				rcv_dt,formation_no
+				,kpa1,kpa2,kpa3,kpa4
+				,rate1,rate2,sum_kpa
+				,AVG1,AVG2
+				,station_id
+			FROM with_lag
+			<![CDATA[ WHERE prev_station IS NULL OR prev_station <> station_id ]]>
+		)a
+		LEFT JOIN station_info b
+		ON (a.station_id = b.up_num OR a.station_id = b.down_num)
+		ORDER BY rcv_dt
+	</select>
+
+	
+	<!-- 역을 상,하행 구분 정렬 -->
+	<select id="updownOrder" parameterType="terminalVO" resultMap="resultTerminalVo">
+		<!-- SELECT 
+		    up_num AS station_id,
+		    station_name,
+		    1 AS active_cap,
+		    up_num AS sort_order
+		FROM station_info
+		UNION ALL
+		SELECT 
+		    down_num AS station_id,
+		    station_name,
+		    2 AS active_cap,
+		    down_num AS sort_order  
+		FROM station_info
+		ORDER BY active_cap, sort_order -->
+		SELECT 
+	 	station_name
+		FROM station_info
+		ORDER BY station_id desc
+	</select>
+	
+	<!-- afc형식 통계 -->
+	<select id="selectAFC" parameterType="terminalVO" resultMap="resultTerminalVo">
+    	SELECT t1.*,(rate1+rate2)/2 AS avgCwd from
+		(
+			SELECT 
+				DATE_FORMAT(RCV_DT,'%H:%i:%s') as RCV_DT
+				,FORMATION_NO
+				,kpa1,kpa2,kpa3,kpa4
+				,kpa1+kpa2+kpa3+kpa4 as sumKpa
+				,(kpa1+kpa2)/2 AS AVG1
+				,(kpa3+kpa4)/2 AS AVG2
+				,STATION_ID
+				,station_name
+				,if(station_id%2=1,1,2) AS active_cap 
+			,ROUND(calc_kpa(AVG1,formation_no,1)*range_kpa(AVG1,formation_no),1) AS rate1
+			,ROUND(calc_kpa(AVG2,formation_no,2)*range_kpa(AVG2,formation_no),1) AS rate2
+			FROM stat_log t
+			WHERE 1=1  
+			<!-- and formation_no in (208,220) -->
+			<choose>
+			    <when test="sDate !=null and sDate neq '' and eDate !=null and eDate neq '' ">
+					and date(rcv_dt)= STR_TO_DATE(#{sDate},'%Y-%m-%d')
+			    </when>
+			    <otherwise>
+			        and date(rcv_dt)= curdate() - interval 1 day
+			    </otherwise>
+			</choose>
+				
+			<!-- 편성 -->	
+			<choose>
+			    <when test="formationNo !=null and formationNo neq ''">
+					and formation_no=#{formationNo}
+			    </when>
+			    <otherwise>
+					<![CDATA[    
+						and formation_no>=201 AND formation_no<=300
+					]]>
+			    </otherwise>
+			</choose>
+			
+			<!-- 상하행 -->	
+			<choose>
+			    <when test="activeCap !=null and activeCap neq ''">
+					<choose>
+					    <!--상행  -->
+					    <when test="activeCap eq 1">
+					        and station_id%2=1
+					    </when>
+					    <!--하행  -->
+					    <otherwise>
+					        and station_id%2=0
+					    </otherwise>
+					</choose>
+			    </when>
+			</choose>
+		)t1
+		order by active_cap,rcv_dt
+	</select>
+	
+	<insert id="insertAfcData" parameterType="afcDataVO">
+	    INSERT INTO afc_data (rcv_dt, station_id, station_name, people_cnt, rate, active_cap, train_no)
+	    VALUES (#{rcvDt}, #{stationId}, #{stationName}, #{peopleCnt}, #{rate}, #{activeCap}, #{trainNo})
+	</insert>
+	
+	<insert id="insertAfcDataList" parameterType="java.util.List">
+	    INSERT INTO afc_data (
+	        rcv_dt, station_id, station_name, people_cnt, rate, active_cap, train_no
+	    ) VALUES
+	    <foreach collection="list" item="item" separator=",">
+	        (#{item.rcvDt}, #{item.stationId}, #{item.stationName}, #{item.peopleCnt}, #{item.rate}, #{item.activeCap}, #{item.trainNo})
+	    </foreach>
+	</insert>
+		
+</mapper>

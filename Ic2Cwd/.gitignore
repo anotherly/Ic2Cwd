@@ -1,0 +1,38 @@
+
+# Eclipse / STS 환경 관련 파일 무시
+.classpath
+.project
+.settings/
+.apt_generated/
+.factorypath
+
+# Maven 관련
+target/
+**/target/
+
+# 로그 및 백업 파일
+*.log
+*.bak
+*.tmp
+
+# OS 관련
+.DS_Store
+Thumbs.db
+
+# IDE 설정 무시 (IntelliJ 등도 포함)
+.idea/
+*.iml
+
+# eGovFrame 기본 제외 대상
+.egovProps/
+egovframework/com/cmm/config/EgovComExcepHndlr.java
+egovframework/com/cmm/config/EgovComOthersExcepHndlr.java
+
+# 빌드 결과물 무시
+*.class
+*.war
+*.jar
+*.zip
+
+# 업로드 테스트 파일 등
+upload/

@@ -4,7 +4,7 @@ import kr.co.hivesys.comm.BaseVO;
 
 public class AspVO extends BaseVO{
  
-	private int carType;
+	private Integer carType;
 	private String carName;
 	
 	private int stWgt1;
@@ -49,10 +49,10 @@ public class AspVO extends BaseVO{
 	public void setBoardStCnt(double boardStCnt) {
 		this.boardStCnt = boardStCnt;
 	}
-	public int getCarType() {
+	public Integer getCarType() {
 		return carType;
 	}
-	public void setCarType(int carType) {
+	public void setCarType(Integer carType) {
 		this.carType = carType;
 	}
 	public String getCarName() {

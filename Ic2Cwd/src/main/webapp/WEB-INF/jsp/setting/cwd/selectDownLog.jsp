@@ -21,9 +21,6 @@
 		
     </style>
 <script>
-	var updUrl="/terminal/terminalUpdate.do";
-	var delUrl="/terminal/terminalDelete.ajax";
-	var delbak="/terminal/terminalList.do";
 	
 	//데이터 테이블 관련
 	var iidx;//날짜컬럼 인덱스
@@ -63,7 +60,7 @@
 			"processing": true,
 		    //"serverSide": true,
 		    "ajax": {
-		        "url": "/terminal/selectDownLogListToday.ajax?" + $.param({ activeCap: 1 }),
+		        "url": "/afc/selectDownLogListToday.ajax?" + $.param({ activeCap: 1 }),
 		        "type": "GET"
             },  
             columns: [
@@ -146,14 +143,14 @@
 	 function search(){
 		 console.log("검색");
 		 let frm = $("#searchFrm").serialize();
-		 var tagUrl="/terminal/selectDownLogListToday.ajax";
+		 var tagUrl="/afc/selectDownLogListToday.ajax";
 		 tbSearch("tableList",tagUrl,frm);
 	 }
 	/* 다운로드 */
 	 function excelDownload(){
 		 console.log("엑셀 다운로드");
 		 let frm = $("#searchFrm").serialize();
-		 location.href='/terminal/excelDownToday.ajax?'+frm;
+		 location.href='/afc/excelDownToday.ajax?'+frm;
 	 }
     
 </script>

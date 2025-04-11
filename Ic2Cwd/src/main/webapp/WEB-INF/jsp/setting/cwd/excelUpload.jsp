@@ -26,7 +26,7 @@ function uploadExcel() {
 	console.log("uploadExcel");
     var formData = new FormData($("#insertForm")[0]);
     $.ajax({
-        url: "/uploadExcel",
+        url: "/afc/uploadExcel",
         type: "POST",
         data: formData,
         processData: false,

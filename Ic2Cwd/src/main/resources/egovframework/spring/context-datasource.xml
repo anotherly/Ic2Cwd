@@ -23,6 +23,17 @@
 		<property name="defaultReadOnly" value="false" />
 		<property name="maxActive" value="20" />
 		<property name="maxIdle" value="20" />
+		
+		<!-- 추가: 커넥션 유효성 검사 -->
+		<!-- 커넥션을 풀에서 가져올 때 validationQuery 실행 -->
+		<property name="testOnBorrow" value="true" />
+		<!-- 유휴 커넥션에 대해 주기적으로 유효성 검사 -->
+		<property name="testWhileIdle" value="true" />
+		<!-- 유휴 검사 주기 (밀리초) -->
+		<property name="timeBetweenEvictionRunsMillis" value="30000" />
+		<!-- 일정 시간 이상 유휴된 커넥션을 제거 -->
+		<property name="minEvictableIdleTimeMillis" value="60000" />
+		
 	</bean> 
 
 	<!-- 쿼리 로그 생성하는 bean 설정 (기존 database 설정을 constructor 로 참조) -->
