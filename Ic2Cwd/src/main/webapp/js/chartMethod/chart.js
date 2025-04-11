@@ -37,6 +37,7 @@ function timerReset(timer){
 ************************************************************************/
 
 function exportChartToPng(chartID){
+	console.log("1. exportChartToPng 진입");
 	//fix weird back fill
 	//console.log("exportChartToPng 차트아이디: "+chartID);
 	d3.select('#'+chartID).selectAll("path").attr("fill", "none");

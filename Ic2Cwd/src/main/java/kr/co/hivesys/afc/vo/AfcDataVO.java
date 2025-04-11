@@ -5,6 +5,8 @@ import java.util.Date;
 import kr.co.hivesys.comm.BaseVO;
 
 public class AfcDataVO extends BaseVO{
+	//upload
+	private Date uptDt;
 	//afc
     private String rcvDt;       // 수집 시간 (예: 2025-04-03 05:42:00)
     private String stationId; // 역번호
@@ -24,6 +26,12 @@ public class AfcDataVO extends BaseVO{
     private double avgRate;      // 혼잡도(%)
     private Integer timeDiffSec; //시간차이
     
+	public Date getUptDt() {
+		return uptDt;
+	}
+	public void setUptDt(Date uptDt) {
+		this.uptDt = uptDt;
+	}
 	public String getRcvDt() {
 		return rcvDt;
 	}

@@ -221,6 +221,7 @@
   };
 
   const downloadOptions = () => {
+	console.log("3. downloadOptions 진입");
     if (!navigator.msSaveOrOpenBlob && !('download' in document.createElement('a'))) {
       return {popup: window.open()};
     }
@@ -315,6 +316,7 @@
   };
 
   out$.svgAsPngUri = (el, options, done) => {
+	console.log("4. svgAsPngUri 진입");
     requireDomNode(el);
     const {
       encoderType = 'image/png',
@@ -367,6 +369,7 @@
   };
 
   out$.download = (name, uri, options) => {
+	console.log("5. download 진입");
     if (navigator.msSaveOrOpenBlob) navigator.msSaveOrOpenBlob(uriToBlob(uri), name);
     else {
       const saveLink = document.createElement('a');
@@ -442,6 +445,7 @@
   };
 
   out$.saveSvgAsPng = (el, name, options) => {
+	console.log("2. saveSvgAsPng 진입");
     const downloadOpts = downloadOptions(); // don't inline, can't be async
     return requireDomNodePromise(el)
       .then(el => out$.svgAsPngUri(el, options || {}))

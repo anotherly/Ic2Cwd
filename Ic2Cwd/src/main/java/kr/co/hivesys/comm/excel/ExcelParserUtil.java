@@ -79,7 +79,7 @@ public class ExcelParserUtil {
                 String cleanTime = String.format("%02d:%02d:%02d", hour, minute, second);
                 LocalDate finalDate = addOneDay ? baseDate.plusDays(1) : baseDate;
                 String dateTimeStr = finalDate.format(dateFormatter) + " " + cleanTime;
-                Date rcvDt = sdf.parse(dateTimeStr);
+                Date uptDt = sdf.parse(dateTimeStr);
 
                 // 역명 + 역번호 파싱
                 String stationName = "";
@@ -132,7 +132,7 @@ public class ExcelParserUtil {
                 }
 
                 AfcDataVO vo = new AfcDataVO();
-                vo.setRcvDt(rcvDt.toString());
+                vo.setUptDt(uptDt);
                 vo.setStationId(String.valueOf(computedStationId));
                 vo.setStationName(stationName);
                 vo.setPeopleCnt(peopleCnt);

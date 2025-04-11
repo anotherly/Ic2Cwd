@@ -133,12 +133,13 @@ table td {
 				$(this).attr("id","chk"+i);
 			});
 		}); 
-
-		$("#btnDownload").click(function() {
-			//console.log("다운로드 버튼 클릭");
+		
+		
+		$('#btnDownload').on('click', function() {
+			console.log("다운로드 버튼 클릭");
 			//엑셀 다운로드 후 언로드 방지
 			cssNonChart();
-			c3Title="MONTH";
+			c3Title="DAY";
 			c3TagId="_("+$("#sDate").val()+")";
 			$("#title_val0").val($("#chart_title0").text());
 			$("#title_val1").val($("#chart_title1").text());
@@ -148,6 +149,7 @@ table td {
 			//rkFlag = true;
 			//console.log("다운로드 버튼 클릭 완료");
 		});
+		
 	});
 	
 	
@@ -157,7 +159,8 @@ table td {
 		<div id="containerAll" class="containerAll" style="flex-direction: column;">
 			<div id="chtImg" class="container_b" style="width: 100%;"></div>
 			<!-- 단말기 테이블 -->
-			<div style="display: flex;width: 100%;height: 50px;flex-direction: row;align-items: center;justify-content: space-between;margin-bottom: 10px; padding-left:37px;">
+			<div style="display: flex;width: 100%;height: 50px;flex-direction: row;align-items: center;justify-content: space-between;margin-bottom: 10px; padding-left:37px;
+			z-index:999;"> <!-- z-index를 안하면 어떤 svg 태그에 막혀 버튼이 눌리지 않음 -->
 				<h3 class="chart-title">시간대/구간별 월 평균 수치값</h3>
 				<!-- 엑셀 다운로드 -->
 				<div style="display: flex;justify-content: space-between;width: 350px;align-items: center;">

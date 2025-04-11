@@ -365,7 +365,7 @@
 	        rcv_dt, station_id, station_name, people_cnt, rate, active_cap, train_no
 	    ) VALUES
 	    <foreach collection="list" item="item" separator=",">
-	        (#{item.rcvDt}, #{item.stationId}, #{item.stationName}, #{item.peopleCnt}, #{item.rate}, #{item.activeCap}, #{item.trainNo})
+	        (#{item.uptDt}, #{item.stationId}, #{item.stationName}, #{item.peopleCnt}, #{item.rate}, #{item.activeCap}, #{item.trainNo})
 	    </foreach>
 	</insert>
 		
