@@ -30,6 +30,10 @@
 		<result property="fcWgt6" column="fc_wgt_6"/>
 		<result property="fcWgt7" column="fc_wgt_7"/>
 		<result property="fcWgt8" column="fc_wgt_8"/>
+		
+		<result property="boardStCnt" column="board_st_cnt"/>
+		<result property="maxPsCnt" column="max_ps_cnt"/>
+		<result property="standardKg" column="standard_kg"/>
 	</resultMap>
 	
 	<select id="selectAspList" parameterType="aspVO" resultMap="resultVo">
@@ -63,41 +67,59 @@
 			,formation_no
 			,st_wgt_1
 			,st_wgt_2
-			,st_wgt_3
-			,st_wgt_4
-			,st_wgt_5
-			,st_wgt_6
-			,st_wgt_7
-			,st_wgt_8
+			
 			,fc_wgt_1
 			,fc_wgt_2
-			,fc_wgt_3
-			,fc_wgt_4
-			,fc_wgt_5
-			,fc_wgt_6
-			,fc_wgt_7
-			,fc_wgt_8
+		
+			,board_st_cnt
+			,max_ps_cnt
+			,standard_kg
+			
+			,kpa_00_70
+			,kpa_71_75
+			,kpa_76_80
+			,kpa_81_85
+			,kpa_86_90
+			,kpa_91_95
+			,kpa_96_100
+			,kpa_101_105
+			,kpa_106_110
+			,kpa_111_115
+			,kpa_116_120
+			,kpa_121_125
+			,kpa_126_130
+			,kpa_131_if
+			
 		)
 		VALUES (
 			 #{carType}
 			,#{carName}
 			,#{formationNo}
+			
 			,#{stWgt1}
 			,#{stWgt2}
-			,#{stWgt3}
-			,#{stWgt4}
-			,#{stWgt5}
-			,#{stWgt6}
-			,#{stWgt7}
-			,#{stWgt8}
+			
 			,#{fcWgt1}
 			,#{fcWgt2}
-			,#{fcWgt3}
-			,#{fcWgt4}
-			,#{fcWgt5}
-			,#{fcWgt6}
-			,#{fcWgt7}
-			,#{fcWgt8}
+			
+			,#{boardStCnt}
+			,#{maxPsCnt}
+			,#{standardKg}
+			
+			,#{kpa_00_70}
+			,#{kpa_71_75}
+			,#{kpa_76_80}
+			,#{kpa_81_85}
+			,#{kpa_86_90}
+			,#{kpa_91_95}
+			,#{kpa_96_100}
+			,#{kpa_101_105}
+			,#{kpa_106_110}
+			,#{kpa_111_115}
+			,#{kpa_116_120}
+			,#{kpa_121_125}
+			,#{kpa_126_130}
+			,#{kpa_131_if}
 		)
 	</insert>
 	
@@ -109,20 +131,27 @@
 			,car_name  =#{carName}
 			,st_wgt_1  =#{stWgt1}
 			,st_wgt_2  =#{stWgt2}
-			,st_wgt_3  =#{stWgt3}
-			,st_wgt_4  =#{stWgt4}
-			,st_wgt_5  =#{stWgt5}
-			,st_wgt_6  =#{stWgt6}
-			,st_wgt_7  =#{stWgt7}
-			,st_wgt_8  =#{stWgt8}
 			,fc_wgt_1  =#{fcWgt1}
 			,fc_wgt_2  =#{fcWgt2}
-			,fc_wgt_3  =#{fcWgt3}
-			,fc_wgt_4  =#{fcWgt4}
-			,fc_wgt_5  =#{fcWgt5}
-			,fc_wgt_6  =#{fcWgt6}
-			,fc_wgt_7  =#{fcWgt7}
-			,fc_wgt_8  =#{fcWgt8}
+			
+			,max_ps_cnt	=#{maxPsCnt}
+			,standard_kg=#{standardKg}
+			
+			,kpa_00_70=#{kpa_00_70}
+			,kpa_71_75=#{kpa_71_75}
+			,kpa_76_80=#{kpa_76_80}
+			,kpa_81_85=#{kpa_81_85}
+			,kpa_86_90=#{kpa_86_90}
+			,kpa_91_95=#{kpa_91_95}
+			,kpa_96_100=#{kpa_96_100}
+			,kpa_101_105=#{kpa_101_105}
+			,kpa_106_110=#{kpa_106_110}
+			,kpa_111_115=#{kpa_111_115}
+			,kpa_116_120=#{kpa_116_120}
+			,kpa_121_125=#{kpa_121_125}
+			,kpa_126_130=#{kpa_126_130}
+			,kpa_131_if=#{kpa_131_if}
+			
 		WHERE 
 		formation_no =#{formationNo}
 	</update>
