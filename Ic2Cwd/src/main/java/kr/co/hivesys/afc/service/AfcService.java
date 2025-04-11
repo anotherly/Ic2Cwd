@@ -21,5 +21,7 @@ public interface AfcService {
 
 	//AFC 업로드
 	void uploadExcelData(MultipartFile file, int activeCap) throws Exception;
+	//응하중 afc 비교목록
+	List<AfcDataVO> versusList(AfcDataVO inputVo);
 	
 }

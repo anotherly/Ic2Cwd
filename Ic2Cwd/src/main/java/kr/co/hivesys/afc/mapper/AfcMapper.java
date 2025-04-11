@@ -23,4 +23,7 @@ public interface AfcMapper {
 	int insertAfcData(AfcDataVO vo);
 	int insertAfcDataList(List<AfcDataVO> dataList);
 	
+	//응하중 afc 비교목록
+	List<AfcDataVO> versusList(AfcDataVO inputVo);
+	
 }

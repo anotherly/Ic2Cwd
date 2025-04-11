@@ -257,6 +257,101 @@ public class AfcController {
 	    }
 	}
 	
+	//응하중 afc 비교목록
+	@RequestMapping(value= "/afc/versusList.ajax")
+	public @ResponseBody ModelAndView versusList( 
+	HttpServletRequest request, HttpServletResponse response
+	,@ModelAttribute("AfcDataVO") AfcDataVO inputVo
+	) throws Exception{
+		url = request.getRequestURI().substring(request.getContextPath().length()).split(".do")[0];
+		
+		ModelAndView mav = new ModelAndView("jsonView");
+		List<AfcDataVO> sList= null;
+		try {
+			sList = afcService.versusList(inputVo);
+			mav.addObject("data", sList);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.debug(""+e);
+			mav.addObject("msg","에러가 발생했습니다.");
+		}
+		return mav;
+	}
+	
+	//엑셀다운
+	@RequestMapping(value= "/afc/versusDownload.ajax")
+	public void versusDownload(
+		HttpServletRequest req, HttpServletResponse res
+		,@ModelAttribute("AfcDataVO") AfcDataVO inputVo
+		) throws Exception{
+	
+		Map<String, Object> model = new HashMap<>();
+		
+		HashMap<Integer, String> thMap = new HashMap<Integer, String>();
+		HashMap<Integer, Map> tbMap = new HashMap<Integer,Map>();
+		HashMap<Integer, String> tbSubMap;
+		
+		url = req.getRequestURI().substring(req.getContextPath().length()).split(".ajax")[0].split("/")[2];
+		
+		List<AfcDataVO> sList= null;
+		sList = afcService.versusList(inputVo);
+		
+		//표제 부분
+		thMap.put(0,"시각");
+		thMap.put(1,"역명");
+		thMap.put(2,"호차");
+		thMap.put(3,"재차인원");
+		thMap.put(4,"혼잡도");
+		
+		thMap.put(5,"시각");
+		thMap.put(6,"편성번호");
+		thMap.put(7,"역명");
+		thMap.put(8,"무게총합");
+		thMap.put(9,"혼잡도");
+		
+		thMap.put(10,"시간차(초)");
+		
+		//표 내용 부분
+		for (int i = 0; i < sList.size(); i++) {
+			tbSubMap = new HashMap<Integer, String>();
+			tbSubMap.put(0,sList.get(i).getRcvDt());
+			tbSubMap.put(1,sList.get(i).getStationName());
+			tbSubMap.put(2,sList.get(i).getTrainNo());
+			tbSubMap.put(3,Integer.toString(sList.get(i).getPeopleCnt()));
+			tbSubMap.put(4,Double.toString(sList.get(i).getRate()));
+			
+			tbSubMap.put(5,sList.get(i).getKpaRcvDt());
+			tbSubMap.put(6,sList.get(i).getKpaFormationNo());
+			tbSubMap.put(7,sList.get(i).getKpaStationName());
+			tbSubMap.put(8,Double.toString(sList.get(i).getSumKpa()));
+			tbSubMap.put(9,Double.toString(sList.get(i).getAvgRate()));
+			
+			tbSubMap.put(10,Integer.toString(sList.get(i).getTimeDiffSec()));
+			
+			tbMap.put(i,tbSubMap);
+			
+		}
+		
+		ExcelComport ex =new ExcelComport();
+		//별도의 엑셀 표 생성 함수 
+		XSSFWorkbook workbook = ex.createDfExcelContent(thMap,tbMap);
+		
+		//다운로드를 위한 헤더 핸들링
+		String heading = "";
+		if(hasText(inputVo.getActiveCap())) {
+			if(inputVo.getActiveCap().equals("1")) {
+				heading="상행";
+			}else {
+				heading="하행";
+			}
+		} else {
+			heading="전체";
+		}		
+		String fileName=inputVo.getsDate()+heading;
+		ex.excelDownload(req,res,fileName,workbook);
+	}
+	
 }
 
 

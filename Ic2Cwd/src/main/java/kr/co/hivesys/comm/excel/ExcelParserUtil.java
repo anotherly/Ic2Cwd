@@ -132,12 +132,12 @@ public class ExcelParserUtil {
                 }
 
                 AfcDataVO vo = new AfcDataVO();
-                vo.setRcvDt(rcvDt);
+                vo.setRcvDt(rcvDt.toString());
                 vo.setStationId(String.valueOf(computedStationId));
                 vo.setStationName(stationName);
                 vo.setPeopleCnt(peopleCnt);
                 vo.setRate(rate);
-                vo.setActiveCap(activeCap);
+                vo.setActiveCap(Integer.toString(activeCap));
                 vo.setTrainNo(trainNo);
 
                 dataList.add(vo);

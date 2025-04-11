@@ -91,8 +91,8 @@
             "pageLength": 10,
             pagingType : "full_numbers",
             columnDefs: [ 
-            	{ orderable: false, targets: [0] }//특정 열(인덱스번호)에 대한 정렬 비활성화
-            	,{className: "dt-center",targets: "_all"} 
+            	//{ orderable: false, targets: [0] },//특정 열(인덱스번호)에 대한 정렬 비활성화
+            	{className: "dt-center",targets: "_all"} 
             ],
             select: {
                 style:    'multi',
@@ -174,9 +174,12 @@
 		<div id="title" class="title-wrap">
 			<div class="title-inner">
 				<div class="title_segments" role="tablist">
-					<button id="today_menu" class="nav-link active" role="tab" aria-selected="false" onclick="location.href='/setting/cwd/selectDownLog.do'">금일 목록</button>
-					<button id="all_menu" class="nav-link" role="tab" aria-selected="false" onclick="location.href='/setting/cwd/selectDownLogAll.do'">전체 목록</button>
-					<button id="upload_menu" class="nav-link" role="tab" aria-selected="false" onclick="location.href='/setting/cwd/excelUpload.do'">데이터 업로드</button>
+
+					<button id="today_menu" class="nav-link active" role="tab" aria-selected="false" onclick="location.href='/setting/cwd/selectDownLog.do'">금일 데이터 목록</button>
+					<button id="all_menu" class="nav-link" role="tab" aria-selected="false" onclick="location.href='/setting/cwd/selectDownLogAll.do'">전체 데이터 목록</button>
+					<button id="upload_menu" class="nav-link" role="tab" aria-selected="false" onclick="location.href='/setting/cwd/excelUpload.do'">AFC 데이터 업로드</button>
+					<button id="versus_menu" class="nav-link" role="tab" aria-selected="false" onclick="location.href='/setting/cwd/versusAFCtoKPA.do'">AFC 응하중 비교</button>
+
 				</div>
 			</div>
 		</div>

@@ -74,6 +74,15 @@
 		<result property="standardKg" column="standard_kg"/>
 	</resultMap>
 	
+	<resultMap type="AfcDataVO" id="resultAfcDataVO">
+		<result property="rcvDt" column="rcv_dt"/>
+		<result property="trainNo" column="train_no"/>
+		<result property="stationId" column="station_id"/>
+		<result property="stationName" column="station_name"/>
+		<result property="activeCap" column="active_cap"/>
+		<result property="peopleCnt" column="people_cnt"/>
+	</resultMap>
+	
 	<!-- 메인화면 대시보드에서의 단말기목록 -->
 	<select id="selectLog" parameterType="terminalVO" resultMap="resultTerminalVo">
 
@@ -306,7 +315,6 @@
 			,ROUND(calc_kpa(AVG2,formation_no,2)*range_kpa(AVG2,formation_no),1) AS rate2
 			FROM stat_log t
 			WHERE 1=1  
-			<!-- and formation_no in (208,220) -->
 			<choose>
 			    <when test="sDate !=null and sDate neq '' and eDate !=null and eDate neq '' ">
 					and date(rcv_dt)= STR_TO_DATE(#{sDate},'%Y-%m-%d')
@@ -361,4 +369,123 @@
 	    </foreach>
 	</insert>
 		
+	
+	<!-- afc형식 통계 -->
+	<select id="versusList" parameterType="afcDataVO" resultMap="resultAfcDataVO">
+		WITH afc AS (
+			SELECT * 
+			FROM afc_data
+			WHERE 1=1
+			<choose>
+			    <when test="sDate !=null and sDate neq ''">
+					and date(rcv_dt)= STR_TO_DATE(#{sDate},'%Y-%m-%d')
+			    </when>
+			    <otherwise>
+			        and date(rcv_dt)= curdate() - interval 1 day
+			    </otherwise>
+			</choose>
+			<!-- 상하행 -->	
+			<choose>
+			    <when test="activeCap !=null and activeCap neq ''">
+					<choose>
+					    <!--상행  -->
+					    <when test="activeCap eq 1">
+					        and station_id%2=1
+					    </when>
+					    <!--하행  -->
+					    <otherwise>
+					        and station_id%2=0
+					    </otherwise>
+					</choose>
+			    </when>
+			</choose>
+		),
+		kpa AS (
+			SELECT rcv_dt, station_id, formation_no, station_name, sum_kpa
+			,ROUND(calc_kpa(AVG1,formation_no,1)*range_kpa(AVG1,formation_no),1) AS rate1
+			,ROUND(calc_kpa(AVG2,formation_no,2)*range_kpa(AVG2,formation_no),1) AS rate2
+			FROM stat_log
+			WHERE 1=1
+			<choose>
+			    <when test="sDate !=null and sDate neq ''">
+					and date(rcv_dt)= STR_TO_DATE(#{sDate},'%Y-%m-%d')
+			    </when>
+			    <otherwise>
+			        and date(rcv_dt)= curdate() - interval 1 day
+			    </otherwise>
+			</choose>
+			
+			<!-- 편성 -->	
+			<choose>
+			    <when test="kpaFormationNo !=null and kpaFormationNo neq ''">
+					and formation_no=#{kpaFormationNo}
+			    </when>
+			    <otherwise>
+					<![CDATA[    
+						and formation_no>=201 AND formation_no<=300
+					]]>
+			    </otherwise>
+			</choose>
+			
+			<!-- 상하행 -->	
+			<choose>
+			    <when test="activeCap !=null and activeCap neq ''">
+					<choose>
+					    <!--상행  -->
+					    <when test="activeCap eq 1">
+					        and station_id%2=1
+					    </when>
+					    <!--하행  -->
+					    <otherwise>
+					        and station_id%2=0
+					    </otherwise>
+					</choose>
+			    </when>
+			</choose>
+		),
+		joined AS (
+			SELECT 
+				afc.*, 
+				kpa.rcv_dt AS kpaRcvDt, 
+				kpa.formation_no AS kpaFormationNo, 
+				kpa.station_id AS kpaStationId, 
+				kpa.station_name AS kpaStationName, 
+				kpa.sum_kpa as sumKpa,
+				rate1,rate2,
+				((rate1+rate2)/2) AS avgRate,
+				<!-- 시간 차이 계산 (절대값)  -->
+				ABS(TIMESTAMPDIFF(SECOND, afc.rcv_dt, kpa.rcv_dt)) AS timeDiffSec,
+				<!-- 가장 가까운 kpa 1개만 선택 -->
+				ROW_NUMBER() OVER (
+					PARTITION BY afc.rcv_dt, afc.station_id 
+					ORDER BY ABS(TIMESTAMPDIFF(SECOND, afc.rcv_dt, kpa.rcv_dt))
+				) AS rn
+			FROM afc
+			INNER JOIN kpa
+			ON afc.station_id = kpa.station_id + 2
+				
+			<!-- 시간차 -->			    
+			<choose>
+			    <when test="timeDiffSec !=null and timeDiffSec neq ''">
+			        AND afc.rcv_dt BETWEEN kpa.rcv_dt - INTERVAL #{timeDiffSec} MINUTE 
+					AND kpa.rcv_dt + INTERVAL 2 MINUTE
+			    </when>
+			    <otherwise>
+			        AND afc.rcv_dt BETWEEN kpa.rcv_dt - INTERVAL #{timeDiffSec} MINUTE 
+					AND kpa.rcv_dt + INTERVAL 2 MINUTE
+			    </otherwise>
+			</choose>
+		)
+		SELECT 
+		 DATE_FORMAT(RCV_DT,'%H:%i:%s') as RCV_DT
+		,station_name,train_no,people_cnt,rate
+		,DATE_FORMAT(kpaRcvDt,'%H:%i:%s') AS kpaRcvDt
+		,kpaFormationNo,kpaStationName
+		,sumKpa,rate1,rate2,avgRate
+		,timeDiffSec
+		FROM joined
+		WHERE rn = 1
+		ORDER BY rcv_dt
+	</select>
+	
 </mapper>

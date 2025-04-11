@@ -51,5 +51,11 @@ public class AfcServiceImpl implements AfcService {
         List<AfcDataVO> dataList = ExcelParserUtil.parse(file, activeCap);
         afcMapper.insertAfcDataList(dataList); // MyBatis foreach 방식으로 한번에 처리
     }
+	
+	//응하중 afc 비교목록
+	@Override
+	public List<AfcDataVO> versusList(AfcDataVO inputVo){	
+		return afcMapper.versusList(inputVo);
+	}
     
 }
