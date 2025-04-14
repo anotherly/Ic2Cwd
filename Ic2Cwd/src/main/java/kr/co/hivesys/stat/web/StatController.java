@@ -319,15 +319,15 @@ public class StatController {
         
         x=7;
         //셀 병합
-        sheet1.addMergedRegion(new CellRangeAddress(y,y,x,x+3));//행시작, 행종료, 열시작, 열종료(4칸 셀병합)
+        sheet1.addMergedRegion(new CellRangeAddress(y,y,4,8));//행시작, 행종료, 열시작, 열종료(4칸 셀병합)
         objRow = sheet1.createRow(y);
-        objCell = objRow.createCell(x);
+        objCell = objRow.createCell(4);
         objCell.setCellStyle(ctStyle);
         objCell.setCellValue(chartTitle);
         x=(x+3)+1;
         //연월일시
-        sheet1.addMergedRegion(new CellRangeAddress(y,y,x,x+3));//행시작, 행종료, 열시작, 열종료
-        objCell = objRow.createCell(x);
+        sheet1.addMergedRegion(new CellRangeAddress(y,y,9,11));//행시작, 행종료, 열시작, 열종료
+        objCell = objRow.createCell(9);
         objCell.setCellStyle(dtStyle);
         objCell.setCellValue(sndDt);
         //개행
@@ -347,14 +347,14 @@ public class StatController {
 	            objCell.setCellValue(req.getParameter("title_val0"));
 	            x=(x+3)+2;
 		    	
-	        	sheet1.addMergedRegion(new CellRangeAddress(y,y,x,x+3));
-	        	objCell = objRow.createCell(x);
+	        	sheet1.addMergedRegion(new CellRangeAddress(y,y,5,7));
+	        	objCell = objRow.createCell(5);
 	            objCell.setCellStyle(dayTt);
 	            objCell.setCellValue(req.getParameter("title_val1"));
 	        	x=(x+3)+2;
 	        	
-	        	sheet1.addMergedRegion(new CellRangeAddress(y,y,x,x+3));
-	            objCell = objRow.createCell(x);
+	        	sheet1.addMergedRegion(new CellRangeAddress(y,y,8,10));
+	            objCell = objRow.createCell(8);
 	            objCell.setCellStyle(dayTt);
 	            objCell.setCellValue(req.getParameter("title_val2"));
 	            //개행
@@ -375,7 +375,7 @@ public class StatController {
 			        XSSFCreationHelper helper = workbook.getCreationHelper();
 		            XSSFDrawing drawing = sheet1.createDrawingPatriarch();
 		            XSSFClientAnchor anchor = helper.createClientAnchor();
-		            XSSFPicture pict = drawing.createPicture(anchor, pictureIdx);
+		            /*XSSFPicture pict = drawing.createPicture(anchor, pictureIdx);*/
 		            
 		            // 이미지를 출력할 CELL 위치 선정 & 크기 지정
 		            // 화면 차트 배치에 따라 각각 핸들링 필요!!
@@ -384,19 +384,28 @@ public class StatController {
 		            // 가로길이를 다르게 함...
 		            if (i==0) {
 		            	//x=x+1;
-		            	anchor.setCol1(x);//오른쪽으로 3칸 시작점
-		                anchor.setRow1(y);//아래로 3칸 시작점
-			            pict.resize(0.3,0.8); // 차트 이미지 크기 조절 함수 resize (double 인자 )
+		            	anchor.setCol1(1);  // 시작 열
+		            	anchor.setRow1(3);  // 시작 행
+		            	anchor.setCol2(5); // 끝 열
+		            	anchor.setRow2(15); // 끝 행
+
+		            	XSSFPicture pict = drawing.createPicture(anchor, pictureIdx);
 			            x=(x+5);
 					} else if(i==1){
-						anchor.setCol1(x);//오른쪽으로 10칸 시작점
-		                anchor.setRow1(y);//아래로 3칸 시작점
-		                pict.resize(0.4,0.7);
+						anchor.setCol1(5);  // 시작 열
+		            	anchor.setRow1(3);  // 시작 행
+		            	anchor.setCol2(8); // 끝 열
+		            	anchor.setRow2(15); // 끝 행
+
+		            	XSSFPicture pict = drawing.createPicture(anchor, pictureIdx);
 		                x=(x+4);
 					} else{ //마지막
-						anchor.setCol1(x);//오른쪽으로 15칸 시작점
-		                anchor.setRow1(y);//아래로 3칸 시작점
-		                pict.resize(0.4,0.7);//열 10칸,행 16칸
+						anchor.setCol1(8);  // 시작 열
+		            	anchor.setRow1(3);  // 시작 행
+		            	anchor.setCol2(11); // 끝 열
+		            	anchor.setRow2(15); // 끝 행
+
+		            	XSSFPicture pict = drawing.createPicture(anchor, pictureIdx);
 					}
 				}
 				y=y+11;
