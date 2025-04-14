@@ -491,12 +491,14 @@
 			<!-- 시간차 -->			    
 			<choose>
 			    <when test="timeDiffSec !=null and timeDiffSec neq ''">
-			        AND afc.rcv_dt BETWEEN kpa.rcv_dt - INTERVAL #{timeDiffSec} MINUTE 
-					AND kpa.rcv_dt + INTERVAL 2 MINUTE
+			        AND afc.rcv_dt 
+			        BETWEEN kpa.rcv_dt - INTERVAL #{timeDiffSec} MINUTE 
+					AND kpa.rcv_dt + INTERVAL #{timeDiffSec} MINUTE
 			    </when>
 			    <otherwise>
-			        AND afc.rcv_dt BETWEEN kpa.rcv_dt - INTERVAL #{timeDiffSec} MINUTE 
-					AND kpa.rcv_dt + INTERVAL 2 MINUTE
+			        AND afc.rcv_dt 
+			        BETWEEN kpa.rcv_dt - INTERVAL 1 MINUTE 
+					AND kpa.rcv_dt + INTERVAL 1 MINUTE
 			    </otherwise>
 			</choose>
 		)
