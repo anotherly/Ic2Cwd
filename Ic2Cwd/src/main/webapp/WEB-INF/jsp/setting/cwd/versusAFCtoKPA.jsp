@@ -167,7 +167,6 @@
                         <div class="form-group col_14">
 							<label class="form-control-label"><span class="langSpan">상하행 구분</span></label>
 							<select class="form-control mw_30" id="activeCap" name="activeCap">
-								<option value="">전체</option>
 								<option value="1" selected>상행</option>
 								<option value="2">하행</option>
 		                    </select>

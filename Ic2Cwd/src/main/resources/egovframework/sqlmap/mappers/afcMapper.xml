@@ -441,6 +441,9 @@
 					    </otherwise>
 					</choose>
 			    </when>
+			    <otherwise>
+			        and station_id%2=1
+			    </otherwise>
 			</choose>
 		),
 		joined AS (
@@ -462,7 +465,28 @@
 				) AS rn
 			FROM afc
 			INNER JOIN kpa
-			ON afc.station_id = kpa.station_id + 2
+			
+			<!-- 상하행 -->	
+			<choose>
+			    <when test="activeCap !=null and activeCap neq ''">
+					<choose>
+					    <!--상행  -->
+					    <when test="activeCap eq 1">
+					        on afc.station_id = kpa.station_id + 2
+					    </when>
+					    <!--하행  -->
+					    <otherwise>
+					        on afc.station_id = kpa.station_id - 2
+					    </otherwise>
+					</choose>
+			    </when>
+			    <!-- 상행 -->
+			    <otherwise>
+					on afc.station_id = kpa.station_id + 2
+			    </otherwise>
+			</choose>
+			
+			
 				
 			<!-- 시간차 -->			    
 			<choose>
