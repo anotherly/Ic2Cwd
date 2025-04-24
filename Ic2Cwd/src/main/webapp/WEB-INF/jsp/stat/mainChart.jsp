@@ -68,11 +68,18 @@
 		cssChart();
 
 		/* 시간 형식으로 포맷하기 */
-		var max='';
-		max += '<p style="font-size:24px; margin:0; color: white;">1. 구간 : ' + alData.todayList[0].stationName + ' / 시간 :  ' +  alData.todayList[0].rcvDt + ' / 혼잡률 : ' + alData.todayList[0].rate3 +' % </p>';
-		max += '<p style="font-size:24px; margin:0; color: white;">2. 구간 : ' + alData.todayList[1].stationName + ' / 시간 : ' +  alData.todayList[1].rcvDt + ' / 혼잡률 : ' + alData.todayList[1].rate3 +' % </p>';
-		max += '<p style="font-size:24px; margin:0; color: white;">3. 구간 : ' + alData.todayList[2].stationName + ' / 시간 : ' + alData.todayList[2].rcvDt + ' / 혼잡률 : ' + alData.todayList[2].rate3 +' % </p>';
-		$("#gauge_chart").append(max);
+		
+		if(alData.todayList == null || alData.todayList.length == 0) { // 미운행 열차를 클릭 했을 경우 = 결과 없음 처리
+			var max='';
+			$("#gauge_chart").append(max);
+		} else { // 운행 중인 열차를 클릭 했을 경우 = 결과 보여주기 
+			var max='';
+			max += '<p style="font-size:24px; margin:0; color: white;">1. 구간 : ' + alData.todayList[0].stationName + ' / 시간 :  ' +  alData.todayList[0].rcvDt + ' / 혼잡률 : ' + alData.todayList[0].rate3 +' % </p>';
+			max += '<p style="font-size:24px; margin:0; color: white;">2. 구간 : ' + alData.todayList[1].stationName + ' / 시간 : ' +  alData.todayList[1].rcvDt + ' / 혼잡률 : ' + alData.todayList[1].rate3 +' % </p>';
+			max += '<p style="font-size:24px; margin:0; color: white;">3. 구간 : ' + alData.todayList[2].stationName + ' / 시간 : ' + alData.todayList[2].rcvDt + ' / 혼잡률 : ' + alData.todayList[2].rate3 +' % </p>';
+			$("#gauge_chart").append(max);
+		}
+		
 	});
 	
 	//접어두기
