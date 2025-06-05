@@ -98,7 +98,7 @@
 								<div class="ctn_tbl_td">
 								<input type="text" 
 									name ="userId" 
-									maxlength="6" 
+									maxlength="12" 
 									class="form-control input_base_require">
 								</div>
 								<div class="ctn_tbl_th fm_rep">사용자 이름</div>

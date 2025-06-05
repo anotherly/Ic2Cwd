@@ -43,6 +43,11 @@
 		
 		console.log(lastWord);
 		
+		/* $(".glyphicon-calendar").on("click",function(){
+			console.log("달력 클릭");
+			alert("달력 클릭");
+		}); */
+		
 		/* $(".title_segments button").each(function(i,list){
 			console.log("진입");
 			if(lastWord == 'selectDownLog.do') { // 금일이라면

@@ -83,6 +83,32 @@ function trCreate(){
 //tdid,tdCont,spanVal
 function tdCreate(data){
 	/*console.log("tdCreate");*/
+	
+	//경고창 이미지용 주석필요!
+	
+	/*data.cwd1= Math.floor(Math.random() * 3) + 1;
+	data.cwd2= Math.floor(Math.random() * 3) + 1;
+	if(data.cwd1==2){
+		data.rate1=Math.floor(Math.random() * (170 - 151 + 1)) + 151;
+	}else if(data.cwd1==3){
+		data.rate1=Math.floor(Math.random() * (170 - 151 + 1)) + 151;
+	}
+	
+	if(data.cwd2==2){
+		data.rate2=Math.floor(Math.random() * (170 - 151 + 1)) + 151;
+	}else if(data.cwd2==3){
+		data.rate2=Math.floor(Math.random() * (170 - 151 + 1)) + 151;
+	}
+	
+	
+	if(data.formationNo==202){
+		data.rate1=195;
+		data.rate2=201;
+		data.cwd1=4;
+		data.cwd2=4;
+	}*/
+	/////////////////
+	
 	var tdid= data.formationNo;
 	var updown = "";
 	if(data.activeCap!=null && typeof data.activeCap !=="undefined"){
@@ -92,6 +118,8 @@ function tdCreate(data){
 	
 	var vRate1=data.rate1;
 	var vRate2=data.rate2;
+	
+	
 	
 	if(data.stationName=="현재 미운행"){
 		vRate1=0;
@@ -151,10 +179,8 @@ function tdCreate(data){
 				+"</div>"
 			+"</td>";
 		}
-		//혼잡 심각의 경우
-		
 		if(
-			data.rate1>=190 || data.rate2>190	
+			data.rate1>190 || data.rate2>190	
 		){
 			newSoundAlert(data.formationNo,"심각");
 		}

@@ -22,15 +22,16 @@
 				if(i==0){
 					xList.push("시간");
 					yList.push("평균 혼잡도");
-					yList2.push("최대 혼잡도");
+					//yList2.push("최대 혼잡도");
 				}else{
 					xList.push(alData.xyList[i].xVal);
 					yList.push(alData.xyList[i].yVal);
-					yList2.push(alData.xyList[i].yVal2);
+					//yList2.push(alData.xyList[i].yVal2);
 				}
 			}
 			
-			bar=barChart("bar_chart",xList,yList,yList2);
+			bar=barChart("bar_chart",xList,yList);
+			//bar=barChart("bar_chart",xList,yList,yList2);
 		}
 		//gauge=gaugeChart("gauge_chart",alData.gaugeCnt);
 		
@@ -74,9 +75,9 @@
 			$("#gauge_chart").append(max);
 		} else { // 운행 중인 열차를 클릭 했을 경우 = 결과 보여주기 
 			var max='';
-			max += '<p style="font-size:24px; margin:0; color: white;">1. 구간 : ' + alData.todayList[0].stationName + ' / 시간 :  ' +  alData.todayList[0].rcvDt + ' / 혼잡률 : ' + alData.todayList[0].rate3 +' % </p>';
-			max += '<p style="font-size:24px; margin:0; color: white;">2. 구간 : ' + alData.todayList[1].stationName + ' / 시간 : ' +  alData.todayList[1].rcvDt + ' / 혼잡률 : ' + alData.todayList[1].rate3 +' % </p>';
-			max += '<p style="font-size:24px; margin:0; color: white;">3. 구간 : ' + alData.todayList[2].stationName + ' / 시간 : ' + alData.todayList[2].rcvDt + ' / 혼잡률 : ' + alData.todayList[2].rate3 +' % </p>';
+			max += '<p style="font-size:24px; margin:0; color: white;">1. 구간 : ' + alData.todayList[0].stationName + ' / 시간 :  ' +  alData.todayList[0].rcvDt + ' / 혼잡률 : ' + alData.todayList[0].rate +' % </p>';
+			max += '<p style="font-size:24px; margin:0; color: white;">2. 구간 : ' + alData.todayList[1].stationName + ' / 시간 : ' +  alData.todayList[1].rcvDt + ' / 혼잡률 : ' + alData.todayList[1].rate +' % </p>';
+			max += '<p style="font-size:24px; margin:0; color: white;">3. 구간 : ' + alData.todayList[2].stationName + ' / 시간 : ' + alData.todayList[2].rcvDt + ' / 혼잡률 : ' + alData.todayList[2].rate +' % </p>';
 			$("#gauge_chart").append(max);
 		}
 		
@@ -107,7 +108,7 @@
 		<!-- 주의 혼잡 gauge -->
 		<!-- class="pie_container" -->
 		<div style="width: 100%;display: flex;flex-direction: row;align-items: center;">
-			<div id="gauge_chart" class="pie_container">
+			<div id="gauge_chart" class="pie_container" style="display: flex;flex-direction: column;align-items: flex-start;margin-left: 50px;">
 				<!-- 25-04-01 : 금일 최대 혼잡률(%) -->
 				<h1 id="todayMax" class="chart-title">금일 최대 혼잡률(%)</h1>
 			</div>
@@ -115,7 +116,7 @@
 	</div>
 	<div>
 		<div id="bar_container">
-			<h1 class="chart-title"  id="chart_title2" style="padding-left: 30px;">금일 시간대별 평균/최대 혼잡률</h1>
+			<h1 class="chart-title"  id="chart_title2" style="padding-left: 30px;">금일 시간대별 평균 혼잡률</h1>
 			<div id="bar_chart" class=""></div>
 		</div>
 	</div>

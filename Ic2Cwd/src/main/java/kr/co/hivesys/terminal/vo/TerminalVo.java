@@ -38,6 +38,7 @@ public class TerminalVo  extends AspVO{
 	
 	private int sumKpa;
 	
+	private int rate;
 	private int rate1;
 	private int rate2;
 	private int rate3;
@@ -74,7 +75,14 @@ public class TerminalVo  extends AspVO{
 	private double range1;
 	private double range2;
 	
-	
+	public int getRate() {
+		return rate;
+	}
+
+	public void setRate(int rate) {
+		this.rate = rate;
+	}
+
 	public int getSumKpa() {
 		return sumKpa;
 	}

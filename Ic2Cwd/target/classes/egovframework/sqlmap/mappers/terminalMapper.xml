@@ -42,6 +42,7 @@
 		<result property="kpa7" column="kpa7"/>
 		<result property="kpa8" column="kpa8"/>
 		
+		<result property="rate" column="rate"/>
 		<result property="rate1" column="rate1"/>
 		<result property="rate2" column="rate2"/>
 		<result property="rate3" column="rate3"/>
@@ -75,19 +76,26 @@
 	</resultMap>
 	
 	<!-- 메인화면 대시보드에서의 단말기목록 -->
+
 	<select id="mainTerminalList" parameterType="terminalVO" resultMap="resultTerminalVo">
 	   	WITH tcms AS(
-	    <![CDATA[ 
+	    
 			SELECT *
 				FROM tcms_log
 				WHERE rcv_dt>= now() - interval 30 second
-				and formation_no>=201 AND formation_no<=300
+				<!-- [암호화 요청 관련] 통상적으로는 차량 테이블과 join 하는것이 맞으나..
+				요청사항으로 201~243이라서... -->
+				<if test="formationNo !=null and formationNo neq ''"> 
+					and formation_no=#{formationNo}
+				</if>
+				<![CDATA[ 
+				and formation_no>=201 AND formation_no<=243
 				AND kpa1>50 and kpa2>50 and kpa3>50 and kpa4>50
 				and station_id >= 0 AND station_id<60
-		]]>
+				]]>
 		),
 		jjng as(
-		<![CDATA[
+		
 			SELECT joong2.formation_no AS jfno
 				FROM 
 				(
@@ -98,10 +106,20 @@
 									,COUNT(*) AS cnt
 									FROM tcms_log
 									WHERE 1=1
-									and rcv_dt>= now() - INTERVAL 2 minute
+									and rcv_dt>= now() - interval 30 second
+									
+									<!-- [암호화 요청 관련] 통상적으로는 차량 테이블과 join 하는것이 맞으나..
+									요청사항으로 201~243이라서... -->
+									
+									<if test="formationNo !=null and formationNo neq ''"> 
+										and formation_no=#{formationNo}
+									</if>
+
+									<![CDATA[ 
 									and formation_no>=201 AND formation_no<=243
 									AND kpa1>50 and kpa2>50 and kpa3>50 and kpa4>50
 									and station_id >= 0 AND station_id<60
+									]]>
 									GROUP BY formation_no,device_mac
 									ORDER BY formation_no,device_mac
 							)tt
@@ -121,10 +139,18 @@
 												,COUNT(*) AS cnt
 												FROM tcms_log
 												WHERE 1=1
-												and rcv_dt>= now() - interval 2 minute
-												and formation_no>=201 AND formation_no<=243
-												AND kpa1>50 and kpa2>50 and kpa3>50 and kpa4>50
-												and station_id >= 0 AND station_id<60
+												and rcv_dt>= now() - interval 30 second
+												
+												<!-- [암호화 요청 관련] 통상적으로는 차량 테이블과 join 하는것이 맞으나..
+												요청사항으로 201~243이라서... -->
+												<if test="formationNo !=null and formationNo neq ''"> 
+													and formation_no=#{formationNo}
+												</if>
+												<![CDATA[ 
+													and formation_no>=201 AND formation_no<=243
+													AND kpa1>50 and kpa2>50 and kpa3>50 and kpa4>50
+													and station_id >= 0 AND station_id<60
+												]]>
 												GROUP BY formation_no,device_mac
 												ORDER BY formation_no,device_mac
 											)tcms
@@ -139,12 +165,13 @@
 				)joong1
 				LEFT JOIN tcms_info joong2
 				ON joong1.device_mac=joong2.device_mac
-			]]>
+			
 		)
-	    
+	    <!-- 최종 조인 : D 역정보 테이블과 -->
 	    SELECT J2.*
 	    ,IFNULL(D.station_name ,'현재 미운행') as station_name
 	    from 
+	    <!-- j2 : C asp_rate_info 혼잡률 범위 테이블 과 -->
 	    (
 		    SELECT J1.* 
 		    ,case when J1.RATE1 is null then 0 when J1.RATE1 <![CDATA[ < ]]> C.care_st then 1 when J1.RATE1 <![CDATA[ < ]]> C.cwd_st then 2 when J1.RATE1 <![CDATA[ < ]]> C.seve_st then 3 ELSE 4 END AS cwd1
@@ -153,56 +180,47 @@
 		    (
 		    <!-- 두 량 혼잡률이 30%이상 차이안나게 -->
 				select J0.*  
-				 ,IF(ABS(((rate_tt1+rate_tt2)/2)-rate_tt1) <![CDATA[ >= ]]> 15, rate12 ,rate_tt1)  as rate1
-				,IF(ABS(((rate_tt1+rate_tt2)/2)-rate_tt2) <![CDATA[ >= ]]> 15, rate12 ,rate_tt2)  as rate2
+				 ,IF(ABS(((rate_t1+rate_t2)/2)-rate_t1) <![CDATA[ >= ]]> 15, greatest(J0.rate_t1,J0.rate_t2) ,J0.rate_t1)  as rate1
+				,IF(ABS(((rate_t1+rate_t2)/2)-rate_t2) <![CDATA[ >= ]]> 15, greatest(J0.rate_t1,J0.rate_t2) ,J0.rate_t2)  as rate2
 				from
 				(
-					SELECT 
-					  a.*
-					 ,b.*
-					 <!-- 혼잡률이 0보다 작을경우 0으로 표기 -->						
-					,if(b.rate_t1<![CDATA[ < ]]>0,0,b.rate_t1) AS rate_tt1
-					,if(b.rate_t2<![CDATA[ < ]]>0,0,b.rate_t2) AS rate_tt2
-					,greatest(b.rate_t1,b.rate_t2) as rate12
-		 		FROM ASP_INFO a
-		 		left join
-		 		(
-					SELECT 
-						 TRAIN_NO AS tno2
-						,formation_no AS fno2
-						
-						,rcv_dt
-						<![CDATA[ 
-						,case when station_id<3 OR station_id>56 then ''
-							else 
-							case when station_id%2=1 then '(상)' 
-							 when station_id%2=0 then '(하)'ELSE '' END 
-						end AS active_cap
- 						]]>
-						,train_cnt
-						,ROUND(calc_kpa((kpa1+kpa2)/2,formation_no,1)*range_kpa((kpa1+kpa2)/2,formation_no),1) AS rate_t1
-						,ROUND(calc_kpa((kpa3+kpa4)/2,formation_no,2)*range_kpa((kpa3+kpa4)/2,formation_no),1) AS rate_t2
-						,station_id
-						,if(a.formation_no=b.jfno,1,0) as train_add_cnt
-		 			FROM tcms a left join jjng b ON a.formation_no=b.jfno
-		 			<!-- 그룹 함수 중 최신 시간껄 가져올때 쓸 것 !!
-		 			기본적으로 옛날시간거 가져온다 ㅡㅡ 
-		 			 -->
-		 			where (formation_no, rcv_dt) 
-				    in (
-					    <![CDATA[  
-					    	select formation_no, max(rcv_dt) as rcv_dt 
-					        	from tcms 
-					            group by formation_no
-					    ]]>
-				    )
-		 		) b
-		 		ON a.formation_no=b.fno2
-		 		
-				WHERE 1=1
-				<if test="formationNo !=null and formationNo neq ''"> 
-					AND formation_no=#{formationNo}
-				</if>
+				<!-- j0 : a+b 조인 : 전체 편성 나오게 하려고,+제조사 -->
+					select a.*,b.* from 
+					asp_info a
+					left join
+					(
+						SELECT 
+							 TRAIN_NO 
+							,formation_no as fno2
+							
+							,rcv_dt
+							<![CDATA[ 
+							,case when station_id<3 OR station_id>56 then ''
+								else 
+								case when station_id%2=1 then '(상)' 
+								 when station_id%2=0 then '(하)'ELSE '' END 
+							end AS active_cap
+	 						]]>
+							,train_cnt
+							
+							,kpa_rate(kpa1+kpa2,kpa1+kpa2+kpa3+kpa4,formation_no)  AS rate_t1
+							,kpa_rate(kpa3+kpa4,kpa1+kpa2+kpa3+kpa4,formation_no) AS rate_t2
+	
+	 						,station_id
+							,if(a.formation_no=b.jfno,1,0) as train_add_cnt
+			 			FROM tcms a left join jjng b ON a.formation_no=b.jfno
+			 			<!--  그룹 함수 중 최신 시간껄 가져올때 쓸 것 !! 기본적으로 옛날시간거 가져온다 ㅡㅡ  -->
+			 			 
+			 			where (formation_no, rcv_dt) 
+					    in (
+						    <![CDATA[  
+						    	select formation_no, max(rcv_dt) as rcv_dt 
+						        	from tcms 
+						            group by formation_no
+						    ]]>
+					    )
+				    )b
+					on a.formation_no =b.fno2
 				)J0
 				
 			)J1
@@ -216,8 +234,9 @@
 			or
 			J2.station_id=D.down_num
 	 	)
+	 	
 	 	<!-- 0(신규제조사 추가 시 기준값) 제외 -->
-		where j2.formation_no != 0
+	 	where j2.formation_no != 0
 	 	ORDER BY J2.train_add_cnt DESC, J2.FORMATION_NO
 	</select>
 	
@@ -314,7 +333,7 @@
 		WHERE formation_no=#{formationNo} 
 	</update>
 	
-		<!-- 사용자 삭제 -->
+	<!-- 사용자 삭제 -->
 	<delete id="deleteTerminal">
 		DELETE FROM TCMS_INFO 
 		WHERE formation_no IN
@@ -328,4 +347,156 @@
 	    DELETE FROM TCMS_INFO
 	    WHERE formation_no=#{formationNo}
 	</delete>
+	
+	
+	<!-- 메인화면 대시보드에서의 단말기목록 - 기존 국토부 방식 -->
+<!-- 
+	<select id="mainTerminalList" parameterType="terminalVO" resultMap="resultTerminalVo">
+	   	WITH tcms AS(
+	    <![CDATA[ 
+			SELECT *
+				FROM tcms_log
+				WHERE rcv_dt>= now() - interval 30 second
+				and formation_no>=201 AND formation_no<=243
+				AND kpa1>50 and kpa2>50 and kpa3>50 and kpa4>50
+				and station_id >= 0 AND station_id<60
+		]]>
+		),
+		jjng as(
+		<![CDATA[
+			SELECT joong2.formation_no AS jfno
+				FROM 
+				(
+					SELECT tt.formation_no ,tt.device_mac FROM 
+							(
+								SELECT rcv_dt,formation_no,station_id
+									,device_mac
+									,COUNT(*) AS cnt
+									FROM tcms_log
+									WHERE 1=1
+									and rcv_dt>= now() - interval 30 second
+									and formation_no>=201 AND formation_no<=243
+									AND kpa1>50 and kpa2>50 and kpa3>50 and kpa4>50
+									and station_id >= 0 AND station_id<60
+									GROUP BY formation_no,device_mac
+									ORDER BY formation_no,device_mac
+							)tt
+							WHERE (tt.formation_no) IN(
+								SELECT 
+								formation_no
+								FROM
+								(
+									SELECT jng.*,COUNT(*) AS cnt2 from
+										(
+											SELECT rcv_dt,formation_no,station_id
+											,device_mac
+											FROM 
+											(
+												SELECT rcv_dt,formation_no,station_id
+												,device_mac
+												,COUNT(*) AS cnt
+												FROM tcms_log
+												WHERE 1=1
+												and rcv_dt>= now() - interval 2 minute
+												and formation_no>=201 AND formation_no<=243
+												AND kpa1>50 and kpa2>50 and kpa3>50 and kpa4>50
+												and station_id >= 0 AND station_id<60
+												GROUP BY formation_no,device_mac
+												ORDER BY formation_no,device_mac
+											)tcms
+											GROUP BY formation_no,device_mac
+											ORDER BY formation_no,device_mac
+										)jng
+										GROUP BY formation_no
+										ORDER BY formation_no
+								)t1
+								WHERE t1.cnt2>1
+							)
+				)joong1
+				LEFT JOIN tcms_info joong2
+				ON joong1.device_mac=joong2.device_mac
+			]]>
+		)
+	    
+	    SELECT J2.*
+	    ,IFNULL(D.station_name ,'현재 미운행') as station_name
+	    from 
+	    (
+		    SELECT J1.* 
+		    ,case when J1.RATE1 is null then 0 when J1.RATE1 <![CDATA[ < ]]> C.care_st then 1 when J1.RATE1 <![CDATA[ < ]]> C.cwd_st then 2 when J1.RATE1 <![CDATA[ < ]]> C.seve_st then 3 ELSE 4 END AS cwd1
+			,case when J1.RATE2 is null then 0 when J1.RATE2 <![CDATA[ < ]]> C.care_st then 1 when J1.RATE2 <![CDATA[ < ]]> C.cwd_st then 2 when J1.RATE2 <![CDATA[ < ]]> C.seve_st then 3 ELSE 4 END AS cwd2
+			from 
+		    (
+		    두 량 혼잡률이 30%이상 차이안나게 !@#
+				select J0.*  
+				 ,IF(ABS(((rate_tt1+rate_tt2)/2)-rate_tt1) <![CDATA[ >= ]]> 15, rate12 ,rate_tt1)  as rate1
+				,IF(ABS(((rate_tt1+rate_tt2)/2)-rate_tt2) <![CDATA[ >= ]]> 15, rate12 ,rate_tt2)  as rate2
+				from
+				(
+					SELECT 
+					  a.*
+					 ,b.*
+					 혼잡률이 0보다 작을경우 0으로 표기 !@#						
+					,if(b.rate_t1<![CDATA[ < ]]>0,0,b.rate_t1) AS rate_tt1
+					,if(b.rate_t2<![CDATA[ < ]]>0,0,b.rate_t2) AS rate_tt2
+					,greatest(b.rate_t1,b.rate_t2) as rate12
+		 		FROM ASP_INFO a
+		 		left join
+		 		(
+					SELECT 
+						 TRAIN_NO AS tno2
+						,formation_no AS fno2
+						
+						,rcv_dt
+						<![CDATA[ 
+						,case when station_id<3 OR station_id>56 then ''
+							else 
+							case when station_id%2=1 then '(상)' 
+							 when station_id%2=0 then '(하)'ELSE '' END 
+						end AS active_cap
+ 						]]>
+						,train_cnt
+						,ROUND(calc_kpa((kpa1+kpa2)/2,formation_no,1)*range_kpa((kpa1+kpa2)/2,formation_no),1) AS rate_t1
+						,ROUND(calc_kpa((kpa3+kpa4)/2,formation_no,2)*range_kpa((kpa3+kpa4)/2,formation_no),1) AS rate_t2
+
+ 						,station_id
+						,if(a.formation_no=b.jfno,1,0) as train_add_cnt
+		 			FROM tcms a left join jjng b ON a.formation_no=b.jfno
+		 			그룹 함수 중 최신 시간껄 가져올때 쓸 것 !!
+		 			기본적으로 옛날시간거 가져온다 ㅡㅡ 
+		 			 !@#
+		 			where (formation_no, rcv_dt) 
+				    in (
+					    <![CDATA[  
+					    	select formation_no, max(rcv_dt) as rcv_dt 
+					        	from tcms 
+					            group by formation_no
+					    ]]>
+				    )
+		 		) b
+		 		ON a.formation_no=b.fno2
+		 		
+				WHERE 1=1
+				<if test="formationNo !=null and formationNo neq ''"> 
+					AND formation_no=#{formationNo}
+				</if>
+				)J0
+				
+			)J1
+			,asp_rate_info C
+	    )J2 
+	    left join 
+	    station_info D
+	    on 
+		(
+			J2.station_id=D.up_num
+			or
+			J2.station_id=D.down_num
+	 	)
+	 	0(신규제조사 추가 시 기준값) 제외 !@#
+		where j2.formation_no != 0
+	 	ORDER BY J2.train_add_cnt DESC, J2.FORMATION_NO
+	</select>
+ -->
+	
 </mapper>

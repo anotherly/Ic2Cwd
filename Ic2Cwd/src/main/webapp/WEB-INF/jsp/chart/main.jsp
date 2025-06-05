@@ -17,21 +17,11 @@
 	
 	$(document).ready(function(){
 		console.log("main");
-		// 24-10-10 : 페이지 옮겨도 30초 후 갱신 시 페이지 변하지 않도록 처리하기 위한 변수
-		var nowPage = 0;
-		var nextPage = 1;
-		var firstId='';
-		$('#trainTb tr td').each(function(index, value){
-		    console.log("id" +  " : "  + $(this).attr('id'));
-		    firstId=$(this).attr('id');
-		});
-		
 		//우측 단말기 리스트
 		var alData=ajaxMethod("/terminal/mainTerminalList.ajax");
 		var Fcounter = alData.data.length;
 		
 		trainOne(alData.data,9);
-		hideTr(nowPage*6,nextPage*6);
 		
 	});	
 	//동적 테이블(삭제 및 갱신)시 td 클릭 이벤트
@@ -59,7 +49,7 @@
 		var Fcounter = alData.data.length;
 		trainOne(alData.data,9);
 	
-	}, 30*1000);
+	}, 10*1000);
 	
 </script>
 </head>

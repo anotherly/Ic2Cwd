@@ -35,6 +35,7 @@
 	<script src="<%=request.getContextPath()%>/calender/mo_ko.js"></script>
 	<script src="<%=request.getContextPath()%>/calender/bootstrap-datetimepicker.js"></script>
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/calender/no-boot-calendar-custom.css" />
+	<!-- <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/bootstrap/bootstrap.min.css" /> -->
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/calender/datetimepickerstyle.css" />
 	
 	<!-- 로그인 시큐어코딩 관련 -->

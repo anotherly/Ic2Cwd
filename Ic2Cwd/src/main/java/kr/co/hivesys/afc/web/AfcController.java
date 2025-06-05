@@ -46,6 +46,28 @@ public class AfcController {
 	private AfcService afcService;
 	
 	
+	//로그조회 금일 데이터 조회
+	@RequestMapping(value= "/afc/selectDownLogListToday.ajax")
+	public @ResponseBody ModelAndView downLogListToday( 
+	HttpServletRequest request, HttpServletResponse response
+	,@ModelAttribute("TerminalVo") TerminalVo inputVo
+	) throws Exception{
+		url = request.getRequestURI().substring(request.getContextPath().length()).split(".do")[0];
+		
+		ModelAndView mav = new ModelAndView("jsonView");
+		List<TerminalVo> sList= null;
+		try {
+			sList = afcService.selectLogToday(inputVo);
+			mav.addObject("data", sList);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.debug(""+e);
+			mav.addObject("msg","에러가 발생했습니다.");
+		}
+		return mav;
+	}
+	
 	//로그조회  전체 데이터 조회
 	@RequestMapping(value= "/afc/selectDownLogList.ajax")
 	public @ResponseBody ModelAndView downLogList( 
@@ -67,28 +89,7 @@ public class AfcController {
 		}
 		return mav;
 	}
-	
-	//로그조회 금일 데이터 조회
-		@RequestMapping(value= "/afc/selectDownLogListToday.ajax")
-		public @ResponseBody ModelAndView downLogListToday( 
-		HttpServletRequest request, HttpServletResponse response
-		,@ModelAttribute("TerminalVo") TerminalVo inputVo
-		) throws Exception{
-			url = request.getRequestURI().substring(request.getContextPath().length()).split(".do")[0];
-			
-			ModelAndView mav = new ModelAndView("jsonView");
-			List<TerminalVo> sList= null;
-			try {
-				sList = afcService.selectLogToday(inputVo);
-				mav.addObject("data", sList);
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-				logger.debug(""+e);
-				mav.addObject("msg","에러가 발생했습니다.");
-			}
-			return mav;
-		}
+
 	
 
 		//AFC download

@@ -11,6 +11,7 @@
 	
 	<resultMap type="terminalVO" id="resultTerminalVo">
 		<result property="trainNo" column="train_no"/>
+		<result property="formationNo" column="formation_no"/>
 		<result property="deviceIp" column="device_ip"/>
 		<result property="deviceMac" column="device_mac"/>
 		<result property="insLocTxt" column="INS_LOC_TXT"/>
@@ -20,14 +21,18 @@
 		<result property="etc" column="etc"/>
 		<result property="regDt" column="reg_dt"/>
 		
+		<result property="carType" column="car_type"/>
+		<result property="carName" column="car_name"/>
+		
 		<result property="rcvDt" column="rcv_dt"/>
-		<result property="trainNo" column="train_no"/>
-		<result property="formationNo" column="formation_no"/>
+		<result property="tno2" column="tno2"/>
+		<result property="fno2" column="fno2"/>
 		<result property="activeCap" column="active_cap"/>
 		<result property="trainCnt" column="train_cnt"/>
 		<result property="trainAddCnt" column="train_add_cnt"/>
 		<result property="deviceIp" column="device_ip"/>
 		<result property="deviceMac" column="device_mac"/>
+		
 		<result property="kpa1" column="kpa1"/>
 		<result property="kpa2" column="kpa2"/>
 		<result property="kpa3" column="kpa3"/>
@@ -36,6 +41,8 @@
 		<result property="kpa6" column="kpa6"/>
 		<result property="kpa7" column="kpa7"/>
 		<result property="kpa8" column="kpa8"/>
+		
+		<result property="rate" column="rate"/>
 		<result property="rate1" column="rate1"/>
 		<result property="rate2" column="rate2"/>
 		<result property="rate3" column="rate3"/>
@@ -44,7 +51,28 @@
 		<result property="rate6" column="rate6"/>
 		<result property="rate7" column="rate7"/>
 		<result property="rate8" column="rate8"/>
+		
+		<result property="cwd1" column="cwd1"/>
+		<result property="cwd2" column="cwd2"/>
+		<result property="cwd3" column="cwd3"/>
+		<result property="cwd4" column="cwd4"/>
+		<result property="cwd5" column="cwd5"/>
+		<result property="cwd6" column="cwd6"/>
+		<result property="cwd7" column="cwd7"/>
+		<result property="cwd8" column="cwd8"/>
+		
+		<result property="stWgt1" column="st_wgt_1"/>
+		<result property="stWgt2" column="st_wgt_2"/>
+		<result property="fcWgt1" column="fc_wgt_1"/>
+		<result property="fcWgt2" column="fc_wgt_2"/>
+		
+		<result property="stationId" column="station_id"/>
+		<result property="stationName" column="station_name"/>
+		
 		<result property="errorRange" column="error_range"/>
+		
+		<result property="maxPsCnt" column="max_ps_cnt"/>
+		<result property="standardKg" column="standard_kg"/>
 	</resultMap>
 	
 		
@@ -94,24 +122,28 @@
 	
 	<!-- 메인화면 바 차트 -->
 	<select id="mainBarChart" parameterType="terminalVO" resultType="chartVo">
-	    
+	    <!-- ,ROUND(calc_kpa((kpa1+kpa2)/2,formation_no,1)*range_kpa((kpa1+kpa2)/2,formation_no),1) AS rate1
+			,ROUND(calc_kpa((kpa3+kpa4)/2,formation_no,2)*range_kpa((kpa3+kpa4)/2,formation_no),1) AS rate2 -->
 	    <![CDATA[ 
 			WITH RECURSIVE DT_TABLE AS (
-			    SELECT NOW() dt, 1 lv FROM dual
-			    UNION all
-			    SELECT 
-			    	 DATE_ADD(NOW(), INTERVAL DT_TABLE.lv HOUR) dt
-			    	,DT_TABLE.lv+1 AS lv 
-			    FROM DT_TABLE 
-			    WHERE DT_TABLE.lv < 24 
-			),
-			tm AS (
-			SELECT RCV_DT,train_cnt,train_add_cnt
-			,ROUND(calc_kpa((kpa1+kpa2)/2,formation_no,1)*range_kpa((kpa1+kpa2)/2,formation_no),1) AS rate1
-			,ROUND(calc_kpa((kpa3+kpa4)/2,formation_no,2)*range_kpa((kpa3+kpa4)/2,formation_no),1) AS rate2
-			FROM tcms_log
-			WHERE formation_no=#{formationNo}
+						    SELECT NOW() dt, 1 lv FROM dual
+						    UNION all
+						    SELECT 
+						    	 DATE_ADD(NOW(), INTERVAL DT_TABLE.lv HOUR) dt
+						    	,DT_TABLE.lv+1 AS lv 
+						    FROM DT_TABLE 
+						    WHERE DT_TABLE.lv < 24 
+						),
+			tcms as(
+						SELECT 
+						hour(rcv_dt) as hh
+						, (kpa1+kpa2+kpa3+kpa4) AS sumkpa_tcms
+						FROM tcms_log a
+						WHERE formation_no=#{formationNo}
+						AND station_id >=3 AND station_id <=56
+						AND ABS(kpa1) > 50 AND ABS(kpa2) > 50 AND ABS(kpa3) > 50 AND ABS(kpa4) > 50
 			)
+
 			SELECT tm.dt AS xVal
 			,IFNULL(val.yVal,0) as yVal 
 			,IFNULL(val.yVal2,0) as yVal2
@@ -123,84 +155,117 @@
 			)tm
 		    left join
 			(
-				SELECT B.*,C.yVal2 FROM 
+
+				SELECT 
+				c.hh AS xVal
+				,ROUND(
+					nvl(
+						100*(
+							SELECT afc2 FROM vs_type 
+							WHERE id=#{formationNo} 
+							and kpa=
+							((avg_kpa) - (SELECT sumkpa from min_kpa WHERE fornum=#{formationNo}))
+						)
+						/206
+					,0)
+				,1) AS yVal
+				,ROUND(
+					nvl(
+						100*(
+							SELECT afc2 FROM vs_type 
+							WHERE id=#{formationNo} 
+							and kpa=
+							((max_kpa) - (SELECT sumkpa from min_kpa WHERE fornum=#{formationNo}))
+						)
+						/206
+					,0)
+				,1) AS yVal2
+				from
 				(
-					SELECT xVal
-					,ROUND(AVG(sum_rate),0) AS yVal
-					FROM
+				SELECT a.hh,a.avg_kpa,b.max_kpa from
 					(
-						SELECT 
-							 DATE_FORMAT(RCV_DT, '%H') AS xVal
-							 ,train_cnt
-							 ,train_add_cnt
-							 ,round((rate1+rate2)/train_cnt,0)AS sum_rate
-						FROM tm
-					)A
-					GROUP BY xVal
-				)B
-				LEFT JOIN
-				(
-					SELECT  
-					DATE_FORMAT(RCV_DT, '%H') AS xVal
-					,round(GREATEST(MAX(rate1),MAX(rate2)),0) AS yVal2
-					FROM tm
-					GROUP BY xVal
-				)C
-				ON B.xVal=C.xVal
+						SELECT t.hh,ROUND(AVG(sumkpa_tcms),0) AS avg_kpa from
+						tcms t
+						GROUP BY t.hh 
+					) a
+					LEFT join
+					(
+						SELECT t.hh,max(sumkpa_tcms) AS max_kpa from
+						tcms t
+						GROUP BY t.hh
+					)b
+					ON a.hh=b.hh
+				)c
 				
 			)val
 			on tm.dt=val.xVal
 			where tm.dt   >=  5
-			ORDER BY xVal 
+			ORDER BY xVal  
 			]]>
 	</select>
 	
 	
-	<select id="todayMaxList" parameterType="terminalVO" resultType="terminalVo">
-	WITH formation AS (
-	    SELECT 
-	        a.formation_no AS formationNo, 
-	        a.station_id AS stationId, 
-	        b.station_name AS stationName,
-	        DATE_FORMAT(a.rcv_dt, '%H:%i') AS rcvDt, 
-	        ROUND(
-	            calc_kpa((kpa1 + kpa2) / 2, formation_no, 1) * range_kpa((kpa1 + kpa2) / 2, formation_no), 1
-	        ) AS rate1, 
-	        ROUND(
-	            calc_kpa((kpa3 + kpa4) / 2, formation_no, 2) * range_kpa((kpa3 + kpa4) / 2, formation_no), 1
-	        ) AS rate2, 
-	        ROUND(
-	            (
-	                calc_kpa((kpa1 + kpa2) / 2, formation_no, 1) * range_kpa((kpa1 + kpa2) / 2, formation_no) 
-	                + calc_kpa((kpa3 + kpa4) / 2, formation_no, 2) * range_kpa((kpa3 + kpa4) / 2, formation_no)
-	            ) / 2, 1
-	        ) AS rate3,
-	        ROW_NUMBER() OVER (
-	            PARTITION BY b.station_name 
-	            ORDER BY rate3 DESC, rcvDt DESC
-	        ) AS rn
-		    FROM tcms_log a 
-		    LEFT JOIN station_info b 
-		        ON (a.station_id = b.up_num OR a.station_id = b.down_num) 
-		    WHERE a.formation_no = #{formationNo}
+	<select id="todayMaxList" parameterType="terminalVO" resultMap="resultTerminalVo">
+		
+		WITH tcms AS (
+		  SELECT 
+		  rcv_dt,
+		    a.station_id,
+		    (kpa1 + kpa2 + kpa3 + kpa4) AS sumkpa_tcms
+		    ,station_name
+		  FROM tcms_log a
+		  LEFT join
+		  (SELECT station_name,up_num,down_num from station_info) b
+			 on 
+			(
+				a.station_id=b.up_num
+				or
+				a.station_id=b.down_num
+			)
+		  
+		  	WHERE formation_no = #{formationNo}
+		  	<![CDATA[ 
+		    AND station_id BETWEEN 3 AND 56
+		    AND (kpa1 > 50 OR kpa1 < -50)
+		    AND (kpa2 > 50 OR kpa2 < -50)
+		    AND (kpa3 > 50 OR kpa3 < -50)
+		    AND (kpa4 > 50 OR kpa4 < -50)
+			]]> 
+		
+		),
+		ranked AS (
+		  SELECT *,
+		         ROW_NUMBER() OVER (PARTITION BY station_name ORDER BY sumkpa_tcms DESC) AS rn
+		  FROM tcms
 		)
-		SELECT 
-		    formationNo, 
-		    stationId, 
-		    stationName, 
-		    rcvDt, 
-		    rate1, 
-		    rate2, 
-		    rate3
-		FROM formation
+		SELECT DATE_FORMAT(rcv_dt, '%H:%i') as rcv_dt
+		,station_id
+		<![CDATA[ 
+		,case when station_id<3 OR station_id>56 then ''
+			else 
+			case when station_id%2=1 then concat(station_name,' (상)') 
+			 when station_id%2=0 then concat(station_name,' (하)') ELSE '' END 
+		end AS station_name
+		]]>
+		
+		,ROUND(
+			nvl(
+				100*(
+					SELECT afc2 FROM vs_type 
+					WHERE id=#{formationNo} 
+					and kpa=
+					((sumkpa_tcms) - (SELECT sumkpa from min_kpa WHERE fornum=#{formationNo}))
+				)
+				/206
+			,0)
+		,0) AS rate
+		
+		FROM ranked
 		WHERE rn = 1
-		ORDER BY rate3 DESC, rcvDt DESC
+		ORDER BY sumkpa_tcms DESC
 		LIMIT 3
+		
 	</select>
-	
-	
-	
-	
 	
 	<!-- 일월년 통계 막대 -->
 	<select id="statBarData" parameterType="statVO" resultType="chartVo">

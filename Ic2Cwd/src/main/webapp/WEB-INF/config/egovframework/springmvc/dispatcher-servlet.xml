@@ -29,6 +29,9 @@
     <!-- /webapp/resources 폴더 내에 이미지 파일을 읽기 위한 매핑 -->
     <mvc:resources location="/firmwareFile/" mapping="/firmwareFile/**"/>
     
+    <!-- /fonts 경로를 브라우저에서 접근 가능하게 매핑 -->
+<mvc:resources location="/fonts/" mapping="/fonts/**" />
+    
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"/>
     
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
