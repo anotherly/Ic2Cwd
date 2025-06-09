@@ -1,18 +1,25 @@
 package kr.co.hivesys.comm.excel;
 
 import kr.co.hivesys.afc.vo.AfcDataVO;
+import kr.co.hivesys.afc.vo.VsTypeVO;
+
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.ZoneId;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.multipart.MultipartFile;
 
 public class ExcelParserUtil {
-
+	//afc 데이터 엑셀 파일 업로드 시 엑셀내용 파싱
     public static List<AfcDataVO> parse(MultipartFile file, int activeCap) throws Exception {
         List<AfcDataVO> dataList = new ArrayList<>();
         String fileName = file.getOriginalFilename();
@@ -148,5 +155,51 @@ public class ExcelParserUtil {
         is.close();
 
         return dataList;
+    }
+    //편성별 kpa afc 엑셀 파일 업로드 시 엑셀내용 파싱
+    public static  List<VsTypeVO> parseVsTypeExcel(MultipartFile file) throws Exception {
+        List<VsTypeVO> list = new ArrayList<>();
+
+        try (InputStream is = file.getInputStream(); Workbook workbook = WorkbookFactory.create(is)) {
+            Sheet sheet = workbook.getSheetAt(0);
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+                Row row = sheet.getRow(i);
+                if (row == null) continue;
+
+                VsTypeVO vo = new VsTypeVO();
+                vo.setId((int) row.getCell(0).getNumericCellValue());
+                vo.setKpa((int) row.getCell(1).getNumericCellValue());
+                vo.setAfc((int) row.getCell(2).getNumericCellValue());
+                vo.setAfc2((int) row.getCell(3).getNumericCellValue());
+                list.add(vo);
+            }
+        }
+
+        return list;
+    }
+    
+    public static void downloadVsExcel(HttpServletRequest req,HttpServletResponse res, List<VsTypeVO> dataList) throws Exception {
+    	XSSFWorkbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("vs_type");
+
+        // 헤더 생성
+        Row header = sheet.createRow(0);
+        header.createCell(0).setCellValue("id");
+        header.createCell(1).setCellValue("kpa");
+        header.createCell(2).setCellValue("afc");
+        header.createCell(3).setCellValue("afc2");
+
+        // 데이터 삽입
+        int rowNum = 1;
+        for (VsTypeVO vo : dataList) {
+            Row row = sheet.createRow(rowNum++);
+            row.createCell(0).setCellValue(vo.getId());
+            row.createCell(1).setCellValue(vo.getKpa());
+            row.createCell(2).setCellValue(vo.getAfc());
+            row.createCell(3).setCellValue(vo.getAfc2());
+        }
+        ExcelComport ex =new ExcelComport();
+        String fileName = "편성별 응하중 및 재차인원";
+		ex.excelDownload(req,res,fileName,workbook);
     }
 }

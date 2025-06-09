@@ -18,6 +18,7 @@ import kr.co.hivesys.terminal.vo.TerminalVo;
 import kr.co.hivesys.afc.mapper.AfcMapper;
 import kr.co.hivesys.afc.service.AfcService;
 import kr.co.hivesys.afc.vo.AfcDataVO;
+import kr.co.hivesys.afc.vo.VsTypeVO;
 import kr.co.hivesys.afc.vo.AfcDataVO;
 
 @Service("afcService")
@@ -50,6 +51,19 @@ public class AfcServiceImpl implements AfcService {
     public void uploadExcelData(MultipartFile file, int activeCap) throws Exception {
         List<AfcDataVO> dataList = ExcelParserUtil.parse(file, activeCap);
         afcMapper.insertAfcDataList(dataList); // MyBatis foreach 방식으로 한번에 처리
+    }
+	
+	@Override
+	public List<VsTypeVO> downVsTypeExcel() throws Exception {
+		return afcMapper.downVsTypeExcel(); 
+	}
+	
+	@Override
+    public void uploadVsTypeExcel(MultipartFile file) throws Exception {
+        List<VsTypeVO> list = ExcelParserUtil.parseVsTypeExcel(file);
+
+        afcMapper.deleteAll();
+        afcMapper.insertBatch(list);
     }
 	
 	//응하중 afc 비교목록

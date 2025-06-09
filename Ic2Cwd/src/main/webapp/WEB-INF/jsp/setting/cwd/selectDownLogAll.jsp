@@ -77,10 +77,10 @@
                 {data:"avg1"},
                 {data:"avg2"},
                 
-                {data:"cal1"},
+                /* {data:"cal1"},
                 {data:"cal2"},
                 {data:"range1"},
-                {data:"range2"},
+                {data:"range2"}, */
                 
                 {data:"rate1"},
                 {data:"rate2"},
@@ -176,8 +176,9 @@
 				<div class="title_segments" role="tablist">
 					<button id="today_menu" class="nav-link" role="tab" aria-selected="false" onclick="location.href='/setting/cwd/selectDownLog.do'">금일 데이터 목록</button>
 					<button id="all_menu" class="nav-link active" role="tab" aria-selected="false" onclick="location.href='/setting/cwd/selectDownLogAll.do'">전체 데이터 목록</button>
-					<button id="upload_menu" class="nav-link" role="tab" aria-selected="false" onclick="location.href='/setting/cwd/excelUpload.do'">AFC 데이터 업로드</button>
+					<button id="upload_menu" class="nav-link " role="tab" aria-selected="false" onclick="location.href='/setting/cwd/excelUpload.do'">AFC 데이터 업로드</button>
 					<button id="versus_menu" class="nav-link" role="tab" aria-selected="false" onclick="location.href='/setting/cwd/versusAFCtoKPA.do'">AFC 응하중 비교</button>
+					<button id="VsType" class="nav-link" role="tab" aria-selected="false" onclick="location.href='/setting/cwd/uploadVsType.do'">편성 별 재차인원 데이터 관리</button>
 				</div>
 			</div>
 		</div>
@@ -203,7 +204,7 @@
 								<option value="2">하행</option>
 		                    </select>
 						</div>
-                        <div class="form-group col_14">
+                       <!--  <div class="form-group col_14">
 							<label class="form-control-label"><span class="langSpan">중복 행 제거수</span></label>
 							<select class="form-control mw_30" id="dufCnt" name="dufCnt">
 								<option value="2" selected>2</option>
@@ -215,7 +216,7 @@
 								<option value="8">8</option>
 								<option value="9">9</option>
 		                    </select>
-						</div>
+						</div> -->
                         <div class="form_daterange" style="display: inline-flex;align-items: center;gap: 5px;" id="schDtBody">
 							<!-- 기간 -->
 							<div class='input-group date' id='datetimepicker1'>
@@ -259,10 +260,10 @@
 										<th>평균1</th>
 										<th>평균2</th>
 										
-										<th>계산1</th>
+										<!-- <th>계산1</th>
 										<th>계산2</th>
 										<th>보정률1</th>
-										<th>보정률2</th>
+										<th>보정률2</th> -->
 										
 										<th>1량 혼잡률</th>
 										<th>2량 혼잡률</th>
@@ -274,9 +275,9 @@
 					</div>
 					
 					<div id ="btnDiv" class="btn_box" style="display: flex;flex-direction: row-reverse;float:right;justify-content: space-around;width: 250px;">
-						<button class="btn btn_primary" id="btnAFC" onclick="AFCDownload()">
+						<!-- <button class="btn btn_primary" id="btnAFC" onclick="AFCDownload()">
 							<span class="langSpan">AFC 다운로드</span>
-						</button>
+						</button> -->
 						<button class="btn btn_primary" id="btnDownload" onclick="excelDownload()">
 							<span class="langSpan">다운로드</span>
 						</button>

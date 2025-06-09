@@ -145,8 +145,9 @@
 				<div class="title_segments" role="tablist">
 					<button id="today_menu" class="nav-link" role="tab" aria-selected="false" onclick="location.href='/setting/cwd/selectDownLog.do'">금일 데이터 목록</button>
 					<button id="all_menu" class="nav-link" role="tab" aria-selected="false" onclick="location.href='/setting/cwd/selectDownLogAll.do'">전체 데이터 목록</button>
-					<button id="upload_menu" class="nav-link" role="tab" aria-selected="false" onclick="location.href='/setting/cwd/excelUpload.do'">AFC 데이터 업로드</button>
+					<button id="upload_menu" class="nav-link " role="tab" aria-selected="false" onclick="location.href='/setting/cwd/excelUpload.do'">AFC 데이터 업로드</button>
 					<button id="versus_menu" class="nav-link active" role="tab" aria-selected="false" onclick="location.href='/setting/cwd/versusAFCtoKPA.do'">AFC 응하중 비교</button>
+					<button id="VsType" class="nav-link" role="tab" aria-selected="false" onclick="location.href='/setting/cwd/uploadVsType.do'">편성 별 재차인원 데이터 관리</button>
 				</div>
 			</div>
 		</div>

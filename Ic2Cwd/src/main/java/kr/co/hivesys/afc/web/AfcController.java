@@ -26,11 +26,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import kr.co.hivesys.comm.excel.ExcelComport;
+import kr.co.hivesys.comm.excel.ExcelParserUtil;
 import kr.co.hivesys.comm.file.FileUploadSave;
 import kr.co.hivesys.comm.file.vo.FileVo;
 import kr.co.hivesys.terminal.service.TerminalService;
 import kr.co.hivesys.terminal.vo.TerminalVo;
 import kr.co.hivesys.afc.vo.AfcDataVO;
+import kr.co.hivesys.afc.vo.VsTypeVO;
 import kr.co.hivesys.afc.service.AfcService;
 
 @Controller
@@ -258,6 +260,34 @@ public class AfcController {
 	    }
 	}
 	
+	
+	//편성별 보정값 업로드 및 다운로드
+    @PostMapping("/afc/uploadVsTypeExcel")
+    @ResponseBody
+    public String uploadVsType(@RequestParam("file") MultipartFile file) {
+        try {
+        	afcService.uploadVsTypeExcel(file);
+            return "success";
+       	    } catch (Exception e) {
+       	        e.printStackTrace();
+       	        return "fail";
+       	    }
+    }
+    
+    //편성별 보정값 업로드 및 다운로드
+    @RequestMapping("/afc/downVsTypeExcel.ajax")
+    public void downVsTypeExcel(
+    		HttpServletRequest request, HttpServletResponse response
+    		) {
+    	try {
+    		List<VsTypeVO> dataList = new ArrayList<>(); 
+    		dataList = afcService.downVsTypeExcel();
+    		ExcelParserUtil.downloadVsExcel(request,response,dataList);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    }
+	
 	//응하중 afc 비교목록
 	@RequestMapping(value= "/afc/versusList.ajax")
 	public @ResponseBody ModelAndView versusList( 
@@ -279,6 +309,7 @@ public class AfcController {
 		}
 		return mav;
 	}
+
 	
 	//엑셀다운
 	@RequestMapping(value= "/afc/versusDownload.ajax")
@@ -352,7 +383,7 @@ public class AfcController {
 		String fileName=inputVo.getsDate()+heading;
 		ex.excelDownload(req,res,fileName,workbook);
 	}
-	
+
 }
 
 

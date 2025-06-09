@@ -18,6 +18,7 @@
 		<typeAlias alias="cwdVO" type="kr.co.hivesys.setting.vo.CwdVO" />
 		<typeAlias alias="statVO" type="kr.co.hivesys.stat.vo.StatVO" />
 		<typeAlias alias="afcDataVO" type="kr.co.hivesys.afc.vo.AfcDataVO" />
+		<typeAlias alias="VsTypeVO" type="kr.co.hivesys.afc.vo.VsTypeVO" />
 		<!-- <typeAlias alias="authVo" type="kr.co.hivesys.auth.vo.AuthVo" /> -->
 		<!-- <typeAlias alias="departVo" type="kr.co.hivesys.depart.vo.DepartVo" /> -->
 		<!-- <typeAlias alias="fileVo" type="kr.co.hivesys.comm.file.vo.FileVo" /> -->

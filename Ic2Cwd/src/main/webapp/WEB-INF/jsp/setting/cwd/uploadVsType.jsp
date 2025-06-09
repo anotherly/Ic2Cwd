@@ -23,21 +23,27 @@
 <script>
 		
 function uploadExcel() {
-	console.log("uploadExcel");
+	console.log("VSupload");
     var formData = new FormData($("#insertForm")[0]);
     $.ajax({
-        url: "/afc/uploadExcel",
+        url: "/afc/uploadVsTypeExcel",
         type: "POST",
         data: formData,
         processData: false,
         contentType: false,
         success: function(result) {
-            alert("업로드 성공!");
+            alert("업로드 성공");
         },
         error: function() {
-            alert("업로드 실패!");
+            alert("업로드 실패");
         }
     });
+}
+		
+function downExcel() {
+    location.href='/afc/downVsTypeExcel.ajax';
+    
+    
 }
     
 </script>
@@ -63,9 +69,9 @@ function uploadExcel() {
 				<div class="title_segments" role="tablist">
 					<button id="today_menu" class="nav-link" role="tab" aria-selected="false" onclick="location.href='/setting/cwd/selectDownLog.do'">금일 데이터 목록</button>
 					<button id="all_menu" class="nav-link" role="tab" aria-selected="false" onclick="location.href='/setting/cwd/selectDownLogAll.do'">전체 데이터 목록</button>
-					<button id="upload_menu" class="nav-link active" role="tab" aria-selected="false" onclick="location.href='/setting/cwd/excelUpload.do'">AFC 데이터 업로드</button>
+					<button id="upload_menu" class="nav-link" role="tab" aria-selected="false" onclick="location.href='/setting/cwd/excelUpload.do'">AFC 데이터 업로드</button>
 					<button id="versus_menu" class="nav-link" role="tab" aria-selected="false" onclick="location.href='/setting/cwd/versusAFCtoKPA.do'">AFC 응하중 비교</button>
-					<button id="VsType" class="nav-link" role="tab" aria-selected="false" onclick="location.href='/setting/cwd/uploadVsType.do'">편성 별 재차인원 데이터 관리</button>
+					<button id="VsType" class="nav-link active" role="tab" aria-selected="false" onclick="location.href='/setting/cwd/uploadVsType.do'">편성 별 재차인원 데이터 관리</button>
 				</div>
 			</div>
 		</div>
@@ -85,21 +91,16 @@ function uploadExcel() {
 								<div class="ctn_tbl_td">
 									<input type="file" name="file" class="form-control">
 								</div>
-								
-								<div class="ctn_tbl_th fm_rep">상/하행 구분</div>
-								<div class="ctn_tbl_td">
-									<select id ="activeCap" name="activeCap" class ="ctn_select_box1">
-										<option value="1">상행</option>
-										<option value="2">하행</option>
-									</select>
-								</div>
 							</div>
 						</div>
 						
 						<!-- btn_box Start -->
-						<div class="btn_box">
+						<div class="btn_box" style="justify-content: space-around;width: 214px;float: right;">
 							<div class="right">
 								<input type="button" class="btn btn_primary" value="업로드" onclick="uploadExcel()">
+							</div>
+							<div class="right">
+								<input type="button" class="btn btn_primary" value="다운로드" onclick="downExcel()">
 							</div>
 						</div>
 						<!-- btn_box End -->

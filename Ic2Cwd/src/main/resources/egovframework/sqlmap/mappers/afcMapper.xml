@@ -83,6 +83,7 @@
 		<result property="peopleCnt" column="people_cnt"/>
 	</resultMap>
 	
+	
 		
 	<!-- 금일 데이터 목록 -->
 	<select id="selectLogToday" parameterType="terminalVO" resultMap="resultTerminalVo">
@@ -170,6 +171,7 @@
 		(
 			SELECT 
 				rcv_dt,formation_no
+				,if(station_id%2=1,'상행','하행') AS active_cap
 				,kpa1,kpa2,kpa3,kpa4
 				,rate1,rate2,sum_kpa
 				,AVG1,AVG2
@@ -344,6 +346,7 @@
 		order by active_cap,rcv_dt
 	</select>
 	
+	<!-- afc 업로드 -->
 	<insert id="insertAfcData" parameterType="afcDataVO">
 	    INSERT INTO afc_data (rcv_dt, station_id, station_name, people_cnt, rate, active_cap, train_no)
 	    VALUES (#{rcvDt}, #{stationId}, #{stationName}, #{peopleCnt}, #{rate}, #{activeCap}, #{trainNo})
@@ -358,6 +361,23 @@
 	    </foreach>
 	</insert>
 		
+	<!-- vstype 업로드 -->
+	    <delete id="deleteAll" parameterType="VsTypeVO">
+        DELETE FROM vs_type
+    </delete>
+
+    <insert id="insertBatch" parameterType="VsTypeVO">
+        INSERT INTO vs_type (id, kpa, afc, afc2)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.id}, #{item.kpa}, #{item.afc}, #{item.afc2})
+        </foreach>
+    </insert>
+
+     <select id="downVsTypeExcel" resultType="VsTypeVO">
+        SELECT id, kpa, afc, afc2 FROM vs_type ORDER BY id, kpa
+    </select>
+	
 	
 	<!-- afc형식 통계 -->
 	<select id="versusList" parameterType="afcDataVO" resultMap="resultAfcDataVO">
